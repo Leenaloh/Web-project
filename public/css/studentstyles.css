@@ -330,3 +330,28 @@ button.cancel:hover {
     background: #c82333;
 }
 
+.ActivityDetails-image {
+    display: block;
+    margin: 20px auto;
+    width: 30%;
+    max-width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	text-align: right;
+}
+
+.back {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: -20px;
+	position: relative; 
+    float: right; 
+}
+
+.back:hover {
+    background: navy;
+}
