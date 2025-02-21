@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Activities | ClubHub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <img src="clubhub.png" alt="ClubHub Logo">
+        <div class="header-buttons">
+            <a href="profile.html">Profile</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- My Dashboard Button -->
+        <a href="dashboard.html" class="dashboard-btn">My Dashboard</a>
+
+        <h2>Manage Activities</h2>
+
+        <!-- Section to Display Existing Activities -->
+        <div class="activity-overview" id="activity-list">
+            <h3>Existing Activities</h3>
+
+            <!-- Example Activity Card 1 -->
+            <div class="activity-card">
+                <h4>Art Workshop</h4>
+                <p><strong>Description:</strong> Learn painting techniques.</p>
+                <p><strong>Start Date:</strong> March 25, 2025</p>
+                <p><strong>End Date:</strong> March 25, 2025</p>
+                <p><strong>Category:</strong> Art</p>
+                <p><strong>Max Registrations:</strong> 30</p>
+                <div class="button-group">
+                    <!-- Edit and Delete Buttons -->
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            </div>
+
+            <!-- Example Activity Card 2 -->
+            <div class="activity-card">
+                <h4>Sports Day</h4>
+                <p><strong>Description:</strong> Compete in various sports events.</p>
+                <p><strong>Start Date:</strong> April 10, 2025</p>
+                <p><strong>End Date:</strong> April 10, 2025</p>
+                <p><strong>Category:</strong> Sports</p>
+                <p><strong>Max Registrations:</strong> 50</p>
+                <div class="button-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Activity Button -->
+        <button id="toggle-form-btn" class="toggle-form-btn">Add Activity</button>
+
+        <!-- Add Activity Form (Hidden Initially) -->
+        <div class="activity-form" id="activity-form-container" style="display: none;">
+            <h3>Add New Activity</h3>
+            <form id="activity-form">
+                <!-- Activity Title Input -->
+                <label for="title">Activity Title:</label>
+                <input type="text" id="title" placeholder="Enter activity title" required>
+
+                <!-- Activity Description Input -->
+                <label for="description">Activity Description:</label>
+                <textarea id="description" placeholder="Enter activity description" rows="4" required></textarea>
+
+                <!-- Upload Photo Input -->
+                <label for="photo">Upload Photo:</label>
+                <input type="file" id="photo" accept="image/*">
+
+                <!-- Start Date & Time Input -->
+                <label for="startDate">Start Date & Time:</label>
+                <input type="datetime-local" id="startDate" required>
+
+                <!-- End Date & Time Input -->
+                <label for="endDate">End Date & Time:</label>
+                <input type="datetime-local" id="endDate" required>
+
+                <!-- Category Dropdown -->
+                <label for="category">Category:</label>
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Art">Art</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Reading">Reading</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <!-- Custom Category Input if "Other" is Selected -->
+                <label for="other-category">If Other, specify:</label>
+                <input type="text" id="other-category" placeholder="Enter custom category">
+
+                <!-- Max Registrations Input -->
+                <label for="maxRegistries">Max Registrations:</label>
+                <input type="number" id="maxRegistries" placeholder="Enter maximum registries" min="1" required>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Add Activity</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <a href="mailto:clubhub@hotmail.com">Contact Us</a> | &copy; 2025 Club Hub. All rights reserved.
+    </footer>
+
+    <!-- JavaScript for Toggling Form, Adding, Editing, and Deleting Activities -->
+    <script>
+        // DOM Elements
+        const toggleFormBtn = document.getElementById('toggle-form-btn');
+        const activityFormContainer = document.getElementById('activity-form-container');
+        const activityForm = document.getElementById('activity-form');
+        const activityList = document.getElementById('activity-list');
+
+        // Variables for Edit Mode
+        let editMode = false;
+        let currentEditCard = null;
+
+        // Toggle Add Activity Form Visibility
+        toggleFormBtn.addEventListener('click', () => {
+            activityFormContainer.style.display = activityFormContainer.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Handle Form Submission (Add Activity)
+        activityForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get Form Values
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const category = document.getElementById('category').value || document.getElementById('other-category').value;
+            const maxRegistries = document.getElementById('maxRegistries').value;
+
+            // Add Activity Card
+            addActivityCard(title, description, startDate, endDate, category, maxRegistries);
+
+            // Reset Form and Hide After Submission
+            activityForm.reset();
+            activityFormContainer.style.display = 'none';
+        });
+
+        // Function to Add a New Activity Card
+        function addActivityCard(title, description, startDate, endDate, category, maxRegistries) {
+            const card = document.createElement('div');
+            card.classList.add('activity-card');
+            card.innerHTML = `
+                <h4>${title}</h4>
+                <p><strong>Description:</strong> ${description}</p>
+                <p><strong>Start Date:</strong> ${startDate}</p>
+                <p><strong>End Date:</strong> ${endDate}</p>
+                <p><strong>Category:</strong> ${category}</p>
+                <p><strong>Max Registrations:</strong> ${maxRegistries}</p>
+                <div class="button-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            `;
+            activityList.appendChild(card);
+
+            // Attach Event Listeners for Edit and Delete Buttons
+            attachCardEventListeners(card);
+        }
+
+        // Function to Attach Event Listeners to Edit and Delete Buttons
+        function attachCardEventListeners(card) {
+            card.querySelector('.delete-btn').addEventListener('click', () => card.remove());
+            card.querySelector('.edit-btn').addEventListener('click', () => enableInlineEditing(card));
+        }
+
+        // Function to Enable Inline Editing on the Activity Card
+        function enableInlineEditing(card) {
+            const title = card.querySelector('h4').innerText;
+            const description = card.querySelector('p:nth-of-type(1)').innerText.replace('Description: ', '');
+            const startDate = card.querySelector('p:nth-of-type(2)').innerText.replace('Start Date: ', '');
+            const endDate = card.querySelector('p:nth-of-type(3)').innerText.replace('End Date: ', '');
+            const category = card.querySelector('p:nth-of-type(4)').innerText.replace('Category: ', '');
+            const maxRegistries = card.querySelector('p:nth-of-type(5)').innerText.replace('Max Registrations: ', '');
+
+            // Replace content with input fields for editing
+            card.innerHTML = `
+                <input type="text" value="${title}" class="edit-title"><br>
+                <textarea class="edit-description">${description}</textarea><br>
+                <input type="datetime-local" value="${startDate}" class="edit-startDate"><br>
+                <input type="datetime-local" value="${endDate}" class="edit-endDate"><br>
+                <input type="text" value="${category}" class="edit-category"><br>
+                <input type="number" value="${maxRegistries}" class="edit-maxRegistries"><br>
+                <div class="button-group">
+                    <button class="save-btn">Save</button>
+                    <button class="cancel-btn">Cancel</button>
+                </div>
+            `;
+
+            // Attach Event Listeners for Save and Cancel
+            card.querySelector('.save-btn').addEventListener('click', () => saveEditedCard(card));
+            card.querySelector('.cancel-btn').addEventListener('click', () => cancelEditing(card, title, description, startDate, endDate, category, maxRegistries));
+        }
+
+        // Function to Save Edited Activity
+        function saveEditedCard(card) {
+            const title = card.querySelector('.edit-title').value;
+            const description = card.querySelector('.edit-description').value;
+            const startDate = card.querySelector('.edit-startDate').value;
+            const endDate = card.querySelector('.edit-endDate').value;
+            const category = card.querySelector('.edit-category').value;
+            const maxRegistries = card.querySelector('.edit-maxRegistries').value;
+
+            // Update the card with new values
+            card.innerHTML = `
+                <h4>${title}</h4>
+                <p><strong>Description:</strong> ${description}</p>
+                <p><strong>Start Date:</strong> ${startDate}</p>
+                <p><strong>End Date:</strong> ${endDate}</p>
+                <p><strong>Category:</strong> ${category}</p>
+                <p><strong>Max Registrations:</strong> ${maxRegistries}</p>
+                <div class="button-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            `;
+
+            // Reattach Event Listeners
+            attachCardEventListeners(card);
+        }
+
+        // Function to Cancel Editing and Restore Original Content
+        function cancelEditing(card, title, description, startDate, endDate, category, maxRegistries) {
+            card.innerHTML = `
+                <h4>${title}</h4>
+                <p><strong>Description:</strong> ${description}</p>
+                <p><strong>Start Date:</strong> ${startDate}</p>
+                <p><strong>End Date:</strong> ${endDate}</p>
+                <p><strong>Category:</strong> ${category}</p>
+                <p><strong>Max Registrations:</strong> ${maxRegistries}</p>
+                <div class="button-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            `;
+
+            // Reattach Event Listeners
+            attachCardEventListeners(card);
+        }
+
+        // Attach Event Listeners to Preloaded Activity Cards
+        document.querySelectorAll('.activity-card').forEach(card => attachCardEventListeners(card));
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,238 @@
+/* General Reset and Body Styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+}
+
+/* Header Styling */
+header {
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* ClubHub Logo */
+header img {
+    height: 100px; /* Increased logo size */
+    width: auto;
+}
+
+/* Header Buttons (Profile & Logout) */
+.header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.header-buttons a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+    font-size: 14px; /* Reduced text size */
+}
+
+.header-buttons a:hover {
+    color: #21618c;
+}
+
+/* Main Container */
+.main-container {
+    width: 80%;
+    max-width: 800px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 120px; /* Adjust for fixed header */
+}
+
+/* Section Titles */
+h2, h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Activity Overview Section */
+.activity-overview {
+    margin-bottom: 30px;
+}
+
+/* Activity/Dashboard Card Styling */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card h4 {
+    margin-bottom: 10px;
+    color: #2980b9;
+}
+
+.card p {
+    margin-bottom: 5px;
+}
+
+/* Button Group for Edit/Delete */
+.button-group {
+    margin-top: 10px;
+}
+
+.button-group button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.edit-btn {
+    background-color: #f1c40f;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+}
+
+.edit-btn:hover {
+    background-color: #d4ac0d;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Toggle Add Activity Button */
+.toggle-form-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.toggle-form-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Activity Form Styling */
+.activity-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+/* Form Input Fields */
+.activity-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.activity-form input[type="text"],
+.activity-form input[type="datetime-local"],
+.activity-form input[type="file"],
+.activity-form input[type="number"],
+.activity-form select,
+.activity-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Ensure textareas align with input fields */
+.activity-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Submit Button */
+.submit-btn {
+    background-color: #27ae60;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #1e8449;
+}
+
+/* Footer Styling */
+footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #7f8c8d;
+    width: 100%;
+    padding: 15px 0;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+}
+
+footer a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Dashboard Button */
+.dashboard-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.dashboard-btn:hover {
+    background-color: #2980b9;
+}
+
+
+
