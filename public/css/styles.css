@@ -140,6 +140,8 @@ h2, h3 {
     font-weight: bold;
     cursor: pointer;
     margin-bottom: 20px;
+    text-align: center;     /* Centers text */
+    text-decoration: none;     /* Ensures underline is still removed on hover */
 }
 
 .toggle-form-btn:hover {
@@ -218,21 +220,124 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Dashboard Button */
-.dashboard-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 20px;
+/* Activity Container */
+.activity-container {
+    max-height: 500px; /* Sets the height for scroll */
+    overflow-y: auto; /* Enables vertical scroll */
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-btn:hover {
+/* Activity Card */
+.activity-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover Effect for Cards */
+.activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Edit & Delete Buttons */
+.edit-btn,
+.delete-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.edit-btn {
+    background-color: #3498db;
+}
+
+.edit-btn:hover {
     background-color: #2980b9;
 }
 
+.delete-btn {
+    background-color: #e74c3c;
+}
 
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Scrollbar Styling */
+.activity-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.activity-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Save Button */
+.save-btn {
+    background-color: #27ae60; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: #1e8449; /* Darker Green on hover */
+    transform: scale(1.05); /* Slight pop-out effect */
+}
+
+/* Cancel Button */
+.cancel-btn {
+    background-color: #e74c3c; /* Red */
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 10px; /* Space between buttons */
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b; /* Darker Red on hover */
+    transform: scale(1.05); /* Slight pop-out effect */
+}
+
+/* Button Group Alignment */
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+
+#main-content{
+    margin-top:190px;
+    margin-bottom:170px;
+}
 
