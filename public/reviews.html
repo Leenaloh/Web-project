@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css1.css">
+    <title>Activity Reviews</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="head">
+        <img src="ClubHub.png" alt="Club Hub Logo" class="logo">
+        <div class="header-buttons">
+            <a href="logout.html" class="btn">Log out</a> <!-- Only Log out button remains -->
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <a href="student_management.html">Student Management</a> &gt; 
+        <a href="activities.html">Activities</a> &gt; 
+        <a href="reviews.html">Activity Reviews</a>
+    </div>
+
+    <main>
+        <section id="reviews-section">
+            <h2>Student Reviews</h2>
+            <table id="reviews-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Activity</th>
+                        <th>Rating</th>
+                        <th>Optional Message</th>
+                        <th>Submit Anonymously</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="lama-ahmed">
+                        <td>Lama Ahmed</td>
+                        <td>Art Club</td>
+                        <td>
+                            <div class="rating">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                        </td>
+                        <td><textarea placeholder="Optional message..." class="message-box"></textarea></td>
+                        <td><input type="checkbox" class="anonymous"></td>
+                        <td><button class="btn submit-review">Submit Review</button></td>
+                    </tr>
+                    <tr id="sara-khalid">
+                        <td>Sara Khalid</td>
+                        <td>Debate Team</td>
+                        <td>
+                            <div class="rating">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                        </td>
+                        <td><textarea placeholder="Optional message..." class="message-box"></textarea></td>
+                        <td><input type="checkbox" class="anonymous"></td>
+                        <td><button class="btn submit-review">Submit Review</button></td>
+                    </tr>
+                    <tr id="noura-mohammed">
+                        <td>Noura Mohammed</td>
+                        <td>Coding Club</td>
+                        <td>
+                            <div class="rating">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                        </td>
+                        <td><textarea placeholder="Optional message..." class="message-box"></textarea></td>
+                        <td><input type="checkbox" class="anonymous"></td>
+                        <td><button class="btn submit-review">Submit Review</button></td>
+                    </tr>
+                    <tr id="alunoud-fahad">
+                        <td>Alunoud Fahad</td>
+                        <td>Chess Club</td>
+                        <td>
+                            <div class="rating">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                        </td>
+                        <td><textarea placeholder="Optional message..." class="message-box"></textarea></td>
+                        <td><input type="checkbox" class="anonymous"></td>
+                        <td><button class="btn submit-review">Submit Review</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Submitted Reviews</h2>
+            <div id="submitted-reviews">
+                <!-- Default Submitted Reviews -->
+                <div class="submitted-review">
+                    <div class="review-card">
+                        <strong>Lama Ahmed</strong> rated <strong>Art Club</strong>: ★★★★★<br>
+                        <em>Amazing experience! I learned so much about art techniques.</em><br>
+                        <small>Submitted on: Monday, October 30, 2023</small>
+                    </div>
+                </div>
+                <div class="submitted-review">
+                    <div class="review-card">
+                        <strong>Sara Khalid</strong> rated <strong>Debate Team</strong>: ★★★★☆<br>
+                        <em>Great activity, but the sessions could be more interactive.</em><br>
+                        <small>Submitted on: Tuesday, October 31, 2023</small>
+                    </div>
+                </div>
+                <div class="submitted-review">
+                    <div class="review-card">
+                        <strong>Noura Mohammed</strong> rated <strong>Coding Club</strong>: ★★★★★<br>
+                        <em>Loved the hands-on coding exercises. Highly recommended!</em><br>
+                        <small>Submitted on: Wednesday, November 1, 2023</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <a href="mailto:cluphup@hotmail.com">Contact Us</a>
+        <p>&copy; 2025 Club Hub. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Activate stars in the rating
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.dataset.value; // Get the rating value from the clicked star
+                const stars = this.parentElement.children; // Get all stars in the same rating div
+
+                // Loop through stars to set their color based on selection
+                for (let i = 0; i < stars.length; i++) {
+                    stars[i].style.color = (i < rating) ? 'gold' : 'gray'; // Gold for selected, gray for unselected
+                }
+            });
+        });
+
+        // Handle review submission
+        document.querySelectorAll('.submit-review').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const name = row.querySelector('td:first-child').textContent;
+                const activity = row.querySelector('td:nth-child(2)').textContent;
+
+                // Get the selected rating based on colored stars
+                const stars = row.querySelectorAll('.star');
+                const rating = Array.from(stars).filter(star => star.style.color === 'gold').length;
+
+                const message = row.querySelector('.message-box').value;
+                const anonymous = row.querySelector('.anonymous').checked;
+
+                // Get the current date
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const dateString = now.toLocaleDateString(undefined, options);
+
+                // Create a review object
+                const review = {
+                    name: anonymous ? 'Anonymous' : name,
+                    activity: activity,
+                    rating: rating,
+                    message: message,
+                    date: dateString
+                };
+
+                // Append review to the submitted reviews section
+                const reviewElement = document.createElement('div');
+                reviewElement.classList.add('submitted-review');
+                reviewElement.innerHTML = `
+                    <div class="review-card">
+                        <strong>${review.name}</strong> rated <strong>${review.activity}</strong>: ${'★'.repeat(review.rating)}<br>
+                        ${message ? `<em>${message}</em><br>` : ''}
+                        <small>Submitted on: ${review.date}</small>
+                    </div>`;
+                document.getElementById('submitted-reviews').appendChild(reviewElement);
+
+                // Clear fields after submission
+                row.querySelector('.message-box').value = '';
+                stars.forEach(star => star.style.color = 'gray'); // Reset star colors
+                row.querySelector('.anonymous').checked = false;
+            });
+        });
+    </script>
+</body>
+</html>

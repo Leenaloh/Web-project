@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css1.css">
+    <title>Student Management</title>
+    <style>
+        .highlight {
+            background-color: #ffff99; /* Light yellow color for highlight */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="head">
+        <img src="ClubHub.png" alt="Club Hub Logo" class="logo">
+        <nav>
+            <ul class="nav-links">
+                <!-- Removed "View Activities" link -->
+            </ul>
+        </nav>
+        <div class="header-buttons">
+            <a href="logout.html" class="btn">Log out</a>
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <a href="student_management.html">Student Management</a> &gt; 
+        <a href="activities.html">Activities</a> &gt; 
+        <a href="reviews.html">Activity Reviews</a> <!-- Added Reviews page to breadcrumbs -->
+    </div>
+
+    <main>
+        <h1>Club Registrations</h1>
+        <section id="activity-registrations">
+            <h2>Registered Students for Activities</h2>
+            <table id="registrations-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Activity</th>
+                        <th>Attendance</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#lama-ahmed" class="student-link">Lama Ahmed</a></td>
+                        <td>Art Club</td>
+                        <td><input type="checkbox" name="attendance"></td>
+                        <td><button class="btn remove-btn">Remove</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#sara-khalid" class="student-link">Sara Khalid</a></td>
+                        <td>Debate Team</td>
+                        <td><input type="checkbox" name="attendance"></td>
+                        <td><button class="btn remove-btn">Remove</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#noura-mohammed" class="student-link">Noura Mohammed</a></td>
+                        <td>Coding Club</td>
+                        <td><input type="checkbox" name="attendance"></td>
+                        <td><button class="btn remove-btn">Remove</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#alunoud-fahad" class="student-link">Alunoud Fahad</a></td>
+                        <td>Chess Club</td>
+                        <td><input type="checkbox" name="attendance"></td>
+                        <td><button class="btn remove-btn">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="student-profiles">
+            <h2>Student Profiles</h2>
+            <div class="card-container">
+                <div class="card" id="lama-ahmed">
+                    <h3>Lama Ahmed</h3>
+                    <p><strong>Student ID:</strong> 123456</p>
+                    <p><strong>Major:</strong> Graphic Design</p>
+                    <p><strong>Clubs:</strong> Art Club, Photography Club</p>
+                    <p><strong>Email:</strong> <a href="mailto:lama.ahmed@gmail.com">lama.ahmed@gmail.com</a></p>
+                    <p><strong>Phone:</strong> <a href="tel:0512345678">0512345678</a></p>
+                    <a href="reviews.html#lama-ahmed" class="btn">View Reviews</a> <!-- Link to Reviews Page -->
+                </div>
+                <div class="card" id="sara-khalid">
+                    <h3>Sara Khalid</h3>
+                    <p><strong>Student ID:</strong> 654321</p>
+                    <p><strong>Major:</strong> Biology</p>
+                    <p><strong>Clubs:</strong> Science Club, Debate Team</p>
+                    <p><strong>Email:</strong> <a href="mailto:sara.khalid@gmail.com">sara.khalid@gmail.com</a></p>
+                    <p><strong>Phone:</strong> <a href="tel:0587654321">0587654321</a></p>
+                    <a href="reviews.html#sara-khalid" class="btn">View Reviews</a> <!-- Link to Reviews Page -->
+                </div>
+                <div class="card" id="noura-mohammed">
+                    <h3>Noura Mohammed</h3>
+                    <p><strong>Student ID:</strong> 789012</p>
+                    <p><strong>Major:</strong> Computer Science</p>
+                    <p><strong>Clubs:</strong> Coding Club, Robotics Club</p>
+                    <p><strong>Email:</strong> <a href="mailto:noura.mohammed@gmail.com">noura.mohammed@gmail.com</a></p>
+                    <p><strong>Phone:</strong> <a href="tel:0523456789">0523456789</a></p>
+                    <a href="reviews.html#noura-mohammed" class="btn">View Reviews</a> <!-- Link to Reviews Page -->
+                </div>
+                <div class="card" id="alunoud-fahad">
+                    <h3>Alunoud Fahad</h3>
+                    <p><strong>Student ID:</strong> 345678</p>
+                    <p><strong>Major:</strong> Mathematics</p>
+                    <p><strong>Clubs:</strong> Mathletes, Chess Club</p>
+                    <p><strong>Email:</strong> <a href="mailto:alunoud.fahad@gmail.com">alunoud.fahad@gmail.com</a></p>
+                    <p><strong>Phone:</strong> <a href="tel:0554321098">0554321098</a></p>
+                    <a href="reviews.html#alunoud-fahad" class="btn">View Reviews</a> <!-- Link to Reviews Page -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <a href="mailto:cluphup@hotmail.com">Contact Us</a>
+        <p>&copy; 2025 Club Hub. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // JavaScript to remove student from the list and their profile
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr'); // Find the closest <tr> element
+                const studentName = row.querySelector('.student-link').textContent; // Get the student name
+                const studentId = studentName.toLowerCase().replace(/\s+/g, '-'); // Create the profile ID from the name
+
+                row.remove(); // Remove the row from the table
+
+                // Remove the corresponding student profile
+                const profileCard = document.getElementById(studentId);
+                if (profileCard) {
+                    profileCard.remove(); // Remove the profile card
+                }
+            });
+        });
+
+        // Highlight the selected student's card
+        document.querySelectorAll('.student-link').forEach(link => {
+            link.addEventListener('click', function() {
+                // Remove highlight from all cards
+                document.querySelectorAll('.card').forEach(card => {
+                    card.classList.remove('highlight');
+                });
+                // Add highlight to the selected card
+                const targetId = this.getAttribute('href').substring(1); // Get the id from href
+                const targetCard = document.getElementById(targetId);
+                if (targetCard) {
+                    targetCard.classList.add('highlight');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
