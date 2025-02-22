@@ -36,7 +36,7 @@ body {
     margin-right: 1em;
 }
 
-.btn {
+.btn a {
     text-decoration: none;
     color: white;
     background-color: #3498db;
@@ -44,10 +44,11 @@ body {
     border-radius: 5px;
     font-weight: bold;
     transition: background-color 0.3s ease; /* Smooth hover effect */
-      border: solid ;
+    border: solid ;
+    display: inline-block;
 }
 
-.btn:hover {
+.btn a:hover {
     background-color:  navy;
 }
 
