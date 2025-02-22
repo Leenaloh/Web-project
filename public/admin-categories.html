@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Categories - Club Hub</title>
+    <link rel="stylesheet" type="text/css" href="projectMain.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="head">
+        <img src="clubhub.png" alt="Club Hub Logo">
+        <div class="header-buttons">
+            <a href="admindashboard.html" class="btn">Admin Dashboard</a>
+            <a href="admin-clubs.html" class="btn">Club Approvals</a>
+            <a href="projectMain.html" class="btn">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div id="category-title">
+            <h1>Manage Activity Categories</h1>
+        </div>
+
+        <div class="category-container">
+            <h2>Current Categories</h2>
+            <ul id="category-list">
+                <li>Sports <button class="remove-btn">Remove</button></li>
+                <li>Art <button class="remove-btn">Remove</button></li>
+                <li>Technology <button class="remove-btn">Remove</button></li>
+                <li>Music <button class="remove-btn">Remove</button></li>
+            </ul>
+
+            <h2>Add New Category</h2>
+            <form action="#" method="post">
+                <label for="category-name">Category Name:</label>
+                <input type="text" id="category-name" name="category-name" required>
+                <button type="submit" class="btn add-btn">Add Category</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="foot">
+        <a href="mailto:cluphup@hotmail.com">Contact Us</a>
+        <p>&copy; 2025 Club Hub. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+
+
+

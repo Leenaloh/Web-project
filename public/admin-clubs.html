@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Club Approvals - Club Hub</title>
+    <link rel="stylesheet" type="text/css" href="projectMain.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="head">
+        <img src="clubhub.png" alt="Club Hub Logo">
+        <div class="header-buttons">
+            <a href="admindashboard.html" class="btn">Admin Dashboard</a>
+            <a href="admin-categories.html" class="btn">Manage Categories</a>
+            <a href="projectMain.html" class="btn">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div id="club-approvals-title">
+            <h1>Club Approvals</h1>
+        </div>
+
+        <div class="table-container">
+            <h2>Pending Clubs</h2>
+            <table id="club-approval-table">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Club Name</th>
+                        <th>Email</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="assets/images/club1.jpg" alt="Photography Club" class="club-photo"></td>
+                        <td>Photography Club</td>
+                        <td>photo@clubhub.com</td>
+                        <td>Club for photography enthusiasts</td>
+                        <td>Building A, Room 101</td>
+                        <td>
+                            <button class="approve-btn">Approve</button>
+                            <button class="reject-btn">Reject</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="assets/images/club2.jpg" alt="Chess Club" class="club-photo"></td>
+                        <td>Chess Club</td>
+                        <td>chess@clubhub.com</td>
+                        <td>Chess games and competitions</td>
+                        <td>Library Hall</td>
+                        <td>
+                            <button class="approve-btn">Approve</button>
+                            <button class="reject-btn">Reject</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="foot">
+        <a href="mailto:cluphup@hotmail.com">Contact Us</a>
+        <p>&copy; 2025 Club Hub. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
+
+
