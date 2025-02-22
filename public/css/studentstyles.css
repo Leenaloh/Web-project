@@ -36,7 +36,7 @@ body {
     margin-right: 1em;
 }
 
-.btn a {
+.btn {
     text-decoration: none;
     color: white;
     background-color: #3498db;
@@ -48,7 +48,7 @@ body {
     display: inline-block;
 }
 
-.btn a:hover {
+.btn :hover {
     background-color:  navy;
 }
 
