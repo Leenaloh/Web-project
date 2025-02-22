@@ -93,6 +93,9 @@ body {
     font-size: 3em;
     background-image: linear-gradient(#0b2d39, #a1b9c1);
 }
+#rev{
+    color: #ecf0f1;  
+}
 /* Footer Styles */
 .foot {
     margin-top: auto; /* Pushes footer to the bottom */
