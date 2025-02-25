@@ -363,3 +363,28 @@ button.cancel:hover {
 .back:hover {
     background: navy;
 }
+
+.club-contact {
+	color:#222;
+}
+
+.club-contact a {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.club-contact a:hover {
+    text-decoration: underline;
+}
+
+.club-link {
+    color: #222; 
+    text-decoration: none;
+    font-weight:normal;
+}
+
+.club-link:hover {
+    text-decoration: underline; 
+	color: #007bff; 
+}
