@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Activities | ClubHub</title>
+    <link rel="stylesheet" href="../public\css\clubLeaderStyle.css"> 
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <img src="../public/img/clubhub.png" alt="ClubHub Logo">
+        <div class="header-buttons">
+            <a href="clubLeaderDashboard.html">Dashboard</a>
+            <a href="clubProfile.html">Club Profile</a>
+            <a href="clubLeaderStudentManagement.html">Student Management</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h2>Manage Activities</h2>
+
+        <!-- Activity Sections -->
+        <div class="activity-sections">
+
+            <!-- Upcoming Activities -->
+            <div class="activity-overview" id="upcoming-activities">
+                <h3>Upcoming Activities</h3>
+
+                <!-- Example Activity 1 -->
+                <div class="activity-card">
+                    <h4 contenteditable="false">Book Review</h4>
+                    <p><strong>Description:</strong> <span contenteditable="false">Share insights on selected books.</span></p>
+                    <p><strong>Start Date:</strong> <span contenteditable="false">March 10, 2025</span></p>
+                    <p><strong>End Date:</strong> <span contenteditable="false">March 10, 2025</span></p>
+                    <p>Status: <span class="status upcoming">Upcoming</span></p>
+                    <div class="button-group">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+
+                    <!-- View Registrations Section -->
+                    <details class="registrations-details">
+                        <summary class="view-registrations-btn">View Registrations</summary>
+                        <ul class="registration-list">
+                            <li>Lama Ahmed</li>
+                            <li>Sara Khalid</li>
+                            <li>Noura Mohammed</li>
+                        </ul>
+                    </details>
+                </div>
+
+                <!-- Example Activity 2 -->
+                <div class="activity-card">
+                    <h4 contenteditable="false">Painting Workshop</h4>
+                    <p><strong>Description:</strong> <span contenteditable="false">Create your masterpiece and explore colors.</span></p>
+                    <p><strong>Start Date:</strong> <span contenteditable="false">March 20, 2025</span></p>
+                    <p><strong>End Date:</strong> <span contenteditable="false">March 22, 2025</span></p>
+                    <p>Status: <span class="status upcoming">Upcoming</span></p>
+                    <div class="button-group">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+
+                    <!-- View Registrations Section -->
+                    <details class="registrations-details">
+                        <summary class="view-registrations-btn">View Registrations</summary>
+                        <ul class="registration-list">
+                            <li>Alunoud Fahad</li>
+                            <li>Reem Saad</li>
+                            <li>Mona Alharbi</li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Past Activities -->
+            <div class="activity-overview" id="past-activities">
+                <h3>Past Activities</h3>
+
+                <div class="activity-card">
+                    <h4>Math Competition</h4>
+                    <p><strong>Description:</strong> Compete and showcase your math skills.</p>
+                    <p><strong>Start Date:</strong> February 10, 2025</p>
+                    <p><strong>End Date:</strong> February 11, 2025</p>
+                    <p>Status: <span class="status attended">Completed</span></p>
+                </div>
+
+                <div class="activity-card">
+                    <h4>Coding & AI Workshop</h4>
+                    <p><strong>Description:</strong> Hands-on workshop on coding and AI fundamentals.</p>
+                    <p><strong>Start Date:</strong> February 15, 2025</p>
+                    <p><strong>End Date:</strong> February 16, 2025</p>
+                    <p>Status: <span class="status attended">Completed</span></p>
+                </div>
+            </div>
+
+            <!-- Add Activity Section -->
+            <div class="activity-overview">
+                <h3>Add Activity</h3>
+                <button id="toggle-form-btn" class="toggle-form-btn">Add New Activity</button>
+
+                <!-- Add Activity Form (Hidden Initially) -->
+                <div class="activity-form hidden" id="activity-form-container">
+                    <form id="activity-form">
+                        <label for="title">Activity Title:</label>
+                        <input type="text" id="title" placeholder="Enter activity title" required>
+
+                        <label for="description">Activity Description:</label>
+                        <textarea id="description" placeholder="Enter activity description" rows="4" required></textarea>
+
+                        <label for="startDate">Start Date & Time:</label>
+                        <input type="datetime-local" id="startDate" required>
+
+                        <label for="endDate">End Date & Time:</label>
+                        <input type="datetime-local" id="endDate" required>
+
+                        <label for="category">Category:</label>
+                        <select id="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Art">Art</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Reading">Reading</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <!-- "Other" category input field -->
+                        <label for="otherCategory">If Other, specify:</label>
+                        <input type="text" id="otherCategory" placeholder="Enter custom category">
+
+                        <label for="activityImage">Activity Image:</label>
+                        <input type="file" id="activityImage" accept="image/*" required>
+
+                        <label for="maxRegistries">Max Registrations:</label>
+                        <input type="number" id="maxRegistries" placeholder="Enter maximum registries" min="1" required>
+
+                        <button type="submit" class="submit-btn">Add Activity</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <a href="mailto:clubhub@hotmail.com">Contact Us</a> | &copy; 2025 Club Hub. All rights reserved.
+    </footer>
+
+    <!-- JavaScript for inline editing and adding activities -->
+    <script>
+        // Inline Editing
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.activity-card');
+                const editableElements = card.querySelectorAll('[contenteditable]');
+
+                if (this.innerText === 'Edit') {
+                    editableElements.forEach(el => {
+                        el.setAttribute('contenteditable', 'true');
+                        el.classList.add('editable-field');
+                    });
+                    this.innerText = 'Save';
+                    card.classList.add('editable');
+                } else {
+                    editableElements.forEach(el => {
+                        el.setAttribute('contenteditable', 'false');
+                        el.classList.remove('editable-field');
+                    });
+                    this.innerText = 'Edit';
+                    card.classList.remove('editable');
+                }
+            });
+        });
+
+        // Delete button functionality
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.activity-card');
+                card.remove();
+            });
+        });
+
+        // Toggle Add Activity Form
+        document.getElementById('toggle-form-btn').addEventListener('click', function() {
+            const form = document.getElementById('activity-form-container');
+            form.classList.toggle('hidden');
+        });
+
+        // Handle Add Activity Form Submission
+        document.getElementById('activity-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const category = document.getElementById('category').value;
+            const otherCategory = document.getElementById('otherCategory').value;
+            const activityImage = document.getElementById('activityImage').value;
+            const maxRegistries = document.getElementById('maxRegistries').value;
+
+            const categoryDisplay = category === 'Other' ? otherCategory : category;
+
+            if (!title || !description || !startDate || !endDate || !categoryDisplay || !activityImage || !maxRegistries) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const newCard = document.createElement('div');
+            newCard.classList.add('activity-card');
+            newCard.innerHTML = `
+                <h4 contenteditable="false">${title}</h4>
+                <p><strong>Description:</strong> <span contenteditable="false">${description}</span></p>
+                <p><strong>Start Date:</strong> <span contenteditable="false">${startDate}</span></p>
+                <p><strong>End Date:</strong> <span contenteditable="false">${endDate}</span></p>
+                <p><strong>Category:</strong> <span contenteditable="false">${categoryDisplay}</span></p>
+                <p><strong>Activity Image:</strong> <span contenteditable="false">${activityImage}</span></p>
+                <p><strong>Max Registrations:</strong> <span contenteditable="false">${maxRegistries}</span></p>
+                <p>Status: <span class="status upcoming">Upcoming</span></p>
+                <div class="button-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+                <details class="registrations-details">
+                    <summary class="view-registrations-btn">View Registrations</summary>
+                    <ul class="registration-list">
+                        <li>Student 1</li>
+                        <li>Student 2</li>
+                        <li>Student 3</li>
+                    </ul>
+                </details>
+            `;
+
+            document.getElementById('upcoming-activities').appendChild(newCard);
+
+            // Clear form
+            this.reset();
+
+            // Attach event listeners to new buttons
+            newCard.querySelector('.edit-btn').addEventListener('click', function() {
+                const card = this.closest('.activity-card');
+                const editableElements = card.querySelectorAll('[contenteditable]');
+
+                if (this.innerText === 'Edit') {
+                    editableElements.forEach(el => {
+                        el.setAttribute('contenteditable', 'true');
+                        el.classList.add('editable-field');
+                    });
+                    this.innerText = 'Save';
+                    card.classList.add('editable');
+                } else {
+                    editableElements.forEach(el => {
+                        el.setAttribute('contenteditable', 'false');
+                        el.classList.remove('editable-field');
+                    });
+                    this.innerText = 'Edit';
+                    card.classList.remove('editable');
+                }
+            });
+
+            newCard.querySelector('.delete-btn').addEventListener('click', function() {
+                newCard.remove();
+            });
+        });
+    </script>
+
+</body>
+</html>

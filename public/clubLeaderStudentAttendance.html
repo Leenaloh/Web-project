@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/css/clubLeaderStyle.css">
+    <title>Take Attendance</title>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img src="../public/img/clubhub.png" alt="ClubHub Logo">
+        <div class="header-buttons">
+            <a href="clubLeaderDashboard.html">Dashboard</a>
+            <a href="clubProfile.html">Club Profile</a>
+            <a href="clubLeaderManageActivities.html">Activities Management</a>
+            <a href="clubLeaderStudentManagement.html">Student Management</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <h1>Take Attendance</h1>
+
+        <table id="registrations-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Activity</th>
+                    <th>Attendance</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Lama Ahmed</td>
+                    <td>Art Club</td>
+                    <td><input type="checkbox" name="attendance"></td>
+                    <td><button class="remove-btn">Remove</button></td>
+                </tr>
+                <tr>
+                    <td>Sara Khalid</td>
+                    <td>Debate Team</td>
+                    <td><input type="checkbox" name="attendance"></td>
+                    <td><button class="remove-btn">Remove</button></td>
+                </tr>
+                <tr>
+                    <td>Noura Mohammed</td>
+                    <td>Coding Club</td>
+                    <td><input type="checkbox" name="attendance"></td>
+                    <td><button class="remove-btn">Remove</button></td>
+                </tr>
+                <tr>
+                    <td>Alunoud Fahad</td>
+                    <td>Chess Club</td>
+                    <td><input type="checkbox" name="attendance"></td>
+                    <td><button class="remove-btn">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <a href="mailto:clubhub@hotmail.com">Contact Us</a> | &copy; 2025 Club Hub. All rights reserved.
+    </footer>
+</body>
+</html>

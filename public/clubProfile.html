@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Club Profile | ClubHub</title>
+    <link rel="stylesheet" href="../public/css/clubLeaderStyle.css"> 
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <img src="../public/img/clubhub.png" alt="ClubHub Logo">
+        <div class="header-buttons">
+            <a href="clubLeaderDashboard.html">Dashboard</a>
+            <a href="clubLeaderManageActivities.html">Activities Management</a>
+            <a href="clubLeaderStudentManagement.html">Student Management</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h2 class="centered-title">TECH CLUB_</h2>
+
+        <!-- Club Info Section -->
+        <section class="club-info" id="club-info">
+            <img src="../public/img/techclub.webp" alt="Tech Club Logo" class="club-logo" id="club-logo">
+            
+            <!-- Edit Button -->
+            <button id="edit-profile-btn" class="edit-profile-btn">Edit Club Profile</button>
+             
+            <div class="info-content">
+                <p><strong>Description:</strong> <span id="description-text">Tech Club_ is a dynamic and inclusive community for students passionate about technology, innovation, and creativity.</span><div class="error-message" id="description-error"></div></p>
+                <p><strong>Location:</strong> <span id="location-text">Science and Technology Building, Room 204</span><div class="error-message" id="location-error"></div></p>
+                <p><strong>Phone:</strong> <span id="club-phone">+123-456-7890</span><div class="error-message" id="phone-error"></div></p>
+                <p><strong>Contact Email:</strong> <span id="email-text">techclub@clubhub.com</span><div class="error-message" id="email-error"></div></p>
+
+                <!-- Password Field (Hidden by Default) -->
+                <p id="password-container" class="hidden"><strong>Password:</strong> 
+                    <input type="password" id="password-input" placeholder="Enter new password">
+                    <div class="error-message" id="password-error"></div>
+                </p>
+
+                <!-- Password Placeholder in View Mode -->
+                <p id="password-placeholder"><strong>Password:</strong> ********</p>
+            </div>
+
+            <!-- Save Button at the Bottom -->
+            <button id="save-profile-btn" class="save-profile-btn hidden">Save Changes</button>
+           
+            <!-- Delete Button at the Bottom -->
+            <button id="delete-profile-btn" class="delete-profile-btn">Delete Club Profile</button>
+
+        </section>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <a href="mailto:clubhub@hotmail.com">Contact Us</a> | &copy; 2025 Club Hub. All rights reserved.
+    </footer>
+
+    <!-- Embedded JavaScript with Inline Input Validation -->
+    <script>
+        // Selecting buttons and fields
+        const editBtn = document.getElementById('edit-profile-btn');
+        const saveBtn = document.getElementById('save-profile-btn');
+        const deleteBtn = document.getElementById('delete-profile-btn');
+        const passwordContainer = document.getElementById('password-container');
+        const passwordInput = document.getElementById('password-input');
+        const passwordPlaceholder = document.getElementById('password-placeholder');
+
+        const fields = {
+            description: document.getElementById('description-text'),
+            phone: document.getElementById('club-phone'),
+            location: document.getElementById('location-text'),
+            email: document.getElementById('email-text')
+        };
+
+        const errorMessages = {
+            description: document.getElementById('description-error'),
+            phone: document.getElementById('phone-error'),
+            location: document.getElementById('location-error'),
+            email: document.getElementById('email-error'),
+            password: document.getElementById('password-error')
+        };
+
+        // Regex patterns for validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phonePattern = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+
+        // Edit Button - Turns fields into input elements
+        editBtn.addEventListener('click', () => {
+            for (const key in fields) {
+                const value = fields[key].innerText || fields[key].textContent;
+                const inputType = key === 'email' ? 'email' : 'text';
+                fields[key].innerHTML = `<input type="${inputType}" value="${value}" class="edit-input" id="${key}-input">`;
+                errorMessages[key].innerText = ''; // Clear any existing error messages
+            }
+
+            // Show password input field during edit
+            passwordContainer.classList.remove('hidden');
+            passwordPlaceholder.classList.add('hidden');
+
+            editBtn.classList.add('hidden');
+            saveBtn.classList.remove('hidden');
+        });
+
+        // Save Button - Validates and saves edited values
+        saveBtn.addEventListener('click', () => {
+            let isValid = true;
+
+            for (const key in fields) {
+                const input = document.getElementById(`${key}-input`);
+                const value = input.value.trim();
+                errorMessages[key].innerText = ''; // Clear previous errors
+                input.classList.remove('invalid'); // Reset input border
+
+                // Validation logic
+                if (key === 'email' && !emailPattern.test(value)) {
+                    errorMessages[key].innerText = 'Please enter a valid email address.';
+                    input.classList.add('invalid');
+                    isValid = false;
+                }
+
+                if (key === 'phone' && !phonePattern.test(value)) {
+                    errorMessages[key].innerText = 'Please enter a valid phone number.';
+                    input.classList.add('invalid');
+                    isValid = false;
+                }
+
+                if ((key === 'description' || key === 'location') && value === '') {
+                    errorMessages[key].innerText = `The ${key} field cannot be empty.`;
+                    input.classList.add('invalid');
+                    isValid = false;
+                }
+            }
+
+            // Validate password if entered
+            const passwordValue = passwordInput.value.trim();
+            errorMessages.password.innerText = '';
+            passwordInput.classList.remove('invalid');
+
+            if (passwordValue && passwordValue.length < 6) {
+                errorMessages.password.innerText = 'Password must be at least 6 characters.';
+                passwordInput.classList.add('invalid');
+                isValid = false;
+            }
+
+            // If valid, save the changes
+            if (isValid) {
+                for (const key in fields) {
+                    const input = document.getElementById(`${key}-input`);
+                    fields[key].innerText = input.value.trim();
+                }
+
+                // Reset and hide password input
+                passwordInput.value = '';
+                passwordContainer.classList.add('hidden');
+                passwordPlaceholder.classList.remove('hidden');
+
+                editBtn.classList.remove('hidden');
+                saveBtn.classList.add('hidden');
+            }
+        });
+
+        // Delete Profile Functionality
+        deleteBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this club profile? This action cannot be undone.')) {
+                document.getElementById('club-info').remove();
+            }
+        });
+    </script>
+</body>
+</html>
