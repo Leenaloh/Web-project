@@ -6,14 +6,21 @@
 <!--photography Workshop-->
 <title> Activity Details</title>
 <link rel="stylesheet" type="text/css" href=
-"public/css/studentstyles.css">
+"../public/css/studentstyles.css">
 </head>
 
 <body>
 <header>
 <!-- Header -->
     <header class="head">
-        <img src="public/img/clubhub.png" alt="Club Hub Logo">
+        <img src="../public/img/clubhub.png" alt="Club Hub Logo">
+	     <nav>
+        <ul class="nav-links">
+            <li><a href="myActivities.html">My Activities</a></li>
+            <li><a href="ActivityList.html">ActivityList</a></li>
+            <li><a href="student-profile.html">Profile</a></li>
+        </ul>
+    </nav>
      <div class="header-buttons">
           <a class="btn" href="projectMain.html">Logout</a>
         </div>
@@ -22,15 +29,14 @@
 <main class="mainActivityDetails">
 
 	<h1 class="TitlesH1H2"> Activity Details</h1>
-	<img src="public/img/photographyy.jpg" alt="photography Workshop photo" class="ActivityDetails-image">
+	<img src="../public/img/photographyy.jpg" alt="photography Workshop photo" class="ActivityDetails-image">
 	
 	<section class="secActDetails">
 		<h2 class="TitlesH1H2">  photography Workshop  </h2>
 		<p class="pActDetailsSec"> Category: Art</p>
 		<p class="pActDetailsSec">Start Date & Time: April 15, 2025 - 8am</p>
 		<p class="pActDetailsSec"> End Date & Time: April 15, 2025 - 12pm</p>
-		<p class="pActDetailsSec"> Maximum Registrations: 15 - 20 Participants</p>
-		<p class="pActDetailsSec">Club:<a href="clubProfile.html" class="club-link"> Photography & Design Club</a></p>
+		<p class="pActDetailsSec">Club:<a href="../public/clubProfile.html" class="club-link"> Photography & Design Club</a></p>
 		<p class="club-contact">Contact Club Owner :
     <a href="mailto:PhotographyDesignClub@hotmail.com">Email</a> | 
     <a href="tel:+966502635587">Phone</a>
@@ -104,16 +110,11 @@
 	
 	<h2 class="TitlesH1H2"> Register for the Activity</h2>
         <form class="formActDetails">
-		<!--<p class="textRegister">
-            <input type="text" id="name" placeholder="Enter your name" required>
-            <br><br></p>
-		<p class="EmailRegister">
-            <input type="email" id="email" placeholder="Enter your email" required>
-            <br><br></p>-->
+		
             <button  type="submit" class="button register">Register</button>
             <button type="reset" class="button cancel">Cancel</button>
         </form>
-		<a href="public/Activity List.html" class="back">Back</a>
+		<a href="../public/ActivityList.html" class="back">Back</a>
 </main>
 
 <!-- Footer -->
