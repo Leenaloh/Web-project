@@ -9,8 +9,8 @@ This project involves developing a web application that allows users to browse, 
 
 ## Team Information
 
-- Rowa Alshehri – Student ID: 444200723
-- Reema Almunasser – Student ID: 444201088
-- Noof Alkhalifa  – Student ID: 444200886
-- Leen Alohali – Student ID: 444200882 
-- Muntaha Alnasser– Student ID: 444200905 
+- Rowa Alshehri – Student ID: 444200723.
+- Reema Almunasser – Student ID: 444201088.
+- Noof Alkhalifa  – Student ID: 444200886.
+- Leen Alohali – Student ID: 444200882.
+- Muntaha Alnasser– Student ID: 444200905. 
