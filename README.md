@@ -1,11 +1,9 @@
-# Web-project
 # Movie Rental Web Application  
 
 
 ## Project Description
 
-This project involves developing a web application that allows users to browse, search, and rent movies from the IMDb dataset. The system includes a user-friendly interface, backend services, database integration, and authentication features. It applies the web development concepts and skills learned throughout the semester.
-
+This project involves developing a web application that allows users to browse, search, and rent movies from the IMDb dataset. The system includes a user-friendly interface, backend services, database integration, and authentication features.
 ---
 
 ## Team Information
