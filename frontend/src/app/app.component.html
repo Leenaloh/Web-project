@@ -1,0 +1,10 @@
+<div style="text-align: center; margin-top: 100px; font-family: Arial, sans-serif;">
+  <h2>Test Backend Connection</h2>
+  <button (click)="checkBackend()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+    Check Connection
+  </button>
+
+  <div *ngIf="backendMessage" style="margin-top: 20px; font-weight: bold; color: green;">
+    {{ backendMessage }}
+  </div>
+</div>
