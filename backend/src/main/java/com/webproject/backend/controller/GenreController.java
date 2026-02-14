@@ -15,7 +15,7 @@ public class GenreController {
     @Autowired
     private GenreService genreService;
 
-    /**
+    /**.\gradlew bootRun 
      * Get all available genres.
      *
      * @return List of Genre objects

@@ -41,10 +41,10 @@ public class MovieController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping
-    public String testMovies() {
-        return "Backend is working 🚀";
-    }
+    @GetMapping("/test")
+public String testMovies() {
+    return "Backend is working 🚀";
+}
 
 
     /**
