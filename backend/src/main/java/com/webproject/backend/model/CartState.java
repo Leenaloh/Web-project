@@ -4,7 +4,6 @@ import java.util.List;
 
 public class CartState {
 
-    private List<CartItem> items;
-    private double totalPrice;
+  private List<CartItem> items;
+  private double totalPrice;
 }
-

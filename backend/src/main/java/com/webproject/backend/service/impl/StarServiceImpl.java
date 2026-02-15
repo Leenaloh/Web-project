@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class StarServiceImpl implements StarService {
 
-    @Override
-    public Star getStarById(String id) {
-        return null; 
-    }
+  @Override
+  public Star getStarById(String id) {
+    return null;
+  }
 }
