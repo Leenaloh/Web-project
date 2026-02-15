@@ -13,8 +13,13 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export class AppComponent {
   constructor(private http: HttpClient) {}
 
-  private call(method: 'GET'|'POST'|'PUT'|'DELETE', url: string, body?: any, useCreds = false) {
-    const options: any = { withCredentials: useCreds };
+    private call(
+    method: HttpMethod,
+    url: string,
+    body?: unknown,
+    useCreds = false
+  ) {
+    const options: { withCredentials: boolean } = { withCredentials: useCreds };
 
     const req =
       method === 'GET' ? this.http.get(url, options) :
@@ -23,14 +28,11 @@ export class AppComponent {
       this.http.delete(url, options);
 
     req.subscribe({
-      next: () => {
-        alert(`METHOD: ${method}\nURL: ${url}`);
-      },
-      error: () => {
-        alert(`METHOD: ${method}\nURL: ${url}`);
-      }
+      next: () => alert(`METHOD: ${method}\nURL: ${url}`),
+      error: () => alert(`METHOD: ${method}\nURL: ${url}`),
     });
   }
+
 
   testBackend() {
     const url = `${environment.apiUrl}/api/v1/movies/test`;
