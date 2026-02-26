@@ -1,0 +1,74 @@
+:host{ display:block; font-family:"Times New Roman", Times, serif; background:#fff; }
+
+.container{
+  width:820px;
+  max-width:92%;
+  margin:30px auto 80px;
+}
+
+.title{
+  margin:0 0 12px;
+  font-size:22px;
+  font-weight:700;
+}
+
+.box{
+  border:1px solid #d9d9d9;
+  background:#fff;
+  padding:16px 18px;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+.table thead th{
+  text-align:left;
+  background:#f3f4f6;
+  border-bottom:1px solid #d9d9d9;
+  padding:10px;
+}
+
+.table td{
+  border-bottom:1px solid #ececec;
+  padding:12px 10px;
+}
+
+.center{ text-align:center; }
+
+.qty{
+  width:42px;
+  height:22px;
+  border:1px solid #bfbfbf;
+  text-align:center;
+  font-size:12px;
+}
+
+.actions-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-top:14px;
+}
+
+.btn{
+  height:28px;
+  padding:0 12px;
+  border:1px solid transparent;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.btn-danger{ background:#d9534f; border-color:#d9534f; color:#fff; }
+.btn-secondary{ background:#6c757d; border-color:#6c757d; color:#fff; }
+.btn-success{ background:#1f7a3a; border-color:#1f7a3a; color:#fff; }
+
+.link{
+  color:#1a5fb4;
+  text-decoration:none;
+  font-size:12px;
+}
+.link:hover{ text-decoration:underline; }

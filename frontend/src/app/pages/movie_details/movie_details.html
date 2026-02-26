@@ -1,0 +1,32 @@
+<div class="top-link">
+  <a routerLink="/movie-list">← Back to Movies</a>
+</div>
+
+<div class="container">
+  <div class="box">
+    <h2 class="title">{{ movie.title }}</h2>
+
+    <div class="meta">
+      <div><b>Year:</b> {{ movie.year }}</div>
+      <div><b>Director:</b> {{ movie.director }}</div>
+      <div><b>Rating:</b> {{ movie.rating }}/10</div>
+      <div><b>Genres:</b> {{ movie.genres.join(', ') }}</div>
+    </div>
+
+    <h3 class="section">Stars</h3>
+    <ul class="links">
+      <li *ngFor="let s of movie.stars">
+        <a (click)="goStar(s.id)">{{ s.name }}</a>
+      </li>
+    </ul>
+
+    <h3 class="section">Add to Cart</h3>
+    <div class="qty-row">
+      <button class="qty-btn" (click)="dec()">-</button>
+      <input class="qty" [value]="qty" readonly />
+      <button class="qty-btn" (click)="inc()">+</button>
+    </div>
+
+    <button class="btn btn-success" (click)="add()">Add to Cart</button>
+  </div>
+</div>

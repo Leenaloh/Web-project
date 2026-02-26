@@ -1,0 +1,24 @@
+<div class="top-link">
+  <a routerLink="/home">← Back to Home</a>
+</div>
+
+<div class="container">
+  <div class="box">
+    <h2 class="page-title">Movies</h2>
+
+    <div class="movie" *ngFor="let m of movies">
+      <h3 class="movie-title">
+        <a (click)="goDetails(m.id)">{{ m.title }}</a>
+      </h3>
+
+      <div class="meta">
+        <div><b>Year:</b> {{ m.year }}</div>
+        <div><b>Director:</b> {{ m.director }}</div>
+        <div><b>Rating:</b> {{ m.rating }}/10</div>
+      </div>
+
+      <button class="btn btn-success" (click)="addToCart(m)">Add to Cart</button>
+      <hr />
+    </div>
+  </div>
+</div>

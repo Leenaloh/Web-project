@@ -1,0 +1,33 @@
+<div class="container">
+  <h2 class="title">Shopping Cart</h2>
+
+  <div class="box">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Movie</th>
+          <th class="center">Quantity</th>
+          <th class="center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{ item.title }}</td>
+          <td class="center">
+            <input class="qty" [value]="item.qty" readonly />
+          </td>
+          <td class="center">
+            <button class="btn btn-danger" (click)="remove(item.id)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="actions-row">
+      <button class="btn btn-secondary" (click)="clear()">Clear Cart</button>
+      <a class="link" routerLink="/movie_list">Continue Shopping</a>
+      <button class="btn btn-success" (click)="checkout()">Proceed to Checkout</button>
+    </div>
+  </div>
+</div>

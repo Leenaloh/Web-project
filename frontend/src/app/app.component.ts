@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -7,6 +8,7 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 @Component({
   selector: 'app-root',
   standalone: true,
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
