@@ -1,0 +1,69 @@
+<div class="page">
+  <div class="container">
+    <h1 class="brand">IMDB Movie Store</h1>
+
+    <div class="nav">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/cart">Cart</a>
+      <a routerLink="/login">Logout</a>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Search Movies -->
+    <div class="panel">
+      <h2 class="panel-title">Search Movies</h2>
+
+      <div class="search-grid">
+        <div class="field">
+          <div class="label">Title</div>
+          <input class="input" [(ngModel)]="form.title" placeholder="Search by title" />
+        </div>
+
+        <div class="field">
+          <div class="label">Year</div>
+          <input class="input" [(ngModel)]="form.year" placeholder="e.g. 1994" />
+        </div>
+
+        <div class="field">
+          <div class="label">Director</div>
+          <input class="input" [(ngModel)]="form.director" placeholder="Search by director" />
+        </div>
+
+        <div class="field">
+          <div class="label">Star Name</div>
+          <input class="input" [(ngModel)]="form.star" placeholder="Search by star" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" (click)="search()">Search</button>
+        <button class="btn btn-secondary" (click)="clear()">Clear</button>
+      </div>
+
+      <div class="note">
+        * You can search by one or multiple criteria. All fields are optional.
+      </div>
+    </div>
+
+    <!-- Browse by Genre -->
+    <h2 class="section-title">Browse by Genre</h2>
+    <div class="chip-row">
+      <button
+        class="chip"
+        *ngFor="let g of genres"
+        [class.active]="g === selectedGenre"
+        (click)="browseGenre(g)">
+        {{ g }}
+      </button>
+    </div>
+
+    <!-- Browse by Title -->
+    <h2 class="section-title">Browse by Title</h2>
+    <div class="alpha-grid">
+      <button class="alpha" *ngFor="let c of titleChars" (click)="browseTitle(c)">
+        {{ c }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="top-link">
+  <a routerLink="/movie-list">← Back to Movies</a>
+</div>
+
+<div class="container">
+  <div class="box">
+    <h2 class="name">{{ star.name }}</h2>
+    <div class="meta"><b>Birth Year:</b> {{ star.birthYear }}</div>
+
+    <h3 class="section">Movies</h3>
+    <ul class="movie-links">
+      <li *ngFor="let m of movies">
+        <a (click)="goMovie(m.id)">{{ m.title }}</a>
+      </li>
+    </ul>
+  </div>
+</div>

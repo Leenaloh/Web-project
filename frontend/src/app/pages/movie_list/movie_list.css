@@ -1,0 +1,54 @@
+:host{ display:block; font-family:"Times New Roman", Times, serif; }
+
+.top-link{
+  text-align:center;
+  margin-top:16px;
+  font-size:12px;
+}
+
+a{ color:#1a5fb4; text-decoration:none; cursor:pointer; }
+a:hover{ text-decoration:underline; }
+
+.container{
+  display:flex;
+  justify-content:center;
+  padding:10px 12px 60px;
+}
+
+.box{
+  width:760px;
+  max-width:92%;
+  border:1px solid #d9d9d9;
+  background:#fff;
+  padding:22px 26px 18px;
+}
+
+.page-title{
+  margin:0 0 16px;
+  font-size:22px;
+  font-weight:700;
+}
+
+.movie-title{ margin:0 0 6px; font-size:16px; }
+
+.meta{ font-size:12px; line-height:1.6; margin-bottom:8px; }
+
+.btn{
+  height:28px;
+  padding:0 12px;
+  border:1px solid transparent;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.btn-success{
+  background:#1f7a3a;
+  border-color:#1f7a3a;
+  color:#fff;
+}
+
+hr{
+  border:none;
+  border-top:1px solid #e5e5e5;
+  margin:16px 0;
+}

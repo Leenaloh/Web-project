@@ -42,11 +42,6 @@ public class MovieController {
     return ResponseEntity.ok(result);
   }
 
-  @GetMapping("/test")
-  public String testMovies() {
-    return "Backend is working";
-  }
-
   /**
    * Browse movies by genre.
    *

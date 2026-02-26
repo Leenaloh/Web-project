@@ -62,7 +62,4 @@ export class MoviesService {
     return this.http.get<Movie>(`${this.base}/${encodeURIComponent(id)}`);
   }
 
-  test(): Observable<string> {
-    return this.http.get(`${this.base}/test`, { responseType: 'text' });
-  }
 }
