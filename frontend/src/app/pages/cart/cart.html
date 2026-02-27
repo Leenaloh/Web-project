@@ -12,13 +12,13 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of items">
+        <tr *ngFor="let item of cart.items">
           <td>{{ item.title }}</td>
           <td class="center">
-            <input class="qty" [value]="item.qty" readonly />
+            <input class="qty" [value]="item.quantity" readonly />
           </td>
           <td class="center">
-            <button class="btn btn-danger" (click)="remove(item.id)">Remove</button>
+            <button class="btn btn-danger" (click)="remove(item.movieId)">Remove</button>
           </td>
         </tr>
       </tbody>
