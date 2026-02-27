@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-type CartItem = { id: string; title: string; qty: number };
+import { CartService, CartState } from "../../services/cartService/cartService";
 
 @Component({
   selector: 'app-cart',
@@ -11,21 +10,54 @@ type CartItem = { id: string; title: string; qty: number };
   templateUrl: './cart.html',
   styleUrls: ['./cart.css'],
 })
-export class CartComponent {
-  items: CartItem[] = [
-    { id: 'tt001', title: 'The Shawshank Redemption', qty: 2 },
-    { id: 'tt002', title: 'The Godfather', qty: 1 },
-  ];
+export class CartComponent{
+  cart: CartState = { 
+    items: [
+      { movieId: "tt001", title: "The Shawshank Redemption", quantity: 2 },
+      { movieId: "tt002", title: "The Wandering Soap Opera", quantity: 1 }
+    ],
+    totalPrice: 45
+  };
 
-  remove(id: string): void {
-    this.items = this.items.filter(x => x.id !== id);
+  constructor(private cartService: CartService) {}
+
+  loadCart(): void {
+    this.cartService.getCart().subscribe({
+      next: (cartData) => {
+        this.cart = cartData;
+      },
+      error: (err) => console.error('Failed to load cart', err)
+    });
+  }
+
+  remove(movieId: string): void {
+    this.cartService.removeItem(movieId).subscribe({
+      next: (updatedCart) => {
+        this.cart = updatedCart; 
+      }
+    });
   }
 
   clear(): void {
-    this.items = [];
+    this.cartService.clearCart().subscribe({
+      next: (emptyCart) => {
+        this.cart = emptyCart;
+      }
+    });
   }
 
   checkout(): void {
-    alert('Proceed to checkout (UI only)');
+    const request = { customerName: 'Guest' }; 
+    
+    this.cartService.checkout(request).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Checkout successful: ' + response.message);
+          this.cart = { items: [] };
+        }
+      }
+    });
   }
 }
+
+
