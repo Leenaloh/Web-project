@@ -60,6 +60,17 @@ describe('MoviesService', () => {
     req.flush(mockResponse);
   });
 
+  it('searchMovies({}) should call GET with no query params', () => {
+    service.searchMovies({}).subscribe();
+
+    const req = httpMock.expectOne((r) => r.url === base);
+    expect(req.request.method).toBe('GET');
+
+    expect(req.request.params.keys().length).toBe(0);
+
+    req.flush({ page: 1, pageSize: 20, movies: [] });
+  });
+
   it('browseByGenre() should call GET /api/v1/movies/browseByGenre with genreId, page, pageSize', () => {
 
     const mockResponse: MoviesPageState = { page: 1, pageSize: 20, total: 0, movies: [] };

@@ -50,6 +50,14 @@ describe('MovieDetailsComponent', () => {
     expect(component.qty).toBe(1);
   });
 
+  it('add() should show alert (UI only)', () => {
+    const alertSpy = spyOn(window, 'alert');
+
+    component.add();
+
+    expect(alertSpy).toHaveBeenCalled();
+  });
+  
   it('goStar() should navigate to /star_details with id query param', () => {
     const navSpy = spyOn(router, 'navigate');
 

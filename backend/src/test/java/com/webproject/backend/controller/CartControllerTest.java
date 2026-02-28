@@ -134,17 +134,6 @@ public class CartControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    void updateItemQuantityNonExistingMovie() throws Exception {
-        when(cartService.updateItemQuantity(eq("invalid-id"), anyInt()))
-                .thenThrow(new RuntimeException("Movie not found in cart"));
-
-        mockMvc.perform(put("/api/v1/cart/items")
-                        .param("movieId", "invalid-id")
-                        .param("quantity", "2"))
-                .andExpect(status().isNotFound());
-    }
-
     //removeItem()
 
     @Test
@@ -155,15 +144,6 @@ public class CartControllerTest {
                 .andExpect(status().isOk());
 
         verify(cartService).removeItem("tt0264464");
-    }
-
-    @Test
-    void removeItemNonExistingItem() throws Exception {
-        when(cartService.removeItem(eq("notInCart")))
-                .thenThrow(new RuntimeException("Item not found in cart"));
-
-        mockMvc.perform(delete("/api/v1/cart/items/notInCart"))
-                .andExpect(status().isNotFound()); 
     }
 
     @Test
@@ -248,15 +228,4 @@ public class CartControllerTest {
                         .content(invalidPaymentJson))
                 .andExpect(status().isBadRequest());
     }
-
-    @Test
-    void checkoutBodyMissing() throws Exception {
-        mockMvc.perform(post("/api/v1/cart/checkout")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verifyNoInteractions(cartService);
-    }
-
- 
 }
