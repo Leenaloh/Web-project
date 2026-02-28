@@ -24,7 +24,6 @@ export class MovieListComponent {
   }
 
   addToCart(_movie: Movie): void {
-    // UI only
     alert('Added to cart (UI only)');
   }
 }
