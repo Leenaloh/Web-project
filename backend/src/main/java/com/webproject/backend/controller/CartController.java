@@ -34,7 +34,6 @@ public class CartController {
       return ResponseEntity.ok(cart);
   }
 
-
   /**
    * Add a movie item to the cart (or increase quantity if it already exists).
    *

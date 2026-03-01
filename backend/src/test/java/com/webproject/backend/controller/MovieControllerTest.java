@@ -23,8 +23,6 @@ class MovieControllerTest {
   @org.springframework.test.context.bean.override.mockito.MockitoBean
   private MovieService movieService;
 
-  
-
   @Test
   void searchMovies_shouldReturn200_andCallServiceWithCorrectArgs() throws Exception {
 
@@ -46,7 +44,6 @@ class MovieControllerTest {
     verify(movieService).searchMovies("abc", 1999, "Dir", "Star", 2, 10);
   }
 
-
   @Test
   void browseByGenre_shouldReturn200_andCallService() throws Exception {
     when(movieService.browseMoviesByGenre(eq(7), eq(1), eq(20))).thenReturn(new MoviesPageState());
@@ -66,7 +63,8 @@ class MovieControllerTest {
 
   @Test
   void browseByFirstLetter_shouldReturn200_andCallService() throws Exception {
-    when(movieService.browseMoviesByFirstLetter(eq("A"), eq(3), eq(5))).thenReturn(new MoviesPageState());
+    when(movieService.browseMoviesByFirstLetter(eq("A"), eq(3), eq(5)))
+        .thenReturn(new MoviesPageState());
 
     mockMvc
         .perform(

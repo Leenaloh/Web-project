@@ -28,80 +28,75 @@ import com.webproject.backend.service.serviceInterface.CartService;
 @WebMvcTest(CartController.class)
 public class CartControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @MockitoBean
-    private CartService cartService;
+  @MockitoBean private CartService cartService;
 
-    //GetCart()
+  // GetCart()
 
-    @Test
-    void getCartValid() throws Exception {
-        when(cartService.getCart()).thenReturn(new CartState());
+  @Test
+  void getCartValid() throws Exception {
+    when(cartService.getCart()).thenReturn(new CartState());
 
-        mockMvc.perform(get("/api/v1/cart"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        
-        verify(cartService).getCart(); 
-    }
+    mockMvc
+        .perform(get("/api/v1/cart"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-    @Test
-    void getCartUnvalid() throws Exception {
-        when(cartService.getCart()).thenThrow(new RuntimeException("Database down"));
+    verify(cartService).getCart();
+  }
 
-        mockMvc.perform(get("/api/v1/cart"))
-                .andExpect(status().isInternalServerError());
-    }
+  @Test
+  void getCartUnvalid() throws Exception {
+    when(cartService.getCart()).thenThrow(new RuntimeException("Database down"));
 
-    //additem()
+    mockMvc.perform(get("/api/v1/cart")).andExpect(status().isInternalServerError());
+  }
 
-    @Test
-    void addItemValid() throws Exception {
-        when(cartService.addItem(anyString(), anyInt())).thenReturn(new CartState());
+  // additem()
 
-        mockMvc.perform(post("/api/v1/cart/items")
-                        .param("movieId", "tt0264464")
-                        .param("quantity", "2"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+  @Test
+  void addItemValid() throws Exception {
+    when(cartService.addItem(anyString(), anyInt())).thenReturn(new CartState());
 
-        verify(cartService).addItem("tt0264464", 2);
-    }
+    mockMvc
+        .perform(post("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "2"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-    @Test
-    void addItemMissingMovieId() throws Exception {
-        mockMvc.perform(post("/api/v1/cart/items")
-                        .param("quantity", "2"))
-                .andExpect(status().isBadRequest());
+    verify(cartService).addItem("tt0264464", 2);
+  }
 
-        verifyNoInteractions(cartService);
-    }
+  @Test
+  void addItemMissingMovieId() throws Exception {
+    mockMvc
+        .perform(post("/api/v1/cart/items").param("quantity", "2"))
+        .andExpect(status().isBadRequest());
 
-    @Test
-    void addItemQuantityIsString() throws Exception {
-        mockMvc.perform(post("/api/v1/cart/items")
-                        .param("movieId", "tt0264464")
-                        .param("quantity", "five"))
-                .andExpect(status().isBadRequest());
+    verifyNoInteractions(cartService);
+  }
 
-        verifyNoInteractions(cartService);
-    }
+  @Test
+  void addItemQuantityIsString() throws Exception {
+    mockMvc
+        .perform(post("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "five"))
+        .andExpect(status().isBadRequest());
 
-    //updateItemQuantity()
+    verifyNoInteractions(cartService);
+  }
 
-    @Test
-    void updateItemQuantityValid() throws Exception {
-        when(cartService.updateItemQuantity(anyString(), anyInt())).thenReturn(new CartState());
+  // updateItemQuantity()
 
-        mockMvc.perform(put("/api/v1/cart/items")
-                        .param("movieId", "tt0264464")
-                        .param("quantity", "5"))
-                .andExpect(status().isOk());
+  @Test
+  void updateItemQuantityValid() throws Exception {
+    when(cartService.updateItemQuantity(anyString(), anyInt())).thenReturn(new CartState());
 
-        verify(cartService).updateItemQuantity("tt0264464", 5);
-    }
+    mockMvc
+        .perform(put("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "5"))
+        .andExpect(status().isOk());
+
+    verify(cartService).updateItemQuantity("tt0264464", 5);
+  }
 
     @Test
     void updateItemQuantityQuantityMissing() throws Exception {
@@ -110,68 +105,64 @@ public class CartControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    void updateItemQuantityToZero() throws Exception {
-        when(cartService.updateItemQuantity(anyString(), eq(0)))
-                .thenThrow(new IllegalArgumentException("Quantity must be greater than zero"));
+  @Test
+  void updateItemQuantityToZero() throws Exception {
+    when(cartService.updateItemQuantity(anyString(), eq(0)))
+        .thenThrow(new IllegalArgumentException("Quantity must be greater than zero"));
 
-        mockMvc.perform(put("/api/v1/cart/items")
-                        .param("movieId", "tt0264464")
-                        .param("quantity", "0"))
-                .andExpect(status().isBadRequest()); 
-    }
+    mockMvc
+        .perform(put("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "0"))
+        .andExpect(status().isBadRequest());
+  }
 
-    @Test
-    void updateItemQuantityNegative() throws Exception {
-        when(cartService.updateItemQuantity(anyString(), eq(-2)))
-                .thenThrow(new IllegalArgumentException("Quantity must be greater than zero"));
+  @Test
+  void updateItemQuantityNegative() throws Exception {
+    when(cartService.updateItemQuantity(anyString(), eq(-2)))
+        .thenThrow(new IllegalArgumentException("Quantity must be greater than zero"));
 
-        mockMvc.perform(put("/api/v1/cart/items")
-                        .param("movieId", "tt0264464")
-                        .param("quantity", "-2"))
-                .andExpect(status().isBadRequest());
-    }
+    mockMvc
+        .perform(put("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "-2"))
+        .andExpect(status().isBadRequest());
+  }
 
-    //removeItem()
+  // removeItem()
 
-    @Test
-    void removeItemValid() throws Exception {
-        when(cartService.removeItem(anyString())).thenReturn(new CartState());
+  @Test
+  void removeItemValid() throws Exception {
+    when(cartService.removeItem(anyString())).thenReturn(new CartState());
 
-        mockMvc.perform(delete("/api/v1/cart/items/tt0264464"))
-                .andExpect(status().isOk());
+    mockMvc.perform(delete("/api/v1/cart/items/tt0264464")).andExpect(status().isOk());
 
-        verify(cartService).removeItem("tt0264464");
-    }
+    verify(cartService).removeItem("tt0264464");
+  }
 
-    @Test
-    void removeItemInvalidId() throws Exception {
-        when(cartService.removeItem(eq("invalidId")))
-                .thenThrow(new IllegalArgumentException("Invalid ID format"));
+  @Test
+  void removeItemInvalidId() throws Exception {
+    when(cartService.removeItem(eq("invalidId")))
+        .thenThrow(new IllegalArgumentException("Invalid ID format"));
 
-        mockMvc.perform(delete("/api/v1/cart/items/invalidId"))
-                .andExpect(status().isBadRequest()); 
-    }
+    mockMvc.perform(delete("/api/v1/cart/items/invalidId")).andExpect(status().isBadRequest());
+  }
 
-    //clearcart()
+  // clearcart()
 
-    @Test
-    void clearCartValid() throws Exception {
-        when(cartService.clearCart()).thenReturn(new CartState());
+  @Test
+  void clearCartValid() throws Exception {
+    when(cartService.clearCart()).thenReturn(new CartState());
 
-        mockMvc.perform(delete("/api/v1/cart"))
-                .andExpect(status().isOk());
+    mockMvc.perform(delete("/api/v1/cart")).andExpect(status().isOk());
 
-        verify(cartService).clearCart();
-    }
+    verify(cartService).clearCart();
+  }
 
-    //checkout()
+  // checkout()
 
-    @Test
-    void checkout_shouldReturnOkStatus() throws Exception {
-        when(cartService.checkout(any(CheckoutRequest.class))).thenReturn(new CheckoutResponse());
+  @Test
+  void checkout_shouldReturnOkStatus() throws Exception {
+    when(cartService.checkout(any(CheckoutRequest.class))).thenReturn(new CheckoutResponse());
 
-        String validJson = """
+    String validJson =
+        """
                 {
                     "customerFirstName": "John",
                     "customerLastName": "Doe",
@@ -179,51 +170,61 @@ public class CartControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/cart/checkout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validJson))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    mockMvc
+        .perform(
+            post("/api/v1/cart/checkout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validJson))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        verify(cartService).checkout(any(CheckoutRequest.class));
-    }
+    verify(cartService).checkout(any(CheckoutRequest.class));
+  }
 
-    @Test
-    void checkoutEmptyCart() throws Exception {
-        when(cartService.checkout(any(CheckoutRequest.class)))
-                .thenThrow(new IllegalStateException("Cannot checkout with an empty cart"));
+  @Test
+  void checkoutEmptyCart() throws Exception {
+    when(cartService.checkout(any(CheckoutRequest.class)))
+        .thenThrow(new IllegalStateException("Cannot checkout with an empty cart"));
 
-        String validJson = "{ \"customerFirstName\": \"John\", \"customerLastName\": \"Doe\", \"expiration\": \"12/2026\" }";
+    String validJson =
+        "{ \"customerFirstName\": \"John\", \"customerLastName\": \"Doe\", \"expiration\": \"12/2026\" }";
 
-        mockMvc.perform(post("/api/v1/cart/checkout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validJson))
-                .andExpect(status().isBadRequest());
-    }
+    mockMvc
+        .perform(
+            post("/api/v1/cart/checkout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validJson))
+        .andExpect(status().isBadRequest());
+  }
 
-    @Test
-    void checkoutMissingRequiredField() throws Exception {
-        when(cartService.checkout(any(CheckoutRequest.class)))
-                .thenThrow(new IllegalArgumentException("Missing required field: customerFirstName"));
+  @Test
+  void checkoutMissingRequiredField() throws Exception {
+    when(cartService.checkout(any(CheckoutRequest.class)))
+        .thenThrow(new IllegalArgumentException("Missing required field: customerFirstName"));
 
-        String missingFieldJson = "{ \"customerLastName\": \"Doe\", \"expiration\": \"12/2026\" }";
+    String missingFieldJson = "{ \"customerLastName\": \"Doe\", \"expiration\": \"12/2026\" }";
 
-        mockMvc.perform(post("/api/v1/cart/checkout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(missingFieldJson))
-                .andExpect(status().isBadRequest());
-    }
+    mockMvc
+        .perform(
+            post("/api/v1/cart/checkout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(missingFieldJson))
+        .andExpect(status().isBadRequest());
+  }
 
-    @Test
-    void checkoutInvalidPaymentInformation() throws Exception {
-        when(cartService.checkout(any(CheckoutRequest.class)))
-                .thenThrow(new IllegalArgumentException("Invalid or expired payment information"));
+  @Test
+  void checkoutInvalidPaymentInformation() throws Exception {
+    when(cartService.checkout(any(CheckoutRequest.class)))
+        .thenThrow(new IllegalArgumentException("Invalid or expired payment information"));
 
-        String invalidPaymentJson = "{ \"customerFirstName\": \"John\", \"customerLastName\": \"Doe\", \"expiration\": \"01/2000\" }";
+    String invalidPaymentJson =
+        "{ \"customerFirstName\": \"John\", \"customerLastName\": \"Doe\", \"expiration\": \"01/2000\" }";
 
-        mockMvc.perform(post("/api/v1/cart/checkout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidPaymentJson))
-                .andExpect(status().isBadRequest());
-    }
+    mockMvc
+        .perform(
+            post("/api/v1/cart/checkout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidPaymentJson))
+        .andExpect(status().isBadRequest());
+  }
 }

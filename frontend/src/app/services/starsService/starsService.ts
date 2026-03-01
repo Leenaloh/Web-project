@@ -2,10 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface StarMovie {
+  id: string;
+  title: string;
+}
+
 export interface Star {
   id: string;
   name: string;
   birthYear?: number;
+  movies?: StarMovie[];
 }
 
 @Injectable({ providedIn: 'root' })
