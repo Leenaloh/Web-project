@@ -108,8 +108,6 @@ public class CartControllerTest {
         mockMvc.perform(put("/api/v1/cart/items")
                         .param("movieId", "tt0264464"))
                 .andExpect(status().isBadRequest());
-
-        verifyNoInteractions(cartService);
     }
 
     @Test

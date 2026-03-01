@@ -30,12 +30,8 @@ public class CartController {
    */
   @GetMapping
   public ResponseEntity<CartState> getCart() {
-    try {
       CartState cart = cartService.getCart();
       return ResponseEntity.ok(cart);
-    } catch (RuntimeException ex) {
-      return ResponseEntity.status(500).build(); 
-    }
   }
 
 
@@ -63,12 +59,8 @@ public class CartController {
   @PutMapping("/items")
   public ResponseEntity<CartState> updateItemQuantity(
       @RequestParam String movieId, @RequestParam int quantity) {
-    try {
       CartState updated = cartService.updateItemQuantity(movieId, quantity);
       return ResponseEntity.ok(updated);
-    } catch (IllegalArgumentException ex) {
-      return ResponseEntity.badRequest().build();
-    }
   }
 
   /**
@@ -79,12 +71,8 @@ public class CartController {
    */
   @DeleteMapping("/items/{movieId}")
   public ResponseEntity<CartState> removeItem(@PathVariable String movieId) {
-    try {
       CartState updated = cartService.removeItem(movieId);
       return ResponseEntity.ok(updated);
-    } catch (IllegalArgumentException ex) {
-      return ResponseEntity.badRequest().build(); 
-    }
     }
 
   /**
@@ -106,11 +94,7 @@ public class CartController {
    */
   @PostMapping("/checkout")
   public ResponseEntity<CheckoutResponse> checkout(@RequestBody CheckoutRequest request) {
-    try {
       CheckoutResponse response = cartService.checkout(request);
       return ResponseEntity.ok(response);
-    } catch (IllegalArgumentException | IllegalStateException ex) {
-      return ResponseEntity.badRequest().build(); 
-    }
   }
 }
