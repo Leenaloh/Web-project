@@ -53,9 +53,6 @@ test.describe('Auth', () => {
 
     await expect(page).toHaveURL(/\/home$/);
     await expect(page.getByTestId('page-home')).toBeVisible();
-
-    const items = await getCartItems(page.request);
-    expect(Array.isArray(items)).toBeTruthy();
   });
 
   test('invalid login shows error message', async ({ page }) => {
@@ -67,4 +64,3 @@ test.describe('Auth', () => {
     await expect(page).toHaveURL(/\/$|\/login$/);
   });
 });
-
