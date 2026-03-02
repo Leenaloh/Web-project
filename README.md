@@ -111,3 +111,214 @@ The responsibilities for Phase 2 were distributed as follows:
 | Noof Alkhalifa | Frontend Development (Angular) |
 | Muntaha Alnasser | Backend Development (Spring Boot) |
 | Leen Alohali | Database Setup & Management (PostgreSQL, schema & data loading) |
+
+
+Phase 3 – Team Distribution
+
+Feature & Testing Responsibilities
+
+Team Member	Responsibilities
+Rowa Alshehri	Checkout Feature + End-to-End (E2E) Testing
+Muntaha Alnasser	Authentication Feature + End-to-End (E2E) Testing
+Reema Almunasser	Movie Listing & Movie Details + Backend Integration Testing
+Noof Alkhalifa	Cart Operations + Frontend Integration Testing
+Leen Alohali	Star Feature + Stress Testing
+
+
+⸻
+
+Testing Allocation (Phase 3)
+	•	Frontend Integration Testing: Noof Alkhalifa
+	•	Backend Integration Testing: Reema Almunasser
+	•	End-to-End (E2E) Testing: Rowa Alshehri & Muntaha Alnasser
+	•	Stress Testing: Leen Alohali
+
+⸻
+
+How to Run Tests
+
+⸻
+
+Frontend (Angular)
+
+All frontend tests are implemented using Jasmine & Karma.
+
+1. Navigate to the frontend directory
+
+cd frontend
+
+2. Install dependencies
+
+npm install --legacy-peer-deps
+
+
+⸻
+
+3. Run Unit Tests (Development Mode)
+
+ng test
+
+This opens a browser and runs all unit tests.
+
+⸻
+
+4. Run Unit Tests (CI / Headless Mode)
+
+npx ng test --watch=false --browsers=ChromeHeadless
+
+This simulates the GitHub Actions environment.
+
+⸻
+
+Frontend Integration Tests
+
+Run a specific integration test file:
+
+npx ng test --include="../tests/integration/<fileName>"
+
+Example:
+
+npx ng test --include="../tests/integration/login.integration.spec.ts"
+
+
+⸻
+
+End-to-End (E2E) Testing – Playwright
+
+E2E tests are implemented using Playwright.
+
+Run All E2E Tests
+
+cd frontend
+npx playwright test
+
+Run a Specific E2E Test
+
+npx playwright test tests/auth.e2e.spec.ts
+
+
+⸻
+
+Stress & Robustness Testing
+
+Stress and robustness tests were performed using k6.
+
+⸻
+
+Stress Testing
+
+Stress testing evaluates system performance under high concurrent load.
+
+Configuration
+	•	Virtual users ramped up to 100
+	•	Duration: ~3 minutes
+	•	Target: http://localhost:8080
+
+Endpoints Tested
+	•	GET /api/v1/movies
+	•	GET /api/v1/movies/{id}
+	•	GET /api/v1/cart
+	•	POST /api/v1/cart/items
+	•	POST /api/v1/cart/checkout
+
+Metrics Monitored
+	•	p95 response time
+	•	Error rate
+	•	Throughput
+
+All thresholds were met and the system remained stable under high load.
+
+⸻
+
+Robustness Testing
+
+Robustness testing verifies correct handling of invalid and edge-case inputs.
+
+Configuration
+	•	10 concurrent users
+	•	Duration: 60 seconds
+	•	Target: http://localhost:8080
+
+Scenarios Tested
+	•	Non-existing movie IDs → Expected 404
+	•	Invalid query parameters → Expected 400
+	•	Invalid checkout payloads → Expected 400
+
+All invalid requests returned correct HTTP status codes, with no unexpected server failures.
+
+⸻
+
+Running Stress & Robustness Tests
+
+Prerequisites
+	•	Backend server running at:
+
+http://localhost:8080
+
+
+	•	k6 installed locally
+
+Install k6 (if needed):
+
+brew install k6
+
+
+⸻
+
+Run Stress Test
+
+From the project root:
+
+k6 run backend/src/test/stress/stress.js
+
+Run Robustness Test
+
+From the project root:
+
+k6 run backend/src/test/robustness/robustness.js
+
+
+⸻
+
+Backend (Spring Boot)
+
+Backend tests are implemented using JUnit + Spring Boot Test (MockMvc/WebMvcTest).
+
+1. Navigate to backend directory
+
+cd backend
+
+2. Run All Backend Tests
+
+./gradlew clean test
+
+
+⸻
+
+3. Run a Specific Test Class
+
+Example:
+
+./gradlew test --tests "*AuthControllerLoginTest"
+
+
+⸻
+
+4. View Test Reports
+
+After execution, open:
+
+backend/build/reports/tests/test/index.html
+
+
+⸻
+
+Important Notes
+	•	Always run tests locally before pushing to ensure CI checks pass.
+	•	GitHub Actions executes:
+	•	npm ci
+	•	npm run lint
+	•	npx ng test --watch=false
+	•	./gradlew test
+	•	If tests fail locally, they will fail in CI.
+	•	Use headless mode to accurately simulate CI behavior.
