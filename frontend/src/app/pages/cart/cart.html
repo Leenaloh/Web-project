@@ -1,8 +1,8 @@
-<div class="container">
-  <h2 class="title">Shopping Cart</h2>
+<div class="container" data-testid="page-cart">
+  <h2 class="title" data-testid="heading-cart-title">Shopping Cart</h2>
 
   <div class="box">
-    <table class="table">
+    <table class="table" data-testid="cart-table">
       <thead>
         <tr>
           <th>Movie</th>
@@ -12,22 +12,24 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of items">
-          <td>{{ item.title }}</td>
+        <tr *ngFor="let item of items; let i = index" [attr.data-testid]="'cart-row-' + (item.id || i)">
+          <td [attr.data-testid]="'cart-item-title-' + (item.id || i)">{{ item.title }}</td>
           <td class="center">
-            <input class="qty" [value]="item.qty" readonly />
+            <input class="qty" [value]="item.qty" readonly [attr.data-testid]="'input-qty-' + (item.id || i)" />
           </td>
           <td class="center">
-            <button class="btn btn-danger" (click)="remove(item.id)">Remove</button>
+            <button class="btn btn-danger" (click)="remove(item.id)" [attr.data-testid]="'btn-remove-' + (item.id || i)">Remove</button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div class="actions-row">
-      <button class="btn btn-secondary" (click)="clear()">Clear Cart</button>
-      <a class="link" routerLink="/movie_list">Continue Shopping</a>
-      <button class="btn btn-success" (click)="checkout()">Proceed to Checkout</button>
+    <div class="actions-row" data-testid="cart-actions">
+      <button class="btn btn-secondary" (click)="clear()" data-testid="btn-clear">Clear Cart</button>
+      <a class="link" routerLink="/movie_list" data-testid="btn-continue-shopping">Continue Shopping</a>
+      <button class="btn btn-success" (click)="checkout()" data-testid="btn-checkout">Proceed to Checkout</button>
     </div>
+    <div data-testid="msg-success" hidden></div>
+    <div data-testid="msg-error" hidden></div>
   </div>
 </div>

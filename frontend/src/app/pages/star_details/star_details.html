@@ -1,17 +1,19 @@
-<div class="top-link">
-  <a routerLink="/movie-list">← Back to Movies</a>
+<div class="top-link" data-testid="nav-star-details">
+  <a routerLink="/movie-list" data-testid="btn-back-movies">← Back to Movies</a>
 </div>
 
-<div class="container">
+<div class="container" data-testid="page-star-details">
   <div class="box">
-    <h2 class="name">{{ star.name }}</h2>
-    <div class="meta"><b>Birth Year:</b> {{ star.birthYear }}</div>
+    <h2 class="name" [attr.data-testid]="'heading-star-name-' + star.id">{{ star.name }}</h2>
+    <div class="meta" [attr.data-testid]="'star-birth-year-' + star.id"><b>Birth Year:</b> {{ star.birthYear }}</div>
 
-    <h3 class="section">Movies</h3>
-    <ul class="movie-links">
-      <li *ngFor="let m of movies">
-        <a (click)="goMovie(m.id)">{{ m.title }}</a>
+    <h3 class="section" data-testid="heading-star-movies">Movies</h3>
+    <ul class="movie-links" data-testid="star-movie-list">
+      <li *ngFor="let m of movies; let i = index" [attr.data-testid]="'movie-item-' + (m.id || i)">
+        <a (click)="goMovie(m.id)" [attr.data-testid]="'movie-link-' + (m.id || i)">{{ m.title }}</a>
       </li>
     </ul>
+    <div data-testid="msg-success" hidden></div>
+    <div data-testid="msg-error" hidden></div>
   </div>
 </div>

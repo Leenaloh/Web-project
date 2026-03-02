@@ -1,23 +1,25 @@
-<div class="top-link">
-  <a routerLink="/home">← Back to Home</a>
+<div class="top-link" data-testid="nav-movie-list">
+  <a routerLink="/home" data-testid="btn-back-home">← Back to Home</a>
 </div>
 
-<div class="container">
+<div class="container" data-testid="page-movie-list">
   <div class="box">
-    <h2 class="page-title">Movies</h2>
+    <h2 class="page-title" data-testid="heading-movie-list">Movies</h2>
+    <div data-testid="msg-success" hidden></div>
+    <div data-testid="msg-error" hidden></div>
 
-    <div class="movie" *ngFor="let m of movies">
-      <h3 class="movie-title">
-        <a (click)="goDetails(m.id)">{{ m.title }}</a>
+    <div class="movie" *ngFor="let m of movies; let i = index" [attr.data-testid]="'movie-card-' + (m.id || i)">
+      <h3 class="movie-title" [attr.data-testid]="'movie-title-' + (m.id || i)">
+        <a (click)="goDetails(m.id)" [attr.data-testid]="'movie-link-' + (m.id || i)">{{ m.title }}</a>
       </h3>
 
       <div class="meta">
-        <div><b>Year:</b> {{ m.year }}</div>
+        <div [attr.data-testid]="'movie-year-' + (m.id || i)"><b>Year:</b> {{ m.year }}</div>
         <div><b>Director:</b> {{ m.director }}</div>
-        <div><b>Rating:</b> {{ m.rating }}/10</div>
+        <div [attr.data-testid]="'movie-rating-' + (m.id || i)"><b>Rating:</b> {{ m.rating }}/10</div>
       </div>
 
-      <button class="btn btn-success" (click)="addToCart(m)">Add to Cart</button>
+      <button class="btn btn-success" (click)="addToCart(m)" [attr.data-testid]="'btn-add-to-cart-' + (m.id || i)">Add to Cart</button>
       <hr />
     </div>
   </div>

@@ -1,32 +1,34 @@
-<div class="top-link">
-  <a routerLink="/movie-list">← Back to Movies</a>
+<div class="top-link" data-testid="nav-movie-details">
+  <a routerLink="/movie-list" data-testid="btn-back-movies">← Back to Movies</a>
 </div>
 
-<div class="container">
+<div class="container" data-testid="page-movie-details">
   <div class="box">
-    <h2 class="title">{{ movie.title }}</h2>
+    <h2 class="title" [attr.data-testid]="'heading-movie-title-' + movie.id">{{ movie.title }}</h2>
 
     <div class="meta">
-      <div><b>Year:</b> {{ movie.year }}</div>
+      <div [attr.data-testid]="'movie-year-' + movie.id"><b>Year:</b> {{ movie.year }}</div>
       <div><b>Director:</b> {{ movie.director }}</div>
-      <div><b>Rating:</b> {{ movie.rating }}/10</div>
+      <div [attr.data-testid]="'movie-rating-' + movie.id"><b>Rating:</b> {{ movie.rating }}/10</div>
       <div><b>Genres:</b> {{ movie.genres.join(', ') }}</div>
     </div>
 
-    <h3 class="section">Stars</h3>
-    <ul class="links">
-      <li *ngFor="let s of movie.stars">
-        <a (click)="goStar(s.id)">{{ s.name }}</a>
+    <h3 class="section" data-testid="heading-stars">Stars</h3>
+    <ul class="links" data-testid="star-list">
+      <li *ngFor="let s of movie.stars" [attr.data-testid]="'star-item-' + s.id">
+        <a (click)="goStar(s.id)" [attr.data-testid]="'star-link-' + s.id">{{ s.name }}</a>
       </li>
     </ul>
 
-    <h3 class="section">Add to Cart</h3>
-    <div class="qty-row">
-      <button class="qty-btn" (click)="dec()">-</button>
-      <input class="qty" [value]="qty" readonly />
-      <button class="qty-btn" (click)="inc()">+</button>
+    <h3 class="section" data-testid="heading-add-to-cart">Add to Cart</h3>
+    <div class="qty-row" data-testid="qty-controls">
+      <button class="qty-btn" (click)="dec()" data-testid="btn-update-qty-dec">-</button>
+      <input class="qty" [value]="qty" readonly data-testid="input-qty" />
+      <button class="qty-btn" (click)="inc()" data-testid="btn-update-qty-inc">+</button>
     </div>
 
-    <button class="btn btn-success" (click)="add()">Add to Cart</button>
+    <button class="btn btn-success" (click)="add()" data-testid="btn-add-to-cart">Add to Cart</button>
+    <div data-testid="msg-success" hidden></div>
+    <div data-testid="msg-error" hidden></div>
   </div>
 </div>
