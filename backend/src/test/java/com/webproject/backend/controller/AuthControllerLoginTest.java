@@ -1,5 +1,10 @@
 package com.webproject.backend.controller;
 
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.webproject.backend.model.LoginResponse;
 import com.webproject.backend.service.serviceInterface.AuthService;
 import org.junit.jupiter.api.Test;
@@ -9,11 +14,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
 class AuthControllerLoginTest {
@@ -29,10 +29,8 @@ class AuthControllerLoginTest {
 
     String body = "{\"useremail\":\"test@ksu.edu.sa\",\"password\":\"1234\"}";
 
-    mockMvc.perform(
-            post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+    mockMvc
+        .perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         // ❌ FAIL الآن لأن AuthController ما يحط session attributes
@@ -45,10 +43,8 @@ class AuthControllerLoginTest {
   void login_emptyJson_shouldReturn400() throws Exception {
     Mockito.when(authService.login(any())).thenReturn(new LoginResponse());
 
-    mockMvc.perform(
-            post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
+    mockMvc
+        .perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content("{}"))
         // ❌ FAIL الآن (غالبًا بيرجع 200)
         .andExpect(status().isBadRequest());
   }
@@ -60,10 +56,8 @@ class AuthControllerLoginTest {
 
     String body = "{\"useremail\":\"test@ksu.edu.sa\"}";
 
-    mockMvc.perform(
-            post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+    mockMvc
+        .perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
         // ❌ FAIL الآن (غالبًا بيرجع 200)
         .andExpect(status().isBadRequest());
   }
@@ -75,10 +69,8 @@ class AuthControllerLoginTest {
 
     String body = "{\"useremail\":\"test@ksu.edu.sa\",\"password\":\"WRONG\"}";
 
-    mockMvc.perform(
-            post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+    mockMvc
+        .perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
         // ❌ FAIL الآن (بيرجع 200)
         .andExpect(status().isUnauthorized());
   }
