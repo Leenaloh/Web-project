@@ -12,13 +12,13 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of items; let i = index" [attr.data-testid]="'cart-row-' + (item.id || i)">
-          <td [attr.data-testid]="'cart-item-title-' + (item.id || i)">{{ item.title }}</td>
+        <tr *ngFor="let item of items">
+          <td>{{ item.title }}</td>
           <td class="center">
-            <input class="qty" [value]="item.qty" readonly [attr.data-testid]="'input-qty-' + (item.id || i)" />
+            <input class="qty" [value]="item.qty" readonly />
           </td>
           <td class="center">
-            <button class="btn btn-danger" (click)="remove(item.id)" [attr.data-testid]="'btn-remove-' + (item.id || i)">Remove</button>
+            <button class="btn btn-danger" (click)="remove(item.id)">Remove</button>
           </td>
         </tr>
       </tbody>

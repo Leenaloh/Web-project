@@ -37,6 +37,23 @@ describe('MovieListComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // clicking Add to Cart triggers alert (UI-only)
+  it('should show alert when clicking Add to Cart', () => {
+    fixture.detectChanges();
+    const alertSpy = spyOn(window, 'alert');
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const buttons = Array.from(compiled.querySelectorAll('button')) as HTMLButtonElement[];
+
+    const addBtn = buttons.find((b) => (b.textContent ?? '').includes('Add to Cart'));
+    expect(addBtn).toBeTruthy();
+
+    addBtn!.click();
+
+    expect(alertSpy).toHaveBeenCalledWith('Added to cart (UI only)');
+  });
+
+
   it('goDetails() should navigate to /movie_details with id query param', () => {
     const navSpy = spyOn(router, 'navigate');
 
