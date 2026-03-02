@@ -1,67 +1,70 @@
-<div class="page">
+<div class="page" data-testid="page-home">
   <div class="container">
-    <h1 class="brand">IMDB Movie Store</h1>
+    <h1 class="brand" data-testid="heading-home-title">IMDB Movie Store</h1>
 
-    <div class="nav">
-      <a routerLink="/home">Home</a>
-      <a routerLink="/cart">Cart</a>
-      <a routerLink="/login">Logout</a>
+    <div class="nav" data-testid="nav-home">
+      <a routerLink="/home" data-testid="link-home">Home</a>
+      <a routerLink="/cart" data-testid="link-cart">Cart</a>
+      <a routerLink="/login" data-testid="link-logout">Logout</a>
     </div>
 
     <hr class="divider" />
 
     <!-- Search Movies -->
-    <div class="panel">
-      <h2 class="panel-title">Search Movies</h2>
+    <div class="panel" data-testid="panel-search">
+      <h2 class="panel-title" data-testid="heading-search-movies">Search Movies</h2>
 
       <div class="search-grid">
         <div class="field">
           <div class="label">Title</div>
-          <input class="input" [(ngModel)]="form.title" placeholder="Search by title" />
+          <input class="input" [(ngModel)]="form.title" placeholder="Search by title" data-testid="input-title" />
         </div>
 
         <div class="field">
           <div class="label">Year</div>
-          <input class="input" [(ngModel)]="form.year" placeholder="e.g. 1994" />
+          <input class="input" [(ngModel)]="form.year" placeholder="e.g. 1994" data-testid="input-year" />
         </div>
 
         <div class="field">
           <div class="label">Director</div>
-          <input class="input" [(ngModel)]="form.director" placeholder="Search by director" />
+          <input class="input" [(ngModel)]="form.director" placeholder="Search by director" data-testid="input-director" />
         </div>
 
         <div class="field">
           <div class="label">Star Name</div>
-          <input class="input" [(ngModel)]="form.star" placeholder="Search by star" />
+          <input class="input" [(ngModel)]="form.star" placeholder="Search by star" data-testid="input-star" />
         </div>
       </div>
 
-      <div class="actions">
-        <button class="btn btn-primary" (click)="search()">Search</button>
-        <button class="btn btn-secondary" (click)="clear()">Clear</button>
+      <div class="actions" data-testid="actions-search">
+        <button class="btn btn-primary" (click)="search()" data-testid="btn-search">Search</button>
+        <button class="btn btn-secondary" (click)="clear()" data-testid="btn-clear">Clear</button>
       </div>
 
       <div class="note">
         * You can search by one or multiple criteria. All fields are optional.
       </div>
+      <div data-testid="msg-success" hidden></div>
+      <div data-testid="msg-error" hidden></div>
     </div>
 
     <!-- Browse by Genre -->
-    <h2 class="section-title">Browse by Genre</h2>
-    <div class="chip-row">
+    <h2 class="section-title" data-testid="heading-browse-genre">Browse by Genre</h2>
+    <div class="chip-row" data-testid="genre-list">
       <button
         class="chip"
-        *ngFor="let g of genres"
+        *ngFor="let g of genres; let i = index"
         [class.active]="g === selectedGenre"
-        (click)="browseGenre(g)">
+        (click)="browseGenre(g)"
+        [attr.data-testid]="'genre-item-' + i">
         {{ g }}
       </button>
     </div>
 
     <!-- Browse by Title -->
-    <h2 class="section-title">Browse by Title</h2>
-    <div class="alpha-grid">
-      <button class="alpha" *ngFor="let c of titleChars" (click)="browseTitle(c)">
+    <h2 class="section-title" data-testid="heading-browse-title">Browse by Title</h2>
+    <div class="alpha-grid" data-testid="title-browse-list">
+      <button class="alpha" *ngFor="let c of titleChars; let i = index" (click)="browseTitle(c)" [attr.data-testid]="'title-char-' + i">
         {{ c }}
       </button>
     </div>
