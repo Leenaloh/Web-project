@@ -1,9 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
-import { AuthService, LoginRequest, LoginResponse } from './authService';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { AuthService } from './authService';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -23,35 +20,15 @@ describe('AuthService', () => {
     httpMock.verify();
   });
 
-  it('should POST /api/v1/auth/login with username and password', () => {
-    const mockResponse: LoginResponse = {
-      status: 'SUCCESS',
-      message: 'Login successful',
-      userId: 1, 
-      username: 'test@example.com',
-    };
-
-    const loginData: LoginRequest = {
-      username: 'test@example.com',
-      password: '123456',
-    };
-
-    service.login(loginData).subscribe((res) => {
+  it('should POST /api/v1/auth/login with useremail and password', () => {
+    service.login({ useremail: 'test@example.com', password: '123456' }).subscribe((res) => {
       expect(res.status).toBe('SUCCESS');
-      expect(res.userId).toBe(1);
-      expect(res.username).toBe('test@example.com');
+      expect(res.userId).toBe('user-1');
     });
 
     const req = httpMock.expectOne('/api/v1/auth/login');
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(loginData);
-
-    req.flush(mockResponse);
-  });
-
-  it('should POST /api/v1/auth/login with alternative endpoint', () => {
-    const req = httpMock.expectOne('http://localhost:8080/api/v1/auth/login');
-    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
     expect(req.request.body).toEqual({
       useremail: 'test@example.com',
       password: '123456',
@@ -70,18 +47,21 @@ describe('AuthService', () => {
       expect(res).toBeUndefined();
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/api/v1/auth/logout');
+    const req = httpMock.expectOne('/api/v1/auth/logout');
     expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
     req.flush(null);
   });
 
   it('should GET /me', () => {
     service.me().subscribe((res) => {
       expect(res.status).toBe('SUCCESS');
+      expect(res.userId).toBe('user-1');
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/api/v1/auth/me');
+    const req = httpMock.expectOne('/api/v1/auth/me');
     expect(req.request.method).toBe('GET');
+    expect(req.request.withCredentials).toBeTrue();
 
     req.flush({
       status: 'SUCCESS',
