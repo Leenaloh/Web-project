@@ -10,7 +10,14 @@
 
     <div class="movie" *ngFor="let m of movies; let i = index" [attr.data-testid]="'movie-card-' + (m.id || i)">
       <h3 class="movie-title" [attr.data-testid]="'movie-title-' + (m.id || i)">
-        <a (click)="goDetails(m.id)" [attr.data-testid]="'movie-link-' + (m.id || i)">{{ m.title }}</a>
+        <a 
+          (click)="goDetails(m.id)" 
+          (keyup.enter)="goDetails(m.id)"
+          (keyup.space)="goDetails(m.id)" 
+          [attr.tabindex]="0"
+          [attr.data-testid]="'movie-link-' + (m.id || i)">
+          {{ m.title }}
+        </a>
       </h3>
 
       <div class="meta">

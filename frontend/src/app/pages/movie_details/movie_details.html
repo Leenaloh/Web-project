@@ -16,7 +16,14 @@
     <h3 class="section" data-testid="heading-stars">Stars</h3>
     <ul class="links" data-testid="star-list">
       <li *ngFor="let s of movie.stars" [attr.data-testid]="'star-item-' + s.id">
-        <a (click)="goStar(s.id)" [attr.data-testid]="'star-link-' + s.id">{{ s.name }}</a>
+        <a 
+          (click)="goStar(s.id)" 
+          (keyup.enter)="goStar(s.id)"
+          (keyup.space)="goStar(s.id)" 
+          [attr.tabindex]="0"
+          [attr.data-testid]="'star-link-' + s.id">
+          {{ s.name }}
+        </a>
       </li>
     </ul>
 
