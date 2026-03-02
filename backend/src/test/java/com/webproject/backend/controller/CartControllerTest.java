@@ -1,6 +1,5 @@
 package com.webproject.backend.controller;
 
-import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -8,11 +7,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +18,12 @@ import com.webproject.backend.model.CartState;
 import com.webproject.backend.model.CheckoutRequest;
 import com.webproject.backend.model.CheckoutResponse;
 import com.webproject.backend.service.serviceInterface.CartService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CartController.class)
 public class CartControllerTest {
@@ -98,12 +98,12 @@ public class CartControllerTest {
     verify(cartService).updateItemQuantity("tt0264464", 5);
   }
 
-    @Test
-    void updateItemQuantityQuantityMissing() throws Exception {
-        mockMvc.perform(put("/api/v1/cart/items")
-                        .param("movieId", "tt0264464"))
-                .andExpect(status().isBadRequest());
-    }
+  @Test
+  void updateItemQuantityQuantityMissing() throws Exception {
+    mockMvc
+        .perform(put("/api/v1/cart/items").param("movieId", "tt0264464"))
+        .andExpect(status().isBadRequest());
+  }
 
   @Test
   void updateItemQuantityToZero() throws Exception {

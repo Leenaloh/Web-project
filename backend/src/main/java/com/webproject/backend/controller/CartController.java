@@ -1,5 +1,9 @@
 package com.webproject.backend.controller;
 
+import com.webproject.backend.model.CartState;
+import com.webproject.backend.model.CheckoutRequest;
+import com.webproject.backend.model.CheckoutResponse;
+import com.webproject.backend.service.serviceInterface.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,11 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.webproject.backend.model.CartState;
-import com.webproject.backend.model.CheckoutRequest;
-import com.webproject.backend.model.CheckoutResponse;
-import com.webproject.backend.service.serviceInterface.CartService;
 
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -30,8 +29,8 @@ public class CartController {
    */
   @GetMapping
   public ResponseEntity<CartState> getCart() {
-      CartState cart = cartService.getCart();
-      return ResponseEntity.ok(cart);
+    CartState cart = cartService.getCart();
+    return ResponseEntity.ok(cart);
   }
 
   /**
@@ -58,8 +57,8 @@ public class CartController {
   @PutMapping("/items")
   public ResponseEntity<CartState> updateItemQuantity(
       @RequestParam String movieId, @RequestParam int quantity) {
-      CartState updated = cartService.updateItemQuantity(movieId, quantity);
-      return ResponseEntity.ok(updated);
+    CartState updated = cartService.updateItemQuantity(movieId, quantity);
+    return ResponseEntity.ok(updated);
   }
 
   /**
@@ -70,9 +69,9 @@ public class CartController {
    */
   @DeleteMapping("/items/{movieId}")
   public ResponseEntity<CartState> removeItem(@PathVariable String movieId) {
-      CartState updated = cartService.removeItem(movieId);
-      return ResponseEntity.ok(updated);
-    }
+    CartState updated = cartService.removeItem(movieId);
+    return ResponseEntity.ok(updated);
+  }
 
   /**
    * Clear all items from the cart.
@@ -93,7 +92,7 @@ public class CartController {
    */
   @PostMapping("/checkout")
   public ResponseEntity<CheckoutResponse> checkout(@RequestBody CheckoutRequest request) {
-      CheckoutResponse response = cartService.checkout(request);
-      return ResponseEntity.ok(response);
+    CheckoutResponse response = cartService.checkout(request);
+    return ResponseEntity.ok(response);
   }
 }
