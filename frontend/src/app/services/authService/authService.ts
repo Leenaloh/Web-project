@@ -3,15 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface LoginRequest {
-  username: string;
+  useremail: string;
   password: string;
 }
 
 export interface LoginResponse {
   status?: string;
   message?: string;
-  userId?: number;
-  username?: string;
+  userId?: string;
+  name?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,19 +22,19 @@ export class AuthService {
 
   login(body: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.base}/login`, body, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   logout(): Observable<void> {
     return this.http.post<void>(`${this.base}/logout`, {}, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   me(): Observable<LoginResponse> {
     return this.http.get<LoginResponse>(`${this.base}/me`, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 }
