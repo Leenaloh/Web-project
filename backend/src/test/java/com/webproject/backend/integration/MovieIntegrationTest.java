@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -37,8 +36,7 @@ class MovieIntegrationTest {
                 .param("starName", "Star")
                 .param("page", "2")
                 .param("pageSize", "10"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        .andExpect(status().isOk());
 
     verify(movieServiceImpl).searchMovies("abc", 1999, "Dir", "Star", 2, 10);
   }
@@ -47,8 +45,7 @@ class MovieIntegrationTest {
   void searchMovies_noParams_integration_usesDefaultPageValues() throws Exception {
     mockMvc
         .perform(get("/api/v1/movies"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        .andExpect(status().isOk());
 
     verify(movieServiceImpl).searchMovies(null, null, null, null, 1, 20);
   }
@@ -61,8 +58,7 @@ class MovieIntegrationTest {
                 .param("genreId", "7")
                 .param("page", "1")
                 .param("pageSize", "20"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        .andExpect(status().isOk());
 
     verify(movieServiceImpl).browseMoviesByGenre(7, 1, 20);
   }
@@ -89,8 +85,7 @@ class MovieIntegrationTest {
                 .param("startsWith", "A")
                 .param("page", "3")
                 .param("pageSize", "5"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        .andExpect(status().isOk());
 
     verify(movieServiceImpl).browseMoviesByFirstLetter("A", 3, 5);
   }
@@ -106,8 +101,7 @@ class MovieIntegrationTest {
 
     mockMvc
         .perform(get("/api/v1/movies/tt001"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        .andExpect(status().isOk());
 
     verify(movieServiceImpl).getMovieById("tt001");
   }

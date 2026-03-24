@@ -67,7 +67,7 @@ describe('MovieListComponent', () => {
 
   it('PHASE-3 (expected to FAIL now): should load movies from backend on init', () => {
     moviesServiceSpy.searchMovies.and.returnValue(
-      of({ page: 1, pageSize: 20, total: 0, movies: [] })
+      of({ page: 1, pageSize: 20, movies: [] })
     );
 
     fixture.detectChanges();

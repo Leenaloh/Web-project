@@ -7,18 +7,20 @@ export interface Movie {
   title: string;
   year?: number;
   director?: string;
+  rating?: number;
 }
 
 export interface MoviesPageState {
   page: number;
   pageSize: number;
-  total?: number;
+  totalResults?: number;
+  totalPages?: number;
   movies: Movie[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class MoviesService {
-  private readonly base = '/api/v1/movies';
+  private readonly base = 'http://localhost:8080/api/v1/movies';
 
   constructor(private http: HttpClient) {}
 

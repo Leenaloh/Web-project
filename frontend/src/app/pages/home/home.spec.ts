@@ -29,13 +29,20 @@ describe('HomeComponent', () => {
       title: 'Avatar',
       year: '2009',
       director: 'James Cameron',
-      star: 'Sam Worthington',
+      starName: 'Sam Worthington',
     };
 
     component.search();
 
     expect(navSpy).toHaveBeenCalledWith(['/movie-list'], {
-      queryParams: component.form,
+      queryParams: {
+        title: 'Avatar',
+        year: '2009',
+        director: 'James Cameron',
+        starName: 'Sam Worthington',
+        page: 1,
+        pageSize: 20,
+      },
     });
   });
 
@@ -44,7 +51,7 @@ describe('HomeComponent', () => {
       title: 'Inception',
       year: '2010',
       director: 'Christopher Nolan',
-      star: 'Leonardo DiCaprio',
+      starName: 'Leonardo DiCaprio',
     };
 
     component.clear();
@@ -53,18 +60,22 @@ describe('HomeComponent', () => {
       title: '',
       year: '',
       director: '',
-      star: '',
+      starName: '',
     });
   });
 
-  it('browseGenre() should set selectedGenre and navigate with genre query param', () => {
+  it('browseGenre() should set selectedGenre and navigate with genreId query param', () => {
     const navSpy = spyOn(router, 'navigate');
 
-    component.browseGenre('Action');
+    component.browseGenre(1);
 
-    expect(component.selectedGenre).toBe('Action');
+    expect(component.selectedGenre).toBe(1);
     expect(navSpy).toHaveBeenCalledWith(['/movie-list'], {
-      queryParams: { genre: 'Action' },
+      queryParams: {
+        genreId: 1,
+        page: 1,
+        pageSize: 20,
+      },
     });
   });
 
@@ -74,7 +85,11 @@ describe('HomeComponent', () => {
     component.browseTitle('A');
 
     expect(navSpy).toHaveBeenCalledWith(['/movie-list'], {
-      queryParams: { startsWith: 'A' },
+      queryParams: {
+        startsWith: 'A',
+        page: 1,
+        pageSize: 20,
+      },
     });
   });
 });

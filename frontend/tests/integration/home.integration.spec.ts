@@ -29,7 +29,7 @@ describe('HomeComponent Integration', () => {
   it('should navigate with genre filter', () => {
     const routerNavigateSpy = spyOn((component as any).router, 'navigate');
 
-    component.browseGenre('Action');
+    component.browseGenre(1);
     expect(routerNavigateSpy).toHaveBeenCalledWith(['/movie-list'], { queryParams: { genre: 'Action' } });
   });
 
