@@ -5,15 +5,18 @@
 <div class="container" data-testid="page-movie-list">
   <div class="box">
     <h2 class="page-title" data-testid="heading-movie-list">Movies</h2>
-    <div data-testid="msg-success" hidden></div>
-    <div data-testid="msg-error" hidden></div>
+
+    <div data-testid="msg-success" [hidden]="!success">{{ success }}</div>
+    <div data-testid="msg-error" [hidden]="!error">{{ error }}</div>
+
+    <div *ngIf="!error && movies.length === 0">No movies found.</div>
 
     <div class="movie" *ngFor="let m of movies; let i = index" [attr.data-testid]="'movie-card-' + (m.id || i)">
       <h3 class="movie-title" [attr.data-testid]="'movie-title-' + (m.id || i)">
-        <a 
-          (click)="goDetails(m.id)" 
+        <a
+          (click)="goDetails(m.id)"
           (keyup.enter)="goDetails(m.id)"
-          (keyup.space)="goDetails(m.id)" 
+          (keyup.space)="goDetails(m.id)"
           [attr.tabindex]="0"
           [attr.data-testid]="'movie-link-' + (m.id || i)">
           {{ m.title }}
@@ -23,11 +26,37 @@
       <div class="meta">
         <div [attr.data-testid]="'movie-year-' + (m.id || i)"><b>Year:</b> {{ m.year }}</div>
         <div><b>Director:</b> {{ m.director }}</div>
-        <div [attr.data-testid]="'movie-rating-' + (m.id || i)"><b>Rating:</b> {{ m.rating }}/10</div>
+        <div [attr.data-testid]="'movie-rating-' + (m.id || i)">
+          <b>Rating:</b> {{ m.rating ?? 'N/A' }}/10
+        </div>
       </div>
 
-      <button class="btn btn-success" (click)="addToCart(m)" [attr.data-testid]="'btn-add-to-cart-' + (m.id || i)">Add to Cart</button>
+      <button
+        class="btn btn-success"
+        (click)="addToCart(m)"
+        [attr.data-testid]="'btn-add-to-cart-' + (m.id || i)">
+        Add to Cart
+      </button>
       <hr />
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1" data-testid="pagination">
+      <button class="page-btn" (click)="goToPage(page - 1)" [disabled]="page === 1">
+        Prev
+      </button>
+
+      <button
+        class="page-btn"
+        *ngFor="let p of pages"
+        (click)="goToPage(p)"
+        [class.active]="p === page"
+        [attr.data-testid]="'page-btn-' + p">
+        {{ p }}
+      </button>
+
+      <button class="page-btn" (click)="goToPage(page + 1)" [disabled]="page === totalPages">
+        Next
+      </button>
     </div>
   </div>
 </div>

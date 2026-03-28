@@ -32,7 +32,7 @@
 
         <div class="field">
           <div class="label">Star Name</div>
-          <input class="input" [(ngModel)]="form.star" placeholder="Search by star" data-testid="input-star" />
+          <input class="input" [(ngModel)]="form.starName" placeholder="Search by star" data-testid="input-star" />
         </div>
       </div>
 
@@ -54,10 +54,10 @@
       <button
         class="chip"
         *ngFor="let g of genres; let i = index"
-        [class.active]="g === selectedGenre"
-        (click)="browseGenre(g)"
+        [class.active]="g.id === selectedGenre"
+        (click)="browseGenre(g.id)"
         [attr.data-testid]="'genre-item-' + i">
-        {{ g }}
+        {{ g.name }}
       </button>
     </div>
 

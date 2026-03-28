@@ -11,4 +11,73 @@ public class Movie {
   private Double rating;
   private List<String> genres;
   private List<Star> stars;
+
+  public Movie() {}
+
+  public Movie(String id, String title, Integer year, String director,
+               Double rating, List<String> genres, List<Star> stars) {
+    this.id = id;
+    this.title = title;
+    this.year = year;
+    this.director = director;
+    this.rating = rating;
+    this.genres = genres;
+    this.stars = stars;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public Integer getYear() {
+    return year;
+  }
+
+  public void setYear(Integer year) {
+    this.year = year;
+  }
+
+  public String getDirector() {
+    return director;
+  }
+
+  public void setDirector(String director) {
+    this.director = director;
+  }
+
+  public Double getRating() {
+    return rating;
+  }
+
+  public void setRating(Double rating) {
+    this.rating = rating;
+  }
+
+  public List<String> getGenres() {
+    return genres;
+  }
+
+  public void setGenres(List<String> genres) {
+    this.genres = genres;
+  }
+
+  public List<Star> getStars() {
+    return stars;
+  }
+
+  public void setStars(List<Star> stars) {
+    this.stars = stars;
+  }
 }
