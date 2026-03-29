@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/authService/authService';
 
 @Component({
   selector: 'app-login',
@@ -13,11 +14,33 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   email = '';
   password = '';
+  errorMessage = ''; 
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   login(): void {
-    // UI only (later connect to backend)
-    this.router.navigate(['/home']);
+    this.errorMessage = ''; 
+    
+    if (!this.email.trim() || !this.password.trim()) {
+      this.errorMessage = 'Email and password are required.';
+      return;
+    }
+
+    this.authService.login({ useremail: this.email, password: this.password })
+      .subscribe({
+        next: (response) => {
+          if (response.status === 'SUCCESS') {
+            this.router.navigate(['/home']);
+          }
+        },
+        error: (err) => {
+          console.error('Login failed', err);
+          if (err.status === 401) {
+            this.errorMessage = 'Invalid email or password. Please try again.';
+          } else {
+            this.errorMessage = 'A server error occurred. Please try again later.';
+          }
+        }
+      });
   }
 }

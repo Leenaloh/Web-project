@@ -23,9 +23,9 @@ describe('MovieDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MovieDetailsComponent],
       providers: [
-        { provide: MoviesService, useValue: moviesServiceSpy },
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
         provideRouter([]),
+        { provide: MoviesService, useValue: moviesServiceSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteStub },    
       ],
     }).compileComponents();
 

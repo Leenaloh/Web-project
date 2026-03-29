@@ -2,12 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface Star {
+  id: string;
+  name: string;
+}
+
 export interface Movie {
   id: string;
   title: string;
   year?: number;
   director?: string;
   rating?: number;
+  genres?: string[];  
+  stars?: Star[];
 }
 
 export interface MoviesPageState {

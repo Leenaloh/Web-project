@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
   useremail: string;
@@ -16,25 +17,31 @@ export interface LoginResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly base = '/api/v1/auth';
+
+  private readonly base = `${environment.apiUrl}/api/v1/auth`;
 
   constructor(private http: HttpClient) {}
 
   login(body: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.base}/login`, body, {
-      withCredentials: true,
-    });
+    return this.http.post<LoginResponse>(
+      `${this.base}/login`,
+      body,
+      { withCredentials: true }
+    );
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.base}/logout`, {}, {
-      withCredentials: true,
-    });
+    return this.http.post<void>(
+      `${this.base}/logout`,
+      {},
+      { withCredentials: true }
+    );
   }
 
   me(): Observable<LoginResponse> {
-    return this.http.get<LoginResponse>(`${this.base}/me`, {
-      withCredentials: true,
-    });
+    return this.http.get<LoginResponse>(
+      `${this.base}/me`,
+      { withCredentials: true }
+    );
   }
 }

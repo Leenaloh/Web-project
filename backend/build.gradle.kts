@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -28,7 +29,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-	 testImplementation("org.springframework.boot:spring-boot-test")
+	testImplementation("org.springframework.boot:spring-boot-test")
     testImplementation("org.springframework.boot:spring-boot-test-autoconfigure")
     testImplementation("org.mockito:mockito-junit-jupiter")
 }

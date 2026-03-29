@@ -14,6 +14,8 @@
 
     <button class="btn btn-primary" (click)="login()" data-testid="btn-login">Login</button>
     <div data-testid="msg-success" hidden></div>
-    <div data-testid="msg-error" hidden></div>
+    <div data-testid="msg-error" *ngIf="errorMessage" style="color: red;">
+  {{ errorMessage }}
+</div>
   </div>
 </div>
