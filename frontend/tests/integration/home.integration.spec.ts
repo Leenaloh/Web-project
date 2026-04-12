@@ -20,7 +20,7 @@ describe('HomeComponent Integration', () => {
   it('should navigate to movie-list on search', () => {
     const routerNavigateSpy = spyOn((component as any).router, 'navigate');
 
-    component.form = { title: 'Test', year: '2020', director: '', star: '' };
+    component.form = { title: 'Test', year: '2020', director: '', starName: '' };
     component.search();
 
     expect(routerNavigateSpy).toHaveBeenCalledWith(['/movie-list'], { queryParams: component.form });

@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './authService';
+import { environment } from '../../../environments/environment';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
+
+  const baseUrl = `${environment.apiUrl}/api/v1/auth`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -26,8 +29,9 @@ describe('AuthService', () => {
       expect(res.userId).toBe('user-1');
     });
 
-    const req = httpMock.expectOne('/api/v1/auth/login');
-    expect(req.request.method).toBe('POST');
+    const req = httpMock.expectOne(r =>
+      r.method === 'POST' && r.url === `${baseUrl}/login`
+    );
     expect(req.request.withCredentials).toBeTrue();
     expect(req.request.body).toEqual({
       useremail: 'test@example.com',
@@ -44,11 +48,12 @@ describe('AuthService', () => {
 
   it('should POST /logout', () => {
     service.logout().subscribe((res) => {
-      expect(res).toBeUndefined();
+      expect(res).toBeNull();
     });
 
-    const req = httpMock.expectOne('/api/v1/auth/logout');
-    expect(req.request.method).toBe('POST');
+    const req = httpMock.expectOne(r =>
+      r.method === 'POST' && r.url === `${baseUrl}/logout`
+    );
     expect(req.request.withCredentials).toBeTrue();
     req.flush(null);
   });
@@ -59,8 +64,9 @@ describe('AuthService', () => {
       expect(res.userId).toBe('user-1');
     });
 
-    const req = httpMock.expectOne('/api/v1/auth/me');
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(r =>
+      r.method === 'GET' && r.url === `${baseUrl}/me`
+    );
     expect(req.request.withCredentials).toBeTrue();
 
     req.flush({

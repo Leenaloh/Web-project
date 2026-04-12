@@ -1,20 +1,20 @@
 <div class="top-link" data-testid="nav-movie-details">
-  <a routerLink="/movie-list" data-testid="btn-back-movies">← Back to Movies</a>
+  <a (click)="goBack()" style="cursor: pointer;" data-testid="btn-back-movies">← Back to Movies</a>
 </div>
 
-<div class="container" data-testid="page-movie-details">
+<div class="container" data-testid="page-movie-details" *ngIf="movie">
   <div class="box">
     <h2 class="title" [attr.data-testid]="'heading-movie-title-' + movie.id">{{ movie.title }}</h2>
 
     <div class="meta">
       <div [attr.data-testid]="'movie-year-' + movie.id"><b>Year:</b> {{ movie.year }}</div>
       <div><b>Director:</b> {{ movie.director }}</div>
-      <div [attr.data-testid]="'movie-rating-' + movie.id"><b>Rating:</b> {{ movie.rating }}/10</div>
-      <div><b>Genres:</b> {{ movie.genres.join(', ') }}</div>
+      <div [attr.data-testid]="'movie-rating-' + movie.id"><b>Rating:</b> {{ movie.rating ?? 'N/A' }}/10</div>
+      <div><b>Genres:</b> <span *ngIf="movie.genres">{{ movie.genres.join(', ') }}</span></div>
     </div>
 
     <h3 class="section" data-testid="heading-stars">Stars</h3>
-    <ul class="links" data-testid="star-list">
+    <ul class="links" data-testid="star-list" *ngIf="movie.stars">
       <li *ngFor="let s of movie.stars" [attr.data-testid]="'star-item-' + s.id">
         <a 
           (click)="goStar(s.id)" 
@@ -35,7 +35,11 @@
     </div>
 
     <button class="btn btn-success" (click)="add()" data-testid="btn-add-to-cart">Add to Cart</button>
-    <div data-testid="msg-success" hidden></div>
-    <div data-testid="msg-error" hidden></div>
+  </div>
+</div>
+
+<div class="container" *ngIf="!movie && error">
+  <div class="box">
+    <div class="alert alert-danger">{{ error }}</div>
   </div>
 </div>
