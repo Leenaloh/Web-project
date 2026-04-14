@@ -1,74 +1,80 @@
-:host{ display:block; font-family:"Times New Roman", Times, serif; background:#fff; }
-
-.container{
-  width:820px;
-  max-width:92%;
-  margin:30px auto 80px;
+.cart-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.title{
-  margin:0 0 12px;
-  font-size:22px;
-  font-weight:700;
+.cart-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
-.box{
-  border:1px solid #d9d9d9;
-  background:#fff;
-  padding:16px 18px;
+.cart-items,
+.summary-box,
+.state-box,
+.error-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
 }
 
-.table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:12px;
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ececec;
 }
 
-.table thead th{
-  text-align:left;
-  background:#f3f4f6;
-  border-bottom:1px solid #d9d9d9;
-  padding:10px;
+.cart-item:last-child {
+  border-bottom: none;
 }
 
-.table td{
-  border-bottom:1px solid #ececec;
-  padding:12px 10px;
+.movie-info h3 {
+  margin: 0 0 0.75rem;
 }
 
-.center{ text-align:center; }
-
-.qty{
-  width:42px;
-  height:22px;
-  border:1px solid #bfbfbf;
-  text-align:center;
-  font-size:12px;
+.movie-info p {
+  margin: 0.3rem 0;
+  color: #444;
 }
 
-.actions-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding-top:14px;
+.remove-btn,
+.checkout-btn {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.btn{
-  height:28px;
-  padding:0 12px;
-  border:1px solid transparent;
-  cursor:pointer;
-  font-size:12px;
+.remove-btn {
+  align-self: start;
+  background: #ef4444;
+  color: white;
+  padding: 0.7rem 1rem;
 }
 
-.btn-danger{ background:#d9534f; border-color:#d9534f; color:#fff; }
-.btn-secondary{ background:#6c757d; border-color:#6c757d; color:#fff; }
-.btn-success{ background:#1f7a3a; border-color:#1f7a3a; color:#fff; }
-
-.link{
-  color:#1a5fb4;
-  text-decoration:none;
-  font-size:12px;
+.checkout-btn {
+  width: 100%;
+  background: #111827;
+  color: white;
+  padding: 0.9rem;
+  margin-top: 1rem;
 }
-.link:hover{ text-decoration:underline; }
+
+.error-box {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+@media (max-width: 768px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-item {
+    flex-direction: column;
+  }
+}

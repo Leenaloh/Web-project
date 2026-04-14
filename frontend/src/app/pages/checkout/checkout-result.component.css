@@ -1,0 +1,48 @@
+.result-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.result-card {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.result-card h1 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.result-card p {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.result-details {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.back-btn {
+  display: inline-block;
+  padding: 0.8rem 1.25rem;
+  border-radius: 8px;
+  background: #111827;
+  color: white;
+  text-decoration: none;
+}
