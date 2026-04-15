@@ -35,6 +35,8 @@
     </div>
 
     <button class="btn btn-success" (click)="add()" data-testid="btn-add-to-cart">Add to Cart</button>
+    <div data-testid="msg-success" [hidden]="!success">{{ success }}</div>
+    <div data-testid="msg-error" [hidden]="!addError">{{ addError }}</div>
   </div>
 </div>
 

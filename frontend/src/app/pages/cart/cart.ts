@@ -20,6 +20,8 @@ const DEMO_CART: CartState = {
 })
 export class CartComponent implements OnInit {
   cart: CartState = { ...DEMO_CART, items: [...DEMO_CART.items] };
+  success = '';
+  error = '';
 
   constructor(private cartService: CartService) {}
 
@@ -31,12 +33,49 @@ export class CartComponent implements OnInit {
     this.cartService.getCart().subscribe({
       next: (cartData) => {
         this.cart = cartData;
+        this.error = '';
       },
       error: (err) => {
         console.error('Failed to load cart', err);
         this.cart = { ...DEMO_CART, items: [...DEMO_CART.items] };
+        this.error = 'Failed to load cart.';
       }
     });
+  }
+
+  updateQuantity(movieId: string, quantity: number): void {
+    if (!movieId || quantity <= 0) {
+      this.error = 'Quantity must be greater than zero.';
+      this.success = '';
+      return;
+    }
+
+    this.cartService.updateItemQuantity(movieId, quantity).subscribe({
+      next: (updatedCart) => {
+        this.cart = updatedCart;
+        this.success = 'Cart updated.';
+        this.error = '';
+      },
+      error: (err) => {
+        console.error('Failed to update quantity', err);
+        this.error = 'Failed to update quantity.';
+        this.success = '';
+      }
+    });
+  }
+
+  increase(itemMovieId: string, currentQuantity: number): void {
+    this.updateQuantity(itemMovieId, currentQuantity + 1);
+  }
+
+  decrease(itemMovieId: string, currentQuantity: number): void {
+    if (currentQuantity <= 1) {
+      this.error = 'Quantity must be greater than zero.';
+      this.success = '';
+      return;
+    }
+
+    this.updateQuantity(itemMovieId, currentQuantity - 1);
   }
 
   remove(movieId: string): void {
@@ -45,6 +84,8 @@ export class CartComponent implements OnInit {
     this.cartService.removeItem(movieId).subscribe({
       next: (updatedCart) => {
         this.cart = updatedCart;
+        this.success = 'Item removed from cart.';
+        this.error = '';
       },
       error: (err) => {
         console.error('Failed to remove item', err);
@@ -52,6 +93,8 @@ export class CartComponent implements OnInit {
           ...this.cart,
           items: this.cart.items.filter((item) => item.movieId !== movieId)
         };
+        this.error = 'Failed to remove item.';
+        this.success = '';
       }
     });
   }
@@ -60,10 +103,13 @@ export class CartComponent implements OnInit {
     this.cartService.clearCart().subscribe({
       next: (emptyCart) => {
         this.cart = emptyCart;
+        this.success = '';
+        this.error = '';
       },
       error: (err) => {
         console.error('Failed to clear cart', err);
         this.cart = { items: [], totalPrice: 0 };
+        this.error = 'Failed to clear cart.';
       }
     });
   }
@@ -76,10 +122,13 @@ export class CartComponent implements OnInit {
         if (response.success) {
           alert('Checkout successful: ' + response.message);
           this.cart = { items: [], totalPrice: 0 };
+          this.success = '';
+          this.error = '';
         }
       },
       error: (err) => {
         console.error('Checkout failed', err);
+        this.error = 'Checkout failed.';
       }
     });
   }

@@ -25,6 +25,7 @@ describe("CartComponent", () => {
   beforeEach(async () => {
     mockCartService = jasmine.createSpyObj("CartService", [
       "getCart",
+      "updateItemQuantity",
       "removeItem",
       "clearCart",
       "checkout"
@@ -66,6 +67,25 @@ describe("CartComponent", () => {
     expect(mockCartService.removeItem).toHaveBeenCalledWith("tt001");
     expect(component.cart.items.length).toBe(1);
     expect(component.cart.items[0].movieId).toBe("tt002");
+  });
+
+  it("should update quantity through the service", () => {
+    mockCartService.getCart.and.returnValue(of(mockInitialCart));
+    fixture.detectChanges();
+
+    const cartAfterUpdate: CartState = {
+      items: [
+        { movieId: "tt001", title: "The Shawshank Redemption", quantity: 3 },
+        { movieId: "tt002", title: "The Wandering Soap Opera", quantity: 1 }
+      ],
+      totalPrice: 60
+    };
+    mockCartService.updateItemQuantity.and.returnValue(of(cartAfterUpdate));
+
+    component.increase("tt001", 2);
+
+    expect(mockCartService.updateItemQuantity).toHaveBeenCalledWith("tt001", 3);
+    expect(component.cart.items[0].quantity).toBe(3);
   });
 
   it("should call clearCart on the service and empty the items", () => {
