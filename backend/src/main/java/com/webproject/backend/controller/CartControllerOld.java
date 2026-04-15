@@ -24,7 +24,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestController
 @RequestMapping("/api/v1/cart")
-public class CartController {
+public class CartControllerOld {
 
   @Autowired private CartService cartService;
 
