@@ -1,68 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface CartItem {
+  cartItemId: number;
+  movieId: string;
+  title: string;
+  year: number;
+  director: string;
+  rentalPrice: number;
+}
+
 export interface CartState {
-  items: Array<{ movieId: string; title?: string; quantity: number; unitPrice?: number }>;
-  totalPrice?: number;
+  customerId: number;
+  items: CartItem[];
+  totalItems: number;
+  totalAmount: number;
+  empty: boolean;
 }
 
-export interface CheckoutRequest {
-  customerName?: string;
-  address?: string;
-  paymentMethod?: string;
-}
-
-export interface CheckoutResponse {
-  success: boolean;
-  message?: string;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class CartService {
-  private readonly base = '/api/v1/cart';
+  private readonly baseUrl = 'http://localhost:8080/api/cart';
 
   constructor(private http: HttpClient) {}
 
-  getCart(): Observable<CartState> {
-    return this.http.get<CartState>(this.base, { withCredentials: true });
+  getCart(customerId: number): Observable<CartState> {
+    return this.http.get<CartState>(`${this.baseUrl}?customerId=${customerId}`);
   }
 
-  addItem(movieId: string, quantity = 1): Observable<CartState> {
-    const params = new HttpParams()
-      .set('movieId', movieId)
-      .set('quantity', String(quantity));
-
-    return this.http.post<CartState>(`${this.base}/items`, null, {
-      params,
-      withCredentials: true
-    });
-  }
-
-  updateItemQuantity(movieId: string, quantity: number): Observable<CartState> {
-    const params = new HttpParams()
-      .set('movieId', movieId)
-      .set('quantity', String(quantity));
-
-    return this.http.put<CartState>(`${this.base}/items`, null, {
-      params,
-      withCredentials: true
-    });
-  }
-
-  removeItem(movieId: string): Observable<CartState> {
-    return this.http.delete<CartState>(`${this.base}/items/${encodeURIComponent(movieId)}`, {
-      withCredentials: true
-    });
-  }
-
-  clearCart(): Observable<CartState> {
-    return this.http.delete<CartState>(this.base, { withCredentials: true });
-  }
-
-  checkout(body: CheckoutRequest): Observable<CheckoutResponse> {
-    return this.http.post<CheckoutResponse>(`${this.base}/checkout`, body, {
-      withCredentials: true
-    });
+  removeCartItem(customerId: number, cartItemId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/items/${cartItemId}?customerId=${customerId}`);
   }
 }
