@@ -1,5 +1,14 @@
 <div class="top-link" data-testid="nav-movie-details">
-  <a (click)="goBack()" style="cursor: pointer;" data-testid="btn-back-movies">← Back to Movies</a>
+  <a
+    (click)="goBack()"
+    (keyup.enter)="goBack()"
+    (keyup.space)="goBack()"
+    [attr.tabindex]="0"
+    role="button"
+    style="cursor: pointer;"
+    data-testid="btn-back-movies">
+    Back to Movies
+  </a>
 </div>
 
 <div class="container" data-testid="page-movie-details" *ngIf="movie">
@@ -16,10 +25,10 @@
     <h3 class="section" data-testid="heading-stars">Stars</h3>
     <ul class="links" data-testid="star-list" *ngIf="movie.stars">
       <li *ngFor="let s of movie.stars" [attr.data-testid]="'star-item-' + s.id">
-        <a 
-          (click)="goStar(s.id)" 
+        <a
+          (click)="goStar(s.id)"
           (keyup.enter)="goStar(s.id)"
-          (keyup.space)="goStar(s.id)" 
+          (keyup.space)="goStar(s.id)"
           [attr.tabindex]="0"
           [attr.data-testid]="'star-link-' + s.id">
           {{ s.name }}
