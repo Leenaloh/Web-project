@@ -12,14 +12,14 @@ public class MoviesPageState {
 
   public MoviesPageState() {}
 
-  public MoviesPageState(List<Movie> movies, int page, int pageSize,long totalResults, int totalPages) {
+  public MoviesPageState(
+      List<Movie> movies, int page, int pageSize, long totalResults, int totalPages) {
     this.movies = movies;
     this.page = page;
     this.pageSize = pageSize;
     this.totalResults = totalResults;
     this.totalPages = totalPages;
   }
-
 
   public List<Movie> getMovies() {
     return movies;

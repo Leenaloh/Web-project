@@ -43,9 +43,7 @@ class MovieIntegrationTest {
 
   @Test
   void searchMovies_noParams_integration_usesDefaultPageValues() throws Exception {
-    mockMvc
-        .perform(get("/api/v1/movies"))
-        .andExpect(status().isOk());
+    mockMvc.perform(get("/api/v1/movies")).andExpect(status().isOk());
 
     verify(movieServiceImpl).searchMovies(null, null, null, null, 1, 20);
   }
@@ -99,9 +97,7 @@ class MovieIntegrationTest {
   void getMovieById_whenFound_integration_returns200Json() throws Exception {
     doReturn(new Movie()).when(movieServiceImpl).getMovieById("tt001");
 
-    mockMvc
-        .perform(get("/api/v1/movies/tt001"))
-        .andExpect(status().isOk());
+    mockMvc.perform(get("/api/v1/movies/tt001")).andExpect(status().isOk());
 
     verify(movieServiceImpl).getMovieById("tt001");
   }

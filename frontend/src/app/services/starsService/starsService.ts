@@ -16,7 +16,7 @@ export interface Star {
 
 @Injectable({ providedIn: 'root' })
 export class StarsService {
-  private readonly base = '/api/v1/stars';
+  private readonly base = 'http://localhost:8080/api/v1/stars';
 
   constructor(private http: HttpClient) {}
 
