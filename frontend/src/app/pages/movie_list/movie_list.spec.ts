@@ -2,16 +2,19 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { MovieListComponent } from './movie_list';
 import { MoviesService } from '../../services/movieService/movieService';
+import { CartService } from '../../services/cartService/cartService';
 import { of } from 'rxjs';
 
 describe('MovieListComponent', () => {
   let fixture: ComponentFixture<MovieListComponent>;
   let component: MovieListComponent;
   let moviesServiceSpy: jasmine.SpyObj<MoviesService>;
+  let cartServiceSpy: jasmine.SpyObj<CartService>;
   let router: Router;
 
   beforeEach(async () => {
     moviesServiceSpy = jasmine.createSpyObj('MoviesService', ['searchMovies']);
+    cartServiceSpy = jasmine.createSpyObj('CartService', ['addItem', 'rememberMovieTitle']);
 
     const activatedRouteStub = {
       snapshot: { queryParamMap: convertToParamMap({}) },
@@ -23,6 +26,7 @@ describe('MovieListComponent', () => {
       imports: [MovieListComponent],
       providers: [
         { provide: MoviesService, useValue: moviesServiceSpy },
+        { provide: CartService, useValue: cartServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         provideRouter([]),
       ],
@@ -37,20 +41,13 @@ describe('MovieListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // clicking Add to Cart triggers alert (UI-only)
-  it('should show alert when clicking Add to Cart', () => {
-    fixture.detectChanges();
-    const alertSpy = spyOn(window, 'alert');
+  it('should call cart service when clicking Add to Cart', () => {
+    cartServiceSpy.addItem.and.returnValue(of({ items: [{ movieId: 'tt001', quantity: 1 }] }));
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    const buttons = Array.from(compiled.querySelectorAll('button')) as HTMLButtonElement[];
+    component.addToCart({ id: 'tt001', title: 'Bambola' });
 
-    const addBtn = buttons.find((b) => (b.textContent ?? '').includes('Add to Cart'));
-    expect(addBtn).toBeTruthy();
-
-    addBtn!.click();
-
-    expect(alertSpy).toHaveBeenCalledWith('Added to cart (UI only)');
+    expect(cartServiceSpy.addItem).toHaveBeenCalledWith('tt001', 1);
+    expect(component.success).toBe('Added to cart');
   });
 
 

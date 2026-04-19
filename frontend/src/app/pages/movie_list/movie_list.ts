@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Movie, MoviesPageState, MoviesService } from '../../services/movieService/movieService';
+import { CartService } from '../../services/cartService/cartService';
 
 @Component({
   selector: 'app-movie-list',
@@ -22,7 +23,8 @@ export class MovieListComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private moviesService: MoviesService
+    private moviesService: MoviesService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -97,8 +99,24 @@ export class MovieListComponent implements OnInit {
     this.router.navigate(['/movie_details'], { queryParams: { id: movieId } });
   }
 
-  addToCart(_movie: Movie): void {
-    this.success = 'Added to cart (UI only)';
+  addToCart(movie: Movie): void {
+    if (!movie.id) {
+      this.error = 'Unable to add this movie to cart.';
+      this.success = '';
+      return;
+    }
+
+    this.cartService.rememberMovieTitle(movie.id, movie.title);
+    this.cartService.addItem(movie.id, 1).subscribe({
+      next: () => {
+        this.success = 'Added to cart';
+        this.error = '';
+      },
+      error: () => {
+        this.error = 'Failed to add item to cart.';
+        this.success = '';
+      }
+    });
   }
 
   goToPage(newPage: number): void {

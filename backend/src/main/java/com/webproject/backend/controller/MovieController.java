@@ -15,7 +15,7 @@ import com.webproject.backend.service.serviceInterface.MovieService;
 
 @RestController
 @RequestMapping("/api/v1/movies")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${frontend.url}", allowCredentials = "true")
 public class MovieController {
 
   @Autowired private MovieService movieService;

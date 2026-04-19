@@ -4,6 +4,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { By } from "@angular/platform-browser";
 import { CartComponent } from "../../src/app/pages/cart/cart";
 import { CartState } from "../../src/app/services/cartService/cartService";
+import { environment } from "../../src/environments/environment";
 
 describe('CartComponent Integration', () => {
   let fixture: ComponentFixture<CartComponent>;
@@ -36,7 +37,7 @@ describe('CartComponent Integration', () => {
   it('should display cart items', waitForAsync(() => {
     component.loadCart();
 
-    const req = httpMock.expectOne('/api/v1/cart');
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart`);
     req.flush(mockCart);
     fixture.detectChanges();
 
@@ -52,7 +53,7 @@ describe('CartComponent Integration', () => {
     const removeButton = fixture.debugElement.queryAll(By.css('button.btn-danger'))[0];
     removeButton.triggerEventHandler('click', null);
 
-    const req = httpMock.expectOne('/api/v1/cart/items/tt001');
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart/items/tt001`);
     req.flush({
       items: [{ movieId: 'tt002', title: 'The Wandering Soap Opera', quantity: 1 }],
       totalPrice: 25,

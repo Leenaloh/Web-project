@@ -3,16 +3,19 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { MovieDetailsComponent } from './movie_details';
 import { MoviesService } from '../../services/movieService/movieService';
 import { of } from 'rxjs';
+import { CartService } from '../../services/cartService/cartService';
 
 describe('MovieDetailsComponent', () => {
   let fixture: ComponentFixture<MovieDetailsComponent>;
   let component: MovieDetailsComponent;
 
   let moviesServiceSpy: jasmine.SpyObj<MoviesService>;
+  let cartServiceSpy: jasmine.SpyObj<CartService>;
   let router: Router;
 
   beforeEach(async () => {
     moviesServiceSpy = jasmine.createSpyObj('MoviesService', ['getMovieById']);
+    cartServiceSpy = jasmine.createSpyObj('CartService', ['addItem', 'rememberMovieTitle']);
 
     const activatedRouteStub = {
       snapshot: { queryParamMap: convertToParamMap({ id: 'tt001' }) },
@@ -25,6 +28,7 @@ describe('MovieDetailsComponent', () => {
       providers: [
         provideRouter([]),
         { provide: MoviesService, useValue: moviesServiceSpy },
+        { provide: CartService, useValue: cartServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },    
       ],
     }).compileComponents();
@@ -50,12 +54,15 @@ describe('MovieDetailsComponent', () => {
     expect(component.qty).toBe(1);
   });
 
-  it('add() should show alert (UI only)', () => {
-    const alertSpy = spyOn(window, 'alert');
+  it('add() should call cart service and set success message', () => {
+    component.movie = { id: 'tt001', title: 'X' } as any;
+    component.qty = 2;
+    cartServiceSpy.addItem.and.returnValue(of({ items: [{ movieId: 'tt001', quantity: 2 }] }));
 
     component.add();
 
-    expect(alertSpy).toHaveBeenCalled();
+    expect(cartServiceSpy.addItem).toHaveBeenCalledWith('tt001', 2);
+    expect(component.success).toContain('Added 2 item(s) to cart');
   });
   
   it('goStar() should navigate to /star_details with id query param', () => {
