@@ -1,14 +1,12 @@
 package com.webproject.backend.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
-
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
 import com.webproject.backend.service.serviceInterface.MovieService;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -153,9 +151,9 @@ public class MovieServiceImpl implements MovieService {
     String countSql;
     Object[] dataParams;
     Object[] countParams;
-      if ("*".equals(startsWith)) {
-        dataSql =
-            """
+    if ("*".equals(startsWith)) {
+      dataSql =
+          """
             SELECT m.id, m.title, m.year, m.director, r.rating
             FROM movies m
             LEFT JOIN ratings r ON m.id = r.movieId
@@ -164,16 +162,16 @@ public class MovieServiceImpl implements MovieService {
             LIMIT ? OFFSET ?
             """;
 
-        countSql =
-            """
+      countSql =
+          """
             SELECT COUNT(*)
             FROM movies m
             WHERE m.title ~ '^[^A-Za-z0-9]'
             """;
 
-        dataParams = new Object[] {pageSize, offset};
-        countParams = new Object[] {};
-      }else {
+      dataParams = new Object[] {pageSize, offset};
+      countParams = new Object[] {};
+    } else {
       dataSql =
           """
           SELECT m.id, m.title, m.year, m.director, r.rating
@@ -222,7 +220,8 @@ public class MovieServiceImpl implements MovieService {
 
   @Override
   public Movie getMovieById(String id) {
-    String movieSql = """
+    String movieSql =
+        """
         SELECT m.id, m.title, m.year, m.director, r.rating
         FROM movies m
         LEFT JOIN ratings r ON m.id = r.movieId
@@ -231,21 +230,25 @@ public class MovieServiceImpl implements MovieService {
 
     Movie movie;
     try {
-      movie = jdbcTemplate.queryForObject(movieSql, (rs, rowNum) ->
-          new Movie(
-              rs.getString("id"),
-              rs.getString("title"),
-              rs.getInt("year"),
-              rs.getString("director"),
-              rs.getObject("rating") != null ? rs.getDouble("rating") : null,
-              new java.util.ArrayList<>(),
-              new java.util.ArrayList<>()
-          ), id);
+      movie =
+          jdbcTemplate.queryForObject(
+              movieSql,
+              (rs, rowNum) ->
+                  new Movie(
+                      rs.getString("id"),
+                      rs.getString("title"),
+                      rs.getInt("year"),
+                      rs.getString("director"),
+                      rs.getObject("rating") != null ? rs.getDouble("rating") : null,
+                      new java.util.ArrayList<>(),
+                      new java.util.ArrayList<>()),
+              id);
     } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-      return null; 
+      return null;
     }
 
-    String genresSql = """
+    String genresSql =
+        """
         SELECT g.name
         FROM genres g
         JOIN genres_in_movies gim ON g.id = gim.genreId
@@ -255,20 +258,25 @@ public class MovieServiceImpl implements MovieService {
     List<String> genres = jdbcTemplate.query(genresSql, (rs, rowNum) -> rs.getString("name"), id);
     movie.setGenres(genres);
 
-    String starsSql = """
+    String starsSql =
+        """
         SELECT s.id, s.name
         FROM stars s
         JOIN stars_in_movies sim ON s.id = sim.starId
         WHERE sim.movieId = ?
         ORDER BY s.name
         """;
-    
-    List<com.webproject.backend.model.Star> stars = jdbcTemplate.query(starsSql, (rs, rowNum) -> {
-        com.webproject.backend.model.Star star = new com.webproject.backend.model.Star();
-        star.setId(rs.getString("id"));
-        star.setName(rs.getString("name"));
-        return star;
-    }, id);
+
+    List<com.webproject.backend.model.Star> stars =
+        jdbcTemplate.query(
+            starsSql,
+            (rs, rowNum) -> {
+              com.webproject.backend.model.Star star = new com.webproject.backend.model.Star();
+              star.setId(rs.getString("id"));
+              star.setName(rs.getString("name"));
+              return star;
+            },
+            id);
     movie.setStars(stars);
 
     return movie;

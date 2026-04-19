@@ -18,7 +18,6 @@ public class Star {
     this.movies = movies;
   }
 
-
   public String getId() {
     return id;
   }

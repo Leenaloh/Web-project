@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { StarsService } from '../../services/starsService/starsService';
 
 @Component({
   selector: 'app-star-details',
@@ -9,16 +10,32 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './star_details.html',
   styleUrls: ['./star_details.css'],
 })
-export class StarDetailsComponent {
-  star = { id: 'nm001', name: 'Francisco Reyes', birthYear: 1954 };
+export class StarDetailsComponent implements OnInit {
+  star: any = { id: '', name: '', birthYear: undefined };
+  movies: any[] = [];
 
-  movies = [
-    { id: 'tt001', title: 'The Wandering Soap Opera' },
-    { id: 'tt010', title: 'El Nominado' },
-    { id: 'tt020', title: 'Buscando a la señorita Hyde' },
-  ];
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private starsService: StarsService
+  ) {}
 
-  constructor(private router: Router) {}
+  ngOnInit(): void {
+    const id = this.route.snapshot.queryParamMap.get('id');
+
+    if (id) {
+      this.starsService.getStarById(id).subscribe({
+        next: (data: any) => {
+          this.star = data;
+          this.movies = data.movies || [];
+        },
+        error: () => {
+          this.star = { id: '', name: 'Star not found', birthYear: undefined };
+          this.movies = [];
+        },
+      });
+    }
+  }
 
   goMovie(movieId: string): void {
     this.router.navigate(['/movie_details'], { queryParams: { id: movieId } });

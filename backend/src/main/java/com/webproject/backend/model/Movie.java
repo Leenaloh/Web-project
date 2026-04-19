@@ -14,8 +14,14 @@ public class Movie {
 
   public Movie() {}
 
-  public Movie(String id, String title, Integer year, String director,
-               Double rating, List<String> genres, List<Star> stars) {
+  public Movie(
+      String id,
+      String title,
+      Integer year,
+      String director,
+      Double rating,
+      List<String> genres,
+      List<Star> stars) {
     this.id = id;
     this.title = title;
     this.year = year;
