@@ -2,6 +2,7 @@ package com.webproject.backend.controller;
 
 import com.webproject.backend.model.LoginRequest;
 import com.webproject.backend.model.LoginResponse;
+import com.webproject.backend.model.RegisterRequest;
 import com.webproject.backend.service.serviceInterface.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -77,6 +78,21 @@ public class AuthController {
     } else {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(new LoginResponse("FAIL", "Not logged in", null, null));
+    }
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+    LoginResponse response = authService.register(request);
+
+    if ("SUCCESS".equals(response.getStatus())) {
+      return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    } else if ("Email already exists".equals(response.getMessage())) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    } else if ("Credit card is expired".equals(response.getMessage())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    } else {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
   }
 }

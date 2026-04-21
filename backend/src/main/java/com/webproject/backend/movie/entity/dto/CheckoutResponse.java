@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record CheckoutResponse(
-        String message,
-        Integer customerId,
-        Integer rentedMoviesCount,
-        BigDecimal totalAmount,
-        LocalDate saleDate
-) {
-}
+    String message,
+    Integer customerId,
+    Integer rentedMoviesCount,
+    BigDecimal totalAmount,
+    LocalDate saleDate) {}

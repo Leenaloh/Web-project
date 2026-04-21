@@ -14,13 +14,13 @@ import { AuthService } from '../../services/authService/authService';
 export class LoginComponent {
   email = '';
   password = '';
-  errorMessage = ''; 
+  errorMessage = '';
 
   constructor(private router: Router, private authService: AuthService) {}
 
   login(): void {
-    this.errorMessage = ''; 
-    
+    this.errorMessage = '';
+
     if (!this.email.trim() || !this.password.trim()) {
       this.errorMessage = 'Email and password are required.';
       return;
@@ -33,7 +33,7 @@ export class LoginComponent {
             this.router.navigate(['/home']);
           }
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Login failed', err);
           if (err.status === 401) {
             this.errorMessage = 'Invalid email or password. Please try again.';

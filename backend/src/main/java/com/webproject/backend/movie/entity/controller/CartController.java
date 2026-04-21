@@ -12,25 +12,25 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class CartController {
 
-    private final CartService cartService;
+  private final CartService cartService;
 
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
-    }
+  public CartController(CartService cartService) {
+    this.cartService = cartService;
+  }
 
-    @GetMapping
-    public ResponseEntity<CartResponse> getCart(
-            @RequestParam @Min(value = 1, message = "Customer ID must be greater than 0") Integer customerId
-    ) {
-        return ResponseEntity.ok(cartService.getCart(customerId));
-    }
+  @GetMapping
+  public ResponseEntity<CartResponse> getCart(
+      @RequestParam @Min(value = 1, message = "Customer ID must be greater than 0")
+          Integer customerId) {
+    return ResponseEntity.ok(cartService.getCart(customerId));
+  }
 
-    @DeleteMapping("/items/{cartItemId}")
-    public ResponseEntity<Void> removeCartItem(
-            @PathVariable Long cartItemId,
-            @RequestParam @Min(value = 1, message = "Customer ID must be greater than 0") Integer customerId
-    ) {
-        cartService.removeCartItem(customerId, cartItemId);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/items/{cartItemId}")
+  public ResponseEntity<Void> removeCartItem(
+      @PathVariable Long cartItemId,
+      @RequestParam @Min(value = 1, message = "Customer ID must be greater than 0")
+          Integer customerId) {
+    cartService.removeCartItem(customerId, cartItemId);
+    return ResponseEntity.noContent().build();
+  }
 }

@@ -7,9 +7,11 @@ import { CheckoutResultComponent } from './pages/checkout/checkout-result.compon
 import { MovieListComponent } from './pages/movie_list/movie_list';
 import { MovieDetailsComponent } from './pages/movie_details/movie_details';
 import { StarDetailsComponent } from './pages/star_details/star_details';
+import { RegisterComponent } from './pages/register/register';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent },

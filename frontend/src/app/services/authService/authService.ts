@@ -15,9 +15,18 @@ export interface LoginResponse {
   name?: string;
 }
 
+export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  address: string;
+  ccId: string;
+  expiration: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   private readonly base = `${environment.apiUrl}/api/v1/auth`;
 
   constructor(private http: HttpClient) {}
@@ -41,6 +50,14 @@ export class AuthService {
   me(): Observable<LoginResponse> {
     return this.http.get<LoginResponse>(
       `${this.base}/me`,
+      { withCredentials: true }
+    );
+  }
+
+  register(body: RegisterRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.base}/register`,
+      body,
       { withCredentials: true }
     );
   }

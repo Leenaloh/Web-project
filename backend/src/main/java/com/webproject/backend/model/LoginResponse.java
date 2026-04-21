@@ -26,4 +26,8 @@ public class LoginResponse {
   public String getName() {
     return name;
   }
+
+  public String getMessage() {
+    return message;
+  }
 }

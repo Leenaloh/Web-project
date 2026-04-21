@@ -1,0 +1,55 @@
+<div class="page" data-testid="page-register">
+  <div class="card">
+    <h1 data-testid="heading-register-title">Register</h1>
+
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input id="firstName" [(ngModel)]="firstName" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input id="lastName" [(ngModel)]="lastName" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" [(ngModel)]="email" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" [(ngModel)]="password" type="password" />
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input id="address" [(ngModel)]="address" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="ccId">Credit Card ID</label>
+      <input id="ccId" [(ngModel)]="ccId" type="text" />
+    </div>
+
+    <div class="form-group">
+      <label for="expiration">Expiration Date</label>
+      <input id="expiration" [(ngModel)]="expiration" type="date" />
+    </div>
+
+    <button class="btn btn-primary" (click)="register()">Register</button>
+
+    <div *ngIf="successMessage" style="color: green; margin-top: 10px;">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" style="color: red; margin-top: 10px;">
+      {{ errorMessage }}
+    </div>
+
+    <p style="margin-top: 12px; text-align: center;">
+      Already have an account?
+      <a routerLink="/">Login</a>
+    </p>
+  </div>
+</div>

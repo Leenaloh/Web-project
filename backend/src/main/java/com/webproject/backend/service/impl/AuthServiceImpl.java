@@ -2,6 +2,7 @@ package com.webproject.backend.service.impl;
 
 import com.webproject.backend.model.LoginRequest;
 import com.webproject.backend.model.LoginResponse;
+import com.webproject.backend.model.RegisterRequest;
 import com.webproject.backend.service.serviceInterface.AuthService;
 import java.util.List;
 import java.util.Map;
@@ -46,5 +47,64 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public LoginResponse me() {
     return null;
+  }
+
+  @Override
+  public LoginResponse register(RegisterRequest request) {
+    try {
+      String checkEmailSql = "SELECT COUNT(*) FROM customers WHERE email = ?";
+      Integer count = jdbcTemplate.queryForObject(checkEmailSql, Integer.class, request.getEmail());
+
+      if (count != null && count > 0) {
+        return new LoginResponse("FAIL", "Email already exists", null, null);
+      }
+
+      java.sql.Date expirationDate = java.sql.Date.valueOf(request.getExpiration());
+      java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+
+      if (expirationDate.before(today)) {
+        return new LoginResponse("FAIL", "Credit card is expired", null, null);
+      }
+
+      String checkCardSql = "SELECT COUNT(*) FROM creditcards WHERE id = ?";
+      Integer cardExists =
+          jdbcTemplate.queryForObject(checkCardSql, Integer.class, request.getCcId());
+
+      if (cardExists == null || cardExists == 0) {
+        String insertCardSql =
+            """
+          INSERT INTO creditcards (id, firstName, lastName, expiration)
+          VALUES (?, ?, ?, ?)
+        """;
+
+        jdbcTemplate.update(
+            insertCardSql,
+            request.getCcId(),
+            request.getFirstName(),
+            request.getLastName(),
+            expirationDate);
+      }
+
+      String insertCustomerSql =
+          """
+        INSERT INTO customers (firstName, lastName, ccId, address, email, password)
+        VALUES (?, ?, ?, ?, ?, ?)
+      """;
+
+      jdbcTemplate.update(
+          insertCustomerSql,
+          request.getFirstName(),
+          request.getLastName(),
+          request.getCcId(),
+          request.getAddress(),
+          request.getEmail(),
+          request.getPassword());
+
+      return new LoginResponse("SUCCESS", "Registered successfully", null, null);
+
+    } catch (Exception e) {
+      System.err.println("Error during registration: " + e.getMessage());
+      return new LoginResponse("FAIL", "Server error", null, null);
+    }
   }
 }
