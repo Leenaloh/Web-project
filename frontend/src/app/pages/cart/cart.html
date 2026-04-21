@@ -10,31 +10,63 @@
     {{ errorMessage }}
   </div>
 
-  <div *ngIf="!loading && cart.empty" class="state-box">
+  <div *ngIf="!loading && isEmpty" class="state-box">
     Your cart is empty.
   </div>
 
-  <div *ngIf="!loading && !cart.empty" class="cart-layout">
+  <div *ngIf="!loading && !isEmpty" class="cart-layout">
     <div class="cart-items">
-      <div class="cart-item" *ngFor="let item of cart.items">
+      <div class="cart-item" *ngFor="let item of cartItems">
         <div class="movie-info">
           <h3>{{ item.title }}</h3>
-          <p><strong>Movie ID:</strong> {{ item.movieId }}</p>
-          <p><strong>Year:</strong> {{ item.year }}</p>
-          <p><strong>Director:</strong> {{ item.director }}</p>
-          <p><strong>Rental Price:</strong> {{ item.rentalPrice | currency }}</p>
+          <p><strong>Year:</strong> {{ item.year ?? 'Not available' }}</p>
+          <p><strong>Director:</strong> {{ item.director || 'Not available' }}</p>
+          <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+          <p *ngIf="hasPrice(item); else priceUnavailable">
+            <strong>Price:</strong> {{ item.price | currency }}
+          </p>
+          <ng-template #priceUnavailable>
+            <p><strong>Price:</strong> Not available</p>
+          </ng-template>
+          <p *ngIf="hasPrice(item); else subtotalUnavailable">
+            <strong>Subtotal:</strong> {{ getItemSubtotal(item) | currency }}
+          </p>
+          <ng-template #subtotalUnavailable>
+            <p><strong>Subtotal:</strong> Not available</p>
+          </ng-template>
         </div>
 
-        <button type="button" class="remove-btn" (click)="remove(item)">
-          Remove
-        </button>
+        <div class="item-actions">
+          <div class="quantity-controls">
+            <button type="button" class="quantity-btn" (click)="decrease(item)">
+              -
+            </button>
+            <span class="quantity-value">{{ item.quantity }}</span>
+            <button type="button" class="quantity-btn" (click)="increase(item)">
+              +
+            </button>
+          </div>
+
+          <button type="button" class="remove-btn" (click)="remove(item)">
+            Remove
+          </button>
+        </div>
       </div>
     </div>
 
     <div class="summary-box">
       <h2>Summary</h2>
-      <p><strong>Total Movies:</strong> {{ cart.totalItems }}</p>
-      <p><strong>Total Amount:</strong> {{ cart.totalAmount | currency }}</p>
+      <p><strong>Total Movies:</strong> {{ totalItems }}</p>
+      <p *ngIf="!hasUnavailablePricing; else totalUnavailable">
+        <strong>Total Amount:</strong> {{ totalPrice | currency }}
+      </p>
+      <ng-template #totalUnavailable>
+        <p><strong>Total Amount:</strong> Not available</p>
+      </ng-template>
+
+      <button type="button" class="clear-btn" (click)="clear()" [disabled]="isEmpty">
+        Clear Cart
+      </button>
 
       <button type="button" class="checkout-btn" (click)="goToCheckout()">
         Proceed to Checkout
