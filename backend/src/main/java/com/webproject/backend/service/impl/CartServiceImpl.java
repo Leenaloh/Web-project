@@ -75,10 +75,7 @@ public class CartServiceImpl implements CartService {
     CartState currentCart = snapshot();
     cartItems.clear();
     return new CheckoutResponse(
-        true,
-        "Order placed",
-        UUID.randomUUID().toString(),
-        currentCart.getTotalPrice());
+        true, "Order placed", UUID.randomUUID().toString(), currentCart.getTotalPrice());
   }
 
   private void validateMovieId(String movieId) {

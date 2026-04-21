@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/checkout")
 public class CheckoutController {
 
-    private final CheckoutService checkoutService;
+  private final CheckoutService checkoutService;
 
-    public CheckoutController(CheckoutService checkoutService) {
-        this.checkoutService = checkoutService;
-    }
+  public CheckoutController(CheckoutService checkoutService) {
+    this.checkoutService = checkoutService;
+  }
 
-    @PostMapping
-    public ResponseEntity<CheckoutResponse> checkout(@Valid @RequestBody CheckoutRequest request) {
-        CheckoutResponse response = checkoutService.checkout(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+  @PostMapping
+  public ResponseEntity<CheckoutResponse> checkout(@Valid @RequestBody CheckoutRequest request) {
+    CheckoutResponse response = checkoutService.checkout(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
 }
