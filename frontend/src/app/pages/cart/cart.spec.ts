@@ -1,117 +1,145 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CartComponent } from "./cart";
-import { RouterTestingModule } from "@angular/router/testing";
-import { of } from "rxjs";
-import { CartService, CartState } from "../../services/cartService/cartService";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { throwError, of } from 'rxjs';
 
-describe("CartComponent", () => {
+import { CartComponent } from './cart';
+import { CartService, CartState } from '../../services/cartService/cartService';
+import { MoviesService } from '../../services/movieService/movieService';
+
+describe('CartComponent', () => {
   let component: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
   let mockCartService: jasmine.SpyObj<CartService>;
+  let mockMoviesService: jasmine.SpyObj<MoviesService>;
+  let router: Router;
 
-  const mockInitialCart: CartState = {
+  const rawCart: CartState = {
     items: [
-      { movieId: "tt001", title: "The Shawshank Redemption", quantity: 2 },
-      { movieId: "tt002", title: "The Wandering Soap Opera", quantity: 1 }
-    ],
-    totalPrice: 45
-  };
-
-  const mockEmptyCart: CartState = {
-    items: [],
-    totalPrice: 0
+      { movieId: 'tt001', quantity: 2 },
+      { movieId: 'tt002', quantity: 1 }
+    ]
   };
 
   beforeEach(async () => {
-    mockCartService = jasmine.createSpyObj("CartService", [
-      "getCart",
-      "updateItemQuantity",
-      "removeItem",
-      "clearCart",
-      "checkout"
+    mockCartService = jasmine.createSpyObj('CartService', [
+      'getCart',
+      'updateItemQuantity',
+      'removeItem',
+      'clearCart'
     ]);
+
+    mockMoviesService = jasmine.createSpyObj('MoviesService', ['getMovieById']);
 
     await TestBed.configureTestingModule({
       imports: [CartComponent, RouterTestingModule],
       providers: [
-        { provide: CartService, useValue: mockCartService }
+        { provide: CartService, useValue: mockCartService },
+        { provide: MoviesService, useValue: mockMoviesService }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CartComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
   });
 
-  it("should load cart items from service", () => {
-    mockCartService.getCart.and.returnValue(of(mockInitialCart));
+  it('loads cart items and enriches them with movie details', () => {
+    mockCartService.getCart.and.returnValue(of(rawCart));
+    mockMoviesService.getMovieById.withArgs('tt001').and.returnValue(
+      of({
+        id: 'tt001',
+        title: 'The Shawshank Redemption',
+        year: 1994,
+        director: 'Frank Darabont',
+        price: 10
+      })
+    );
+    mockMoviesService.getMovieById.withArgs('tt002').and.returnValue(
+      of({
+        id: 'tt002',
+        title: 'The Wandering Soap Opera',
+        year: 2017,
+        director: 'Raul Ruiz',
+        rentalPrice: 25
+      })
+    );
 
-    fixture.detectChanges(); 
-
-    expect(mockCartService.getCart).toHaveBeenCalled();
-    expect(component.cart.items.length).toBe(2);
-    expect(component.cart.items[0].title).toBe("The Shawshank Redemption");
-  });
-
-  it("should call removeItem on the service and update state", () => {
-    mockCartService.getCart.and.returnValue(of(mockInitialCart));
-    fixture.detectChanges(); 
-
-    const cartAfterRemoval: CartState = {
-      items: [{ movieId: "tt002", title: "The Wandering Soap Opera", quantity: 1 }],
-      totalPrice: 15
-    };
-    mockCartService.removeItem.and.returnValue(of(cartAfterRemoval));
-
-    component.remove("tt001");
-
-    expect(mockCartService.removeItem).toHaveBeenCalledWith("tt001");
-    expect(component.cart.items.length).toBe(1);
-    expect(component.cart.items[0].movieId).toBe("tt002");
-  });
-
-  it("should update quantity through the service", () => {
-    mockCartService.getCart.and.returnValue(of(mockInitialCart));
     fixture.detectChanges();
 
-    const cartAfterUpdate: CartState = {
-      items: [
-        { movieId: "tt001", title: "The Shawshank Redemption", quantity: 3 },
-        { movieId: "tt002", title: "The Wandering Soap Opera", quantity: 1 }
-      ],
-      totalPrice: 60
-    };
-    mockCartService.updateItemQuantity.and.returnValue(of(cartAfterUpdate));
-
-    component.increase("tt001", 2);
-
-    expect(mockCartService.updateItemQuantity).toHaveBeenCalledWith("tt001", 3);
-    expect(component.cart.items[0].quantity).toBe(3);
+    expect(mockCartService.getCart).toHaveBeenCalledWith(1);
+    expect(mockMoviesService.getMovieById).toHaveBeenCalledWith('tt001');
+    expect(mockMoviesService.getMovieById).toHaveBeenCalledWith('tt002');
+    expect(component.cartItems[0].title).toBe('The Shawshank Redemption');
+    expect(component.totalItems).toBe(3);
+    expect(component.totalPrice).toBe(45);
   });
 
-  it("should call clearCart on the service and empty the items", () => {
-    mockCartService.getCart.and.returnValue(of(mockInitialCart));
+  it('falls back to movieId when the movie details request fails', () => {
+    mockCartService.getCart.and.returnValue(of({ items: [{ movieId: 'tt404', quantity: 1 }] }));
+    mockMoviesService.getMovieById.and.returnValue(
+      throwError(() => new Error('movie lookup failed'))
+    );
+
     fixture.detectChanges();
 
-    mockCartService.clearCart.and.returnValue(of(mockEmptyCart));
+    expect(component.cartItems[0].title).toBe('tt404');
+    expect(component.totalPrice).toBe(0);
+  });
 
+  it('updates quantity and re-enriches the cart', () => {
+    mockCartService.getCart.and.returnValue(of(rawCart));
+    mockMoviesService.getMovieById.and.returnValues(
+      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 }),
+      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 })
+    );
+    mockCartService.updateItemQuantity.and.returnValue(
+      of({
+        items: [
+          { movieId: 'tt001', quantity: 3 },
+          { movieId: 'tt002', quantity: 1 }
+        ]
+      })
+    );
+
+    fixture.detectChanges();
+    component.increase(component.cartItems[0]);
+
+    expect(mockCartService.updateItemQuantity).toHaveBeenCalledWith('tt001', 3);
+    expect(component.cartItems[0].quantity).toBe(3);
+    expect(component.totalPrice).toBe(55);
+  });
+
+  it('clears the cart', () => {
+    mockCartService.getCart.and.returnValue(of(rawCart));
+    mockMoviesService.getMovieById.and.returnValues(
+      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 })
+    );
+    mockCartService.clearCart.and.returnValue(of({ items: [] }));
+
+    fixture.detectChanges();
     component.clear();
 
     expect(mockCartService.clearCart).toHaveBeenCalled();
-    expect(component.cart.items.length).toBe(0);
+    expect(component.cartItems.length).toBe(0);
+    expect(component.isEmpty).toBeTrue();
   });
 
-  it("should call checkout on the service and clear cart on success", () => {
-    mockCartService.getCart.and.returnValue(of(mockInitialCart));
+  it('navigates to checkout when the cart has items', () => {
+    mockCartService.getCart.and.returnValue(of(rawCart));
+    mockMoviesService.getMovieById.and.returnValues(
+      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 })
+    );
+
     fixture.detectChanges();
-    spyOn(window, "alert");
 
-    const mockCheckoutResponse = { success: true, message: "Order placed" };
-    mockCartService.checkout.and.returnValue(of(mockCheckoutResponse));
+    const navigateSpy = spyOn(router, 'navigate');
+    component.goToCheckout();
 
-    component.checkout();
-
-    expect(mockCartService.checkout).toHaveBeenCalledWith({ customerName: "Guest" });
-    expect(window.alert).toHaveBeenCalledWith("Checkout successful: Order placed");
-    expect(component.cart.items.length).toBe(0); 
+    expect(navigateSpy).toHaveBeenCalledWith(['/checkout']);
   });
 });
