@@ -1,1 +1,31 @@
-<router-outlet data-testid="app-router-outlet"></router-outlet>
+<div class="app-shell">
+  <header *ngIf="showNavbar" class="app-header">
+    <div class="app-header-inner">
+      <nav class="app-nav" aria-label="Primary">
+        <a
+          routerLink="/home"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          data-testid="app-link-home">
+          Home
+        </a>
+        <a
+          routerLink="/cart"
+          routerLinkActive="active"
+          data-testid="app-link-cart">
+          Cart
+        </a>
+        <a
+          routerLink="/"
+          (click)="logout()"
+          data-testid="app-link-logout">
+          Logout
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet data-testid="app-router-outlet"></router-outlet>
+  </main>
+</div>

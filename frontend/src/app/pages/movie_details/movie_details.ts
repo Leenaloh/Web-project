@@ -37,7 +37,7 @@ export class MovieDetailsComponent implements OnInit {
           this.movie = data;
           this.error = '';
         },
-        error: (err) => {
+        error: (err: unknown) => {
           console.error(err);
           this.error = 'Movie not found or failed to load.';
         }
@@ -62,7 +62,7 @@ export class MovieDetailsComponent implements OnInit {
         this.success = `Added ${this.qty} item(s) to cart`;
         this.addError = '';
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Failed to add item to cart', err);
         this.addError = 'Failed to add item to cart.';
         this.success = '';
