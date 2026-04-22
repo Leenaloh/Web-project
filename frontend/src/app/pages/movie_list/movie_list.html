@@ -1,62 +1,150 @@
-<div class="top-link" data-testid="nav-movie-list">
-  <a routerLink="/home" data-testid="btn-back-home">← Back to Home</a>
-</div>
-
-<div class="container" data-testid="page-movie-list">
-  <div class="box">
-    <h2 class="page-title" data-testid="heading-movie-list">Movies</h2>
-
-    <div data-testid="msg-success" [hidden]="!success">{{ success }}</div>
-    <div data-testid="msg-error" [hidden]="!error">{{ error }}</div>
-
-    <div *ngIf="!error && movies.length === 0">No movies found.</div>
-
-    <div class="movie" *ngFor="let m of movies; let i = index" [attr.data-testid]="'movie-card-' + (m.id || i)">
-      <h3 class="movie-title" [attr.data-testid]="'movie-title-' + (m.id || i)">
-        <a
-          (click)="goDetails(m.id)"
-          (keyup.enter)="goDetails(m.id)"
-          (keyup.space)="goDetails(m.id)"
-          [attr.tabindex]="0"
-          [attr.data-testid]="'movie-link-' + (m.id || i)">
-          {{ m.title }}
+<div class="app-background" data-testid="page-movie-list">
+  <div class="container-fluid px-0">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg app-navbar">
+      <div class="container">
+        <a class="navbar-brand app-brand" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
+          <span class="app-brand-text">ilmly</span>
         </a>
-      </h3>
 
-      <div class="meta">
-        <div [attr.data-testid]="'movie-year-' + (m.id || i)"><b>Year:</b> {{ m.year }}</div>
-        <div><b>Director:</b> {{ m.director }}</div>
-        <div [attr.data-testid]="'movie-rating-' + (m.id || i)">
-          <b>Rating:</b> {{ m.rating ?? 'N/A' }}/10
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isMenuOpen = !isMenuOpen"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/cart" (click)="isMenuOpen = false">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/login" (click)="isMenuOpen = false">Logout</a>
+            </li>
+          </ul>
         </div>
       </div>
+    </nav>
 
-      <button
-        class="btn btn-success"
-        (click)="addToCart(m)"
-        [attr.data-testid]="'btn-add-to-cart-' + (m.id || i)">
-        Add to Cart
-      </button>
-      <hr />
-    </div>
+    <!-- Header -->
+    <section class="page-hero">
+      <div class="container">
+        <span class="page-badge">Movie Collection</span>
+        <h1 class="page-hero-title" data-testid="heading-movie-list">Browse Movies</h1>
+      </div>
+    </section>
 
-    <div class="pagination" *ngIf="totalPages > 1" data-testid="pagination">
-      <button class="page-btn" (click)="goToPage(page - 1)" [disabled]="page === 1">
-        Prev
-      </button>
+    <!-- Messages -->
+    <section class="movie-list-feedback" *ngIf="success || error">
+      <div class="container">
+        <div class="alert alert-success" data-testid="msg-success" [hidden]="!success">
+          {{ success }}
+        </div>
 
-      <button
-        class="page-btn"
-        *ngFor="let p of pages"
-        (click)="goToPage(p)"
-        [class.active]="p === page"
-        [attr.data-testid]="'page-btn-' + p">
-        {{ p }}
-      </button>
+        <div class="alert alert-danger" data-testid="msg-error" [hidden]="!error">
+          {{ error }}
+        </div>
+      </div>
+    </section>
 
-      <button class="page-btn" (click)="goToPage(page + 1)" [disabled]="page === totalPages">
-        Next
-      </button>
-    </div>
+    <!-- Cards -->
+    <section class="movie-list-wrap">
+      <div class="container">
+        <div class="movie-list-empty empty-state" *ngIf="!error && movies.length === 0">
+          No movies found.
+        </div>
+
+        <div class="row g-4">
+          <div
+            class="col-12 col-md-6 col-xl-4"
+            *ngFor="let m of movies; let i = index"
+            [attr.data-testid]="'movie-card-' + (m.id || i)">
+
+            <article
+              class="movie-list-card clickable-card"
+              (click)="goDetails(m.id)"
+              (keyup.enter)="goDetails(m.id)"
+              (keyup.space)="goDetails(m.id)"
+              tabindex="0">
+
+              <div class="movie-list-card-top">
+                <span class="soft-pill" [attr.data-testid]="'movie-rating-' + (m.id || i)">
+                  {{ m.rating ?? 'N/A' }}/10
+                </span>
+              </div>
+
+              <div class="movie-list-card-body">
+                <h3 class="movie-list-title" [attr.data-testid]="'movie-title-' + (m.id || i)">
+                  <span
+                    class="movie-list-link"
+                    [attr.data-testid]="'movie-link-' + (m.id || i)">
+                    {{ m.title }}
+                  </span>
+                </h3>
+
+                <div class="info-block">
+                  <div class="info-row" [attr.data-testid]="'movie-year-' + (m.id || i)">
+                    <span class="info-label">Year</span>
+                    <span class="info-value">{{ m.year }}</span>
+                  </div>
+
+                  <div class="info-row">
+                    <span class="info-label">Director</span>
+                    <span class="info-value">{{ m.director }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="movie-list-actions">
+                <button
+                  class="btn btn-primary movie-list-cart-btn"
+                  (click)="$event.stopPropagation(); addToCart(m)"
+                  [attr.data-testid]="'btn-add-to-cart-' + (m.id || i)">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div
+          class="movie-list-pagination"
+          *ngIf="totalPages > 1"
+          data-testid="pagination">
+
+          <button
+            class="movie-list-nav-btn"
+            (click)="goToPage(page - 1)"
+            [disabled]="page === 1">
+            Previous
+          </button>
+
+          <div class="movie-list-page-numbers">
+            <button
+              class="movie-list-page-btn"
+              *ngFor="let p of pages"
+              (click)="goToPage(p)"
+              [class.active]="p === page"
+              [attr.data-testid]="'page-btn-' + p">
+              {{ p }}
+            </button>
+          </div>
+
+          <button
+            class="movie-list-nav-btn"
+            (click)="goToPage(page + 1)"
+            [disabled]="page === totalPages">
+            Next
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
 </div>

@@ -1,66 +1,155 @@
-<div class="page" data-testid="page-home">
-  <div class="container">
-    <h1 class="brand" data-testid="heading-home-title">IMDB Movie Store</h1>
+<div class="app-background" data-testid="page-home">
+  <div class="container-fluid px-0">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg app-navbar">
+      <div class="container">
+        <a class="navbar-brand app-brand" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
+          <span class="app-brand-text">ilmly</span>
+        </a>
 
-    <hr class="divider" />
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isMenuOpen = !isMenuOpen"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!-- Search Movies -->
-    <div class="panel" data-testid="panel-search">
-      <h2 class="panel-title" data-testid="heading-search-movies">Search Movies</h2>
-
-      <div class="search-grid">
-        <div class="field">
-          <div class="label">Title</div>
-          <input class="input" [(ngModel)]="form.title" placeholder="Search by title" data-testid="input-title" />
-        </div>
-
-        <div class="field">
-          <div class="label">Year</div>
-          <input class="input" [(ngModel)]="form.year" placeholder="e.g. 1994" data-testid="input-year" />
-        </div>
-
-        <div class="field">
-          <div class="label">Director</div>
-          <input class="input" [(ngModel)]="form.director" placeholder="Search by director" data-testid="input-director" />
-        </div>
-
-        <div class="field">
-          <div class="label">Star Name</div>
-          <input class="input" [(ngModel)]="form.starName" placeholder="Search by star" data-testid="input-star" />
+        <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+            <li class="nav-item">
+              <a class="nav-link active" routerLink="/home" (click)="isMenuOpen = false" data-testid="link-home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/cart" (click)="isMenuOpen = false" data-testid="link-cart">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/login" (click)="isMenuOpen = false" data-testid="link-logout">Logout</a>
+            </li>
+          </ul>
         </div>
       </div>
+    </nav>
 
-      <div class="actions" data-testid="actions-search">
-        <button class="btn btn-primary" (click)="search()" data-testid="btn-search">Search</button>
-        <button class="btn btn-secondary" (click)="clear()" data-testid="btn-clear">Clear</button>
+    <!-- Hero -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-lg-8">
+            <span class="hero-badge">Browse • Search • Discover</span>
+
+            <h1 class="hero-title">
+              Find your next movie in seconds
+            </h1>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="note">
-        * You can search by one or multiple criteria. All fields are optional.
+    <!-- Search Panel -->
+    <section class="search-panel-wrap">
+      <div class="container">
+        <div class="search-panel page-section" data-testid="panel-search">
+          <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2 mb-4">
+            <div>
+              <h2 class="section-title mb-1">Search Movies</h2>
+              <p class="section-subtitle mb-0">
+                Type a movie title for suggestions, or filter by genre and first letter.
+              </p>
+            </div>
+          </div>
+
+          <div class="row g-3 align-items-end">
+            <!-- Main title search -->
+            <div class="col-12 col-lg-6 position-relative">
+              <label class="form-label">Movie Title</label>
+              <input
+                class="form-control search-input-lg"
+                [(ngModel)]="form.title"
+                (input)="onTitleInput()"
+                (blur)="hideSuggestions()"
+                placeholder="Type a title..."
+                autocomplete="off"
+                data-testid="input-title" />
+
+              <div class="autocomplete-menu" *ngIf="showSuggestions">
+                <button
+                  type="button"
+                  class="autocomplete-item"
+                  *ngFor="let suggestion of titleSuggestions"
+                  (mousedown)="selectSuggestion(suggestion)">
+                  {{ suggestion }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Genre filter -->
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Genre</label>
+              <select class="form-select" [(ngModel)]="selectedGenreString">
+                <option value="">All genres</option>
+                <option *ngFor="let g of genres" [value]="g.id">
+                  {{ g.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Letter filter -->
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Starts With</label>
+              <select class="form-select" [(ngModel)]="selectedTitleChar">
+                <option value="">Letter</option>
+                <option *ngFor="let c of titleChars" [value]="c">
+                  {{ c }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Optional advanced fields -->
+            <div class="col-12 col-md-6">
+              <label class="form-label">Director</label>
+              <input
+                class="form-control"
+                [(ngModel)]="form.director"
+                placeholder="Search by director"
+                data-testid="input-director" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">Star Name</label>
+              <input
+                class="form-control"
+                [(ngModel)]="form.starName"
+                placeholder="Search by star"
+                data-testid="input-star" />
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3">
+              <label class="form-label">Year</label>
+              <input
+                class="form-control"
+                [(ngModel)]="form.year"
+                placeholder="e.g. 1994"
+                data-testid="input-year" />
+            </div>
+
+            <div class="col-12 col-lg-9">
+              <div class="action-row justify-content-lg-end mt-lg-4" data-testid="actions-search">
+                <button class="btn btn-primary px-4" (click)="search()" data-testid="btn-search">
+                  Search
+                </button>
+                <button class="btn btn-outline-primary px-4" (click)="clear()" data-testid="btn-clear">
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div data-testid="msg-success" hidden></div>
+          <div data-testid="msg-error" hidden></div>
+        </div>
       </div>
-      <div data-testid="msg-success" hidden></div>
-      <div data-testid="msg-error" hidden></div>
-    </div>
-
-    <!-- Browse by Genre -->
-    <h2 class="section-title" data-testid="heading-browse-genre">Browse by Genre</h2>
-    <div class="chip-row" data-testid="genre-list">
-      <button
-        class="chip"
-        *ngFor="let g of genres; let i = index"
-        [class.active]="g.id === selectedGenre"
-        (click)="browseGenre(g.id)"
-        [attr.data-testid]="'genre-item-' + i">
-        {{ g.name }}
-      </button>
-    </div>
-
-    <!-- Browse by Title -->
-    <h2 class="section-title" data-testid="heading-browse-title">Browse by Title</h2>
-    <div class="alpha-grid" data-testid="title-browse-list">
-      <button class="alpha" *ngFor="let c of titleChars; let i = index" (click)="browseTitle(c)" [attr.data-testid]="'title-char-' + i">
-        {{ c }}
-      </button>
-    </div>
+    </section>
   </div>
 </div>

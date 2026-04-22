@@ -281,4 +281,24 @@ public class MovieServiceImpl implements MovieService {
 
     return movie;
   }
+
+    public List<String> autocompleteTitles(String query) {
+    if (query == null || query.trim().isEmpty()) {
+      return List.of();
+    }
+
+    String sql =
+        """
+        SELECT DISTINCT m.title
+        FROM movies m
+        WHERE LOWER(m.title) LIKE LOWER(?)
+        ORDER BY m.title
+        LIMIT 8
+        """;
+
+    return jdbcTemplate.query(
+        sql,
+        (rs, rowNum) -> rs.getString("title"),
+        query.trim() + "%");
+  }
 }
