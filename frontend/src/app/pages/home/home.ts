@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MoviesService } from '../../services/movieService/movieService';
 
 @Component({
   selector: 'app-home',
@@ -39,23 +40,74 @@ export class HomeComponent {
     { id: 23, name: 'Western' },
   ];
 
-  selectedGenre: number | null = null;
-
   titleChars: string[] = [
     '*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
     'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
   ];
 
-  constructor(private router: Router) {}
+  selectedGenreString = '';
+  selectedTitleChar = '';
+
+  titleSuggestions: string[] = [];
+  showSuggestions = false;
+  isLoadingSuggestions = false;
+  isMenuOpen = false;
+
+  constructor(
+    private router: Router,
+    private moviesService: MoviesService
+  ) {}
+
+  onTitleInput(): void {
+    const value = this.form.title.trim();
+
+    if (value.length < 2) {
+      this.titleSuggestions = [];
+      this.showSuggestions = false;
+      return;
+    }
+
+    this.isLoadingSuggestions = true;
+
+    this.moviesService.autocompleteTitles(value).subscribe({
+      next: (results: string[]) => {
+        this.titleSuggestions = results;
+        this.showSuggestions = results.length > 0;
+        this.isLoadingSuggestions = false;
+      },
+      error: () => {
+        this.titleSuggestions = [];
+        this.showSuggestions = false;
+        this.isLoadingSuggestions = false;
+      }
+    });
+  }
+
+  selectSuggestion(title: string): void {
+    this.form.title = title;
+    this.titleSuggestions = [];
+    this.showSuggestions = false;
+  }
+
+  hideSuggestions(): void {
+    setTimeout(() => {
+      this.showSuggestions = false;
+    }, 150);
+  }
 
   search(): void {
+    const genreId = this.selectedGenreString ? Number(this.selectedGenreString) : null;
+    const startsWith = this.selectedTitleChar || null;
+
     this.router.navigate(['/movie-list'], {
       queryParams: {
         title: this.form.title || null,
         year: this.form.year || null,
         director: this.form.director || null,
         starName: this.form.starName || null,
+        genreId,
+        startsWith,
         page: 1,
         pageSize: 20,
       },
@@ -64,18 +116,10 @@ export class HomeComponent {
 
   clear(): void {
     this.form = { title: '', year: '', director: '', starName: '' };
-  }
-
-  browseGenre(genreId: number): void {
-    this.selectedGenre = genreId;
-    this.router.navigate(['/movie-list'], {
-      queryParams: { genreId, page: 1, pageSize: 20 },
-    });
-  }
-
-  browseTitle(c: string): void {
-    this.router.navigate(['/movie-list'], {
-      queryParams: { startsWith: c, page: 1, pageSize: 20 },
-    });
+    this.selectedGenreString = '';
+    this.selectedTitleChar = '';
+    this.titleSuggestions = [];
+    this.showSuggestions = false;
+    this.isLoadingSuggestions = false;
   }
 }

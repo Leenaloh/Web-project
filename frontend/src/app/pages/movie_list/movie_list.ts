@@ -19,6 +19,7 @@ export class MovieListComponent implements OnInit {
   totalResults = 0;
   error = '';
   success = '';
+  isMenuOpen = false;
 
   constructor(
     private router: Router,
@@ -132,6 +133,26 @@ export class MovieListComponent implements OnInit {
   }
 
   get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    const windowSize = 7;
+
+    if (this.totalPages <= windowSize) {
+      return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    }
+
+    const half = Math.floor(windowSize / 2);
+    let start = this.page - half;
+    let end = this.page + half;
+
+    if (start < 1) {
+      start = 1;
+      end = windowSize;
+    }
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = this.totalPages - windowSize + 1;
+    }
+
+    return Array.from({ length: windowSize }, (_, i) => start + i);
   }
 }

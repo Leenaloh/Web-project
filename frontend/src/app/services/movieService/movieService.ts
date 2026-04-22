@@ -15,7 +15,7 @@ export interface Movie {
   rating?: number;
   price?: number;
   rentalPrice?: number;
-  genres?: string[];  
+  genres?: string[];
   stars?: Star[];
 }
 
@@ -73,4 +73,9 @@ export class MoviesService {
     return this.http.get<Movie>(`${this.base}/${encodeURIComponent(id)}`);
   }
 
+  autocompleteTitles(query: string) {
+    return this.http.get<string[]>(`${this.base}/autocomplete`, {
+      params: { query }
+    });
+  }
 }

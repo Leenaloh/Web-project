@@ -3,6 +3,9 @@ package com.webproject.backend.controller;
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
 import com.webproject.backend.service.serviceInterface.MovieService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -96,4 +99,11 @@ public class MovieController {
 
     return ResponseEntity.ok(movie);
   }
+
+  @GetMapping("/autocomplete")
+  public ResponseEntity<List<String>> autocompleteTitles(
+      @RequestParam String query) {
+    return ResponseEntity.ok(movieService.autocompleteTitles(query));
+  }
+  
 }
