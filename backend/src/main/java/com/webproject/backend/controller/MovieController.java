@@ -55,15 +55,19 @@ public class MovieController {
    * @param pageSize number of movies per page (default is 20)
    * @return MoviesPageState containing the list of movies filtered by genre
    */
-  @GetMapping("/browseByGenre")
-  public ResponseEntity<MoviesPageState> browseMoviesByGenre(
-      @RequestParam Integer genreId,
-      @RequestParam(defaultValue = "1") int page,
-      @RequestParam(defaultValue = "20") int pageSize) {
-    MoviesPageState result = movieService.browseMoviesByGenre(genreId, page, pageSize);
+    @GetMapping("/browseByGenre")
+    public ResponseEntity<MoviesPageState> browseMoviesByGenre(
+        @RequestParam(required = false) Integer genreId,
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "20") int pageSize) {
 
-    return ResponseEntity.ok(result);
-  }
+      if (genreId == null) {
+        return ResponseEntity.badRequest().build();
+      }
+
+      MoviesPageState result = movieService.browseMoviesByGenre(genreId, page, pageSize);
+      return ResponseEntity.ok(result);
+    }
 
   /**
    * Browse movies by the first letter of the movie title.
@@ -73,15 +77,19 @@ public class MovieController {
    * @param pageSize number of movies per page (default is 20)
    * @return MoviesPageState containing the list of movies that match the given starting letter
    */
-  @GetMapping("/browseByFirstLetter")
-  public ResponseEntity<MoviesPageState> browseMoviesByFirstLetter(
-      @RequestParam String startsWith,
-      @RequestParam(defaultValue = "1") int page,
-      @RequestParam(defaultValue = "20") int pageSize) {
-    MoviesPageState result = movieService.browseMoviesByFirstLetter(startsWith, page, pageSize);
+    @GetMapping("/browseByFirstLetter")
+    public ResponseEntity<MoviesPageState> browseMoviesByFirstLetter(
+        @RequestParam(required = false) String startsWith,
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "20") int pageSize) {
 
-    return ResponseEntity.ok(result);
-  }
+      if (startsWith == null || startsWith.isBlank()) {
+        return ResponseEntity.badRequest().build();
+      }
+
+      MoviesPageState result = movieService.browseMoviesByFirstLetter(startsWith, page, pageSize);
+      return ResponseEntity.ok(result);
+    }
 
   /**
    * Retrieve a single movie by its unique identifier.
@@ -102,8 +110,12 @@ public class MovieController {
 
   @GetMapping("/autocomplete")
   public ResponseEntity<List<String>> autocompleteTitles(
-      @RequestParam String query) {
+      @RequestParam(required = false) String query) {
+
+    if (query == null || query.isBlank()) {
+      return ResponseEntity.badRequest().build();
+    }
+
     return ResponseEntity.ok(movieService.autocompleteTitles(query));
   }
-  
 }

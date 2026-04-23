@@ -5,20 +5,18 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.webproject.backend.TestConfig;
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.service.impl.MovieServiceImpl;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestConfig.class)
 class MovieIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
@@ -109,5 +107,30 @@ class MovieIntegrationTest {
     mockMvc.perform(get("/api/v1/movies/tt999")).andExpect(status().isNotFound());
 
     verify(movieServiceImpl).getMovieById("tt999");
+  }
+
+  @Test
+  void autocompleteTitles_integration_returns200Json() throws Exception {
+    doReturn(List.of("Avatar", "Avengers")).when(movieServiceImpl).autocompleteTitles("av");
+
+    mockMvc
+        .perform(get("/api/v1/movies/autocomplete").param("query", "av"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0]").value("Avatar"))
+        .andExpect(jsonPath("$[1]").value("Avengers"));
+
+    verify(movieServiceImpl).autocompleteTitles("av");
+  }
+
+  @Test
+  void autocompleteTitles_missingQuery_integration_returns400() throws Exception {
+    mockMvc.perform(get("/api/v1/movies/autocomplete")).andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void autocompleteTitles_blankQuery_integration_returns400() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/movies/autocomplete").param("query", "   "))
+        .andExpect(status().isBadRequest());
   }
 }

@@ -1,3 +1,5 @@
+/// <reference types="jasmine" />
+
 import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
@@ -5,13 +7,12 @@ import {
 } from '@angular/common/http/testing';
 import { HttpRequest } from '@angular/common/http';
 import { MoviesService, MoviesPageState, Movie } from './movieService';
-import { environment } from '../../../environments/environment';
 
 describe('MoviesService', () => {
   let service: MoviesService;
   let httpMock: HttpTestingController;
 
-  const base = `${environment.apiUrl}/api/v1/movies`;
+  const base = 'http://localhost:8080/api/v1/movies';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -136,5 +137,21 @@ describe('MoviesService', () => {
     expect(req.request.method).toBe('GET');
 
     req.flush(mockMovie);
+  });
+
+  it('autocompleteTitles() should call GET /api/v1/movies/autocomplete with query param', () => {
+    const mockSuggestions = ['Avatar', 'Avengers'];
+
+    service.autocompleteTitles('Av').subscribe((res) => {
+      expect(res).toEqual(mockSuggestions);
+    });
+
+    const req = httpMock.expectOne(
+      (r: HttpRequest<any>) =>
+        r.method === 'GET' && r.url === `${base}/autocomplete`
+    );
+    expect(req.request.params.get('query')).toBe('Av');
+
+    req.flush(mockSuggestions);
   });
 });
