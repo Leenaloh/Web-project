@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
 import com.webproject.backend.service.serviceInterface.MovieService;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -102,5 +103,24 @@ class MovieControllerTest {
     mockMvc.perform(get("/api/v1/movies/missing")).andExpect(status().isNotFound());
 
     verify(movieService).getMovieById("missing");
+  }
+
+  @Test
+  void autocompleteTitles_shouldReturn200_andCallService() throws Exception {
+    when(movieService.autocompleteTitles(eq("av"))).thenReturn(List.of("Avatar", "Avengers"));
+
+    mockMvc
+        .perform(get("/api/v1/movies/autocomplete").param("query", "av"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$[0]").value("Avatar"))
+        .andExpect(jsonPath("$[1]").value("Avengers"));
+
+    verify(movieService).autocompleteTitles("av");
+  }
+
+  @Test
+  void autocompleteTitles_missingQuery_shouldReturn400() throws Exception {
+    mockMvc.perform(get("/api/v1/movies/autocomplete")).andExpect(status().isBadRequest());
   }
 }

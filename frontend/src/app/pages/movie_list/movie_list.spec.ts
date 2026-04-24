@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { MovieListComponent } from './movie_list';
 import { MoviesService } from '../../services/movieService/movieService';
 import { CartService } from '../../services/cartService/cartService';
@@ -13,13 +13,15 @@ describe('MovieListComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
-    moviesServiceSpy = jasmine.createSpyObj('MoviesService', ['searchMovies']);
+    moviesServiceSpy = jasmine.createSpyObj('MoviesService', [
+      'searchMovies',
+      'browseByGenre',
+      'browseByFirstLetter',
+    ]);
     cartServiceSpy = jasmine.createSpyObj('CartService', ['addItem', 'rememberMovieTitle']);
 
     const activatedRouteStub = {
-      snapshot: { queryParamMap: convertToParamMap({}) },
       queryParams: of({}),
-      paramMap: of(convertToParamMap({})),
     };
 
     await TestBed.configureTestingModule({
@@ -41,34 +43,62 @@ describe('MovieListComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should load movies from backend on init using searchMovies', () => {
+    moviesServiceSpy.searchMovies.and.returnValue(
+      of({ page: 1, pageSize: 20, totalPages: 1, totalResults: 0, movies: [] })
+    );
+
+    fixture.detectChanges();
+
+    expect(moviesServiceSpy.searchMovies).toHaveBeenCalledWith({
+      title: '',
+      year: undefined,
+      director: '',
+      starName: '',
+      page: 1,
+      pageSize: 20,
+    });
+  });
+
   it('should call cart service when clicking Add to Cart', () => {
     cartServiceSpy.addItem.and.returnValue(of({ items: [{ movieId: 'tt001', quantity: 1 }] }));
 
     component.addToCart({ id: 'tt001', title: 'Bambola' });
 
+    expect(cartServiceSpy.rememberMovieTitle).toHaveBeenCalledWith('tt001', 'Bambola');
     expect(cartServiceSpy.addItem).toHaveBeenCalledWith('tt001', 1);
     expect(component.success).toBe('Added to cart');
   });
 
-
   it('goDetails() should navigate to /movie_details with id query param', () => {
     const navSpy = spyOn(router, 'navigate');
 
-    const id = 'tt002';
-    component.goDetails(id);
+    component.goDetails('tt002');
 
     expect(navSpy).toHaveBeenCalledWith(['/movie_details'], {
-      queryParams: { id },
+      queryParams: { id: 'tt002' },
     });
   });
 
-  it('PHASE-3 (expected to FAIL now): should load movies from backend on init', () => {
-    moviesServiceSpy.searchMovies.and.returnValue(
-      of({ page: 1, pageSize: 20, movies: [] })
-    );
+  it('goToPage() should navigate with merged query params', () => {
+    const navSpy = spyOn(router, 'navigate');
+    component.page = 1;
+    component.pageSize = 20;
+    component.totalPages = 5;
 
-    fixture.detectChanges();
+    component.goToPage(2);
 
-    expect(moviesServiceSpy.searchMovies).toHaveBeenCalled();
+    expect(navSpy).toHaveBeenCalledWith([], {
+      relativeTo: jasmine.anything(),
+      queryParams: { page: 2, pageSize: 20 },
+      queryParamsHandling: 'merge',
+    });
+  });
+
+  it('pages should return a window of 7 page numbers around current page', () => {
+    component.page = 5;
+    component.totalPages = 10;
+
+    expect(component.pages).toEqual([2, 3, 4, 5, 6, 7, 8]);
   });
 });
