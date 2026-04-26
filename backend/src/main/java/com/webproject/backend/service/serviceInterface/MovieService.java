@@ -1,9 +1,8 @@
 package com.webproject.backend.service.serviceInterface;
 
-import java.util.List;
-
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
+import java.util.List;
 
 public interface MovieService {
   MoviesPageState searchMovies(
@@ -14,5 +13,6 @@ public interface MovieService {
   MoviesPageState browseMoviesByFirstLetter(String startsWith, int page, int pageSize);
 
   Movie getMovieById(String id);
+
   List<String> autocompleteTitles(String query);
 }

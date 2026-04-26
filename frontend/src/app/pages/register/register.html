@@ -1,55 +1,116 @@
-<div class="page" data-testid="page-register">
-  <div class="card">
-    <h1 data-testid="heading-register-title">Register</h1>
+<div class="min-vh-100 d-flex align-items-center bg-light bg-gradient">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
 
-    <div class="form-group">
-      <label for="firstName">First Name</label>
-      <input id="firstName" [(ngModel)]="firstName" type="text" />
+        <div
+          class="bg-white rounded-4 shadow border p-4 p-md-5"
+          data-testid="page-register">
+
+          <div class="text-center mb-4">
+            <h1 class="fw-bold mb-2">Register</h1>
+            <p class="text-secondary mb-0">
+              Create your account to get started
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="firstName" class="form-label fw-semibold">First Name</label>
+              <input
+                id="firstName"
+                [(ngModel)]="firstName"
+                type="text"
+                class="form-control rounded-4"
+                placeholder="First name" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="lastName" class="form-label fw-semibold">Last Name</label>
+              <input
+                id="lastName"
+                [(ngModel)]="lastName"
+                type="text"
+                class="form-control rounded-4"
+                placeholder="Last name" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <input
+              id="email"
+              [(ngModel)]="email"
+              type="text"
+              class="form-control rounded-4"
+              placeholder="Enter your email" />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label fw-semibold">Password</label>
+            <input
+              id="password"
+              [(ngModel)]="password"
+              type="password"
+              class="form-control rounded-4"
+              placeholder="Enter your password" />
+          </div>
+
+          <div class="mb-3">
+            <label for="address" class="form-label fw-semibold">Address</label>
+            <input
+              id="address"
+              [(ngModel)]="address"
+              type="text"
+              class="form-control rounded-4"
+              placeholder="Enter your address" />
+          </div>
+
+          <div class="row">
+            <div class="col-md-7 mb-3">
+              <label for="ccId" class="form-label fw-semibold">Credit Card ID</label>
+              <input
+                id="ccId"
+                [(ngModel)]="ccId"
+                type="text"
+                class="form-control rounded-4"
+                placeholder="Card number" />
+            </div>
+
+            <div class="col-md-5 mb-3">
+              <label for="expiration" class="form-label fw-semibold">Expiration</label>
+              <input
+                id="expiration"
+                [(ngModel)]="expiration"
+                type="date"
+                class="form-control rounded-4" />
+            </div>
+          </div>
+
+          <button
+            class="btn btn-danger w-100 py-2 rounded-pill fw-semibold mt-2"
+            (click)="register()">
+            Register
+          </button>
+
+          <div *ngIf="successMessage" class="alert alert-success mt-3 mb-0">
+            {{ successMessage }}
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">
+            {{ errorMessage }}
+          </div>
+
+          <p class="text-center mt-4 mb-0">
+            Already have an account?
+            <a routerLink="/login" class="text-dark fw-bold text-decoration-none">
+              Login
+            </a>
+          </p>
+
+        </div>
+
+      </div>
     </div>
-
-    <div class="form-group">
-      <label for="lastName">Last Name</label>
-      <input id="lastName" [(ngModel)]="lastName" type="text" />
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" [(ngModel)]="email" type="text" />
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input id="password" [(ngModel)]="password" type="password" />
-    </div>
-
-    <div class="form-group">
-      <label for="address">Address</label>
-      <input id="address" [(ngModel)]="address" type="text" />
-    </div>
-
-    <div class="form-group">
-      <label for="ccId">Credit Card ID</label>
-      <input id="ccId" [(ngModel)]="ccId" type="text" />
-    </div>
-
-    <div class="form-group">
-      <label for="expiration">Expiration Date</label>
-      <input id="expiration" [(ngModel)]="expiration" type="date" />
-    </div>
-
-    <button class="btn btn-primary" (click)="register()">Register</button>
-
-    <div *ngIf="successMessage" style="color: green; margin-top: 10px;">
-      {{ successMessage }}
-    </div>
-
-    <div *ngIf="errorMessage" style="color: red; margin-top: 10px;">
-      {{ errorMessage }}
-    </div>
-
-    <p style="margin-top: 12px; text-align: center;">
-      Already have an account?
-      <a routerLink="/">Login</a>
-    </p>
   </div>
 </div>

@@ -63,8 +63,9 @@
           <div class="row g-3 align-items-end">
             <!-- Main title search -->
             <div class="col-12 col-lg-6 position-relative">
-              <label class="form-label">Movie Title</label>
+              <label for="movieTitle" class="form-label">Movie Title</label>
               <input
+                id="movieTitle"
                 class="form-control search-input-lg"
                 [(ngModel)]="form.title"
                 (input)="onTitleInput()"
@@ -86,8 +87,8 @@
 
             <!-- Genre filter -->
             <div class="col-12 col-md-6 col-lg-3">
-              <label class="form-label">Genre</label>
-              <select class="form-select" [(ngModel)]="selectedGenreString">
+              <label for="genre" class="form-label">Genre</label>
+              <select id="genre" class="form-select" [(ngModel)]="selectedGenreString">
                 <option value="">All genres</option>
                 <option *ngFor="let g of genres" [value]="g.id">
                   {{ g.name }}
@@ -97,8 +98,8 @@
 
             <!-- Letter filter -->
             <div class="col-12 col-md-6 col-lg-3">
-              <label class="form-label">Starts With</label>
-              <select class="form-select" [(ngModel)]="selectedTitleChar">
+              <label for="letter" class="form-label">Starts With</label>
+              <select id="letter" class="form-select" [(ngModel)]="selectedTitleChar">
                 <option value="">Letter</option>
                 <option *ngFor="let c of titleChars" [value]="c">
                   {{ c }}
@@ -108,8 +109,9 @@
 
             <!-- Optional advanced fields -->
             <div class="col-12 col-md-6">
-              <label class="form-label">Director</label>
+              <label for="director" class="form-label">Director</label>
               <input
+                id="director"
                 class="form-control"
                 [(ngModel)]="form.director"
                 placeholder="Search by director"
@@ -117,8 +119,9 @@
             </div>
 
             <div class="col-12 col-md-6">
-              <label class="form-label">Star Name</label>
+              <label for="star" class="form-label">Star Name</label>
               <input
+                id="star"
                 class="form-control"
                 [(ngModel)]="form.starName"
                 placeholder="Search by star"
@@ -126,8 +129,9 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-3">
-              <label class="form-label">Year</label>
+              <label for="year" class="form-label">Year</label>
               <input
+                id="year"
                 class="form-control"
                 [(ngModel)]="form.year"
                 placeholder="e.g. 1994"
