@@ -47,8 +47,10 @@ test.describe('Auth', () => {
   });
 
   test('login success navigates to home', async ({ page }) => {
-    await page.getByTestId('input-email').fill('demo@user.com');
-    await page.getByTestId('input-password').fill('password123');
+    await page.getByTestId('input-email').fill('jbrown@ics185.edu');
+    await page.getByTestId('input-password').fill('keyboard');
+    // await page.getByTestId('input-email').fill('demo@user.com');
+    // await page.getByTestId('input-password').fill('password123');
     await page.getByTestId('btn-login').click();
 
     await expect(page).toHaveURL(/\/home$/);

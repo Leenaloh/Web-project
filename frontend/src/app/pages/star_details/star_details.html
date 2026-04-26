@@ -39,7 +39,7 @@
           {{ star.name }}
         </h1>
 
-        <p class="star-meta">
+        <p class="star-meta" [attr.data-testid]="'star-birth-year-' + star.id">
           Born {{ star.birthYear || 'N/A' }}
           <span *ngIf="star.birthYear">
             (Age {{ 2026 - star.birthYear }})
@@ -73,15 +73,15 @@
                 </span>
               </h3>
 
-              <div class="star-film-meta">
-                <div *ngIf="m.year">
-                  <span>Year</span>
-                  {{ m.year }}
+              <div class="info-block">
+                <div class="info-row" *ngIf="m.year">
+                  <span class="info-label">Year</span>
+                  <span class="info-value">{{ m.year }}</span>
                 </div>
 
-                <div *ngIf="m.director">
-                  <span>Director</span>
-                  {{ m.director }}
+                <div class="info-row" *ngIf="m.director">
+                  <span class="info-label">Director</span>
+                  <span class="info-value">{{ m.director }}</span>
                 </div>
               </div>
             </article>
