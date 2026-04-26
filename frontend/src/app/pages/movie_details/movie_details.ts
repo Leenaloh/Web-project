@@ -12,6 +12,7 @@ import { CartService } from '../../services/cartService/cartService';
   styleUrls: ['./movie_details.css'],
 })
 export class MovieDetailsComponent implements OnInit {
+  isMenuOpen = false;
   qty = 1;
   movie: Movie | null = null;
   error = '';
