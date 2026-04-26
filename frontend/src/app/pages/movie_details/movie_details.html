@@ -1,5 +1,6 @@
-<div class="app-background" data-testid="page-movie-details">
+<div class="min-vh-100 bg-light" data-testid="page-movie-details">
   <div class="container-fluid px-0">
+
     <nav class="navbar navbar-expand-lg app-navbar">
       <div class="container">
         <a class="navbar-brand app-brand" routerLink="/home">
@@ -18,61 +19,96 @@
         <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
           <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
             <li class="nav-item">
-              <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false">Home</a>
+              <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false" data-testid="link-home">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" routerLink="/cart" (click)="isMenuOpen = false">Cart</a>
+              <a class="nav-link" routerLink="/cart" (click)="isMenuOpen = false" data-testid="link-cart">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" routerLink="/login" (click)="isMenuOpen = false">Logout</a>
+              <a class="nav-link" routerLink="/login" (click)="isMenuOpen = false" data-testid="link-logout">Logout</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+    <section class="bg-white bg-opacity-75 py-5 border-bottom" *ngIf="movie">
+      <div class="container-xl py-4">
+        <h1
+          class="display-5 fw-bold mb-0"
+          [attr.data-testid]="'heading-movie-title-' + movie.id">
+          {{ movie.title }}
+        </h1>
+      </div>
+    </section>
 
-    <ng-container *ngIf="movie">
-      <section class="page-hero details-hero">
-        <div class="container">
-          <div class="row align-items-center g-4">
-            <div class="col-lg-8">
-              <span class="page-badge">Movie Details</span>
+    <section class="py-5" *ngIf="movie">
+      <div class="container-xl">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-lg-5">
 
-              <h1
-                class="page-hero-title"
-                [attr.data-testid]="'heading-movie-title-' + movie.id">
-                {{ movie.title }}
-              </h1>
+          <div class="row g-4">
 
-              <p class="movie-meta">
-                <span>Year</span> {{ movie.year || 'N/A' }}
-                <span class="dot">•</span>
-                <span>Director</span> {{ movie.director || 'N/A' }}
-                <span class="dot">•</span>
-                <span>Rating</span> {{ movie.rating ?? 'N/A' }}/10
-              </p>
+            <div class="col-12 col-lg-8">
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                  <h2 class="h4 fw-bold mb-1">Overview</h2>
+                  <p class="text-secondary mb-0">Basic movie information</p>
+                </div>
 
-              <div class="genre-tags" *ngIf="movie.genres && movie.genres.length">
-                <span *ngFor="let g of movie.genres">{{ g }}</span>
+                <span
+                  class="badge rounded-pill text-danger bg-danger bg-opacity-10 border border-danger px-3 py-2"
+                  [attr.data-testid]="'movie-rating-' + movie.id">
+                  {{ movie.rating ?? 'N/A' }}/10
+                </span>
+              </div>
+
+              <div class="border rounded-4 p-4">
+                <div class="row gy-3">
+                  <div class="col-6 text-secondary text-uppercase fw-bold small">Year</div>
+                  <div class="col-6 text-end fw-bold" [attr.data-testid]="'movie-year-' + movie.id">
+                    {{ movie.year }}
+                  </div>
+
+                  <div class="col-6 text-secondary text-uppercase fw-bold small">Director</div>
+                  <div class="col-6 text-end fw-bold">
+                    {{ movie.director }}
+                  </div>
+
+                  <div class="col-6 text-secondary text-uppercase fw-bold small">Genres</div>
+                  <div class="col-6 text-end fw-bold">
+                    {{ movie.genres?.join(', ') }}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="col-lg-4">
-              <div class="hero-cart-box">
-                <h2 class="cart-heading">Add to Cart</h2>
+            <div class="col-12 col-lg-4">
+              <h2 class="h4 fw-bold mb-1" data-testid="heading-add-to-cart">
+                Add to Cart
+              </h2>
+              <p class="text-secondary mb-4">Select quantity</p>
 
-                <div class="cart-qty-row">
+              <div class="border rounded-4 p-4">
+                <div
+                  class="d-flex justify-content-center align-items-center gap-3 mb-4"
+                  data-testid="qty-controls">
+
                   <button
-                    class="qty-chip"
+                    type="button"
+                    class="btn btn-link text-danger fw-bold text-decoration-none"
                     (click)="dec()"
                     data-testid="btn-update-qty-dec">
-                    −
+                    -
                   </button>
 
-                  <span class="qty-display" data-testid="input-qty">{{ qty }}</span>
+                  <input
+                    class="form-control text-center w-25"
+                    [value]="qty"
+                    readonly
+                    data-testid="input-qty" />
 
                   <button
-                    class="qty-chip"
+                    type="button"
+                    class="btn btn-link text-danger fw-bold text-decoration-none"
                     (click)="inc()"
                     data-testid="btn-update-qty-inc">
                     +
@@ -80,53 +116,56 @@
                 </div>
 
                 <button
-                  class="btn btn-primary cart-main-btn"
+                  class="btn btn-danger w-100 rounded-pill fw-bold py-2"
                   (click)="add()"
                   data-testid="btn-add-to-cart">
                   Add to Cart
                 </button>
+              </div>
+            </div>
 
-                <div class="alert alert-success mt-3" data-testid="msg-success" [hidden]="!success">
-                  {{ success }}
-                </div>
+          </div>
 
-                <div class="alert alert-danger mt-3" data-testid="msg-error" [hidden]="!addError">
-                  {{ addError }}
-                </div>
+          <div class="mt-5">
+            <h2 class="h4 fw-bold mb-3" data-testid="heading-stars">Stars</h2>
+
+            <div class="row g-3" data-testid="star-list" *ngIf="movie.stars">
+              <div
+                class="col-12 col-md-6 col-xl-4"
+                *ngFor="let s of movie.stars"
+                [attr.data-testid]="'star-item-' + s.id">
+
+                <button
+                  type="button"
+                  class="btn btn-outline-danger w-100 text-start rounded-pill px-4"
+                  (click)="goStar(s.id)"
+                  [attr.data-testid]="'star-link-' + s.id">
+                  {{ s.name }}
+                </button>
+
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section class="cast-section">
-        <div class="container">
-          <h2 class="section-title mb-3" data-testid="heading-stars">Cast</h2>
-
-          <div class="empty-state" *ngIf="!movie.stars || movie.stars.length === 0">
-            No stars found for this movie.
+          <div class="alert alert-success mt-4 mb-0" data-testid="msg-success" [hidden]="!success">
+            {{ success }}
           </div>
 
-          <div class="cast-list" data-testid="star-list">
-            <a
-              *ngFor="let s of movie.stars"
-              class="cast-chip"
-              (click)="goStar(s.id)"
-              (keyup.enter)="goStar(s.id)"
-              (keyup.space)="goStar(s.id)"
-              tabindex="0"
-              [attr.data-testid]="'star-link-' + s.id">
-              {{ s.name }}
-            </a>
+          <div class="alert alert-danger mt-4 mb-0" data-testid="msg-error" [hidden]="!addError">
+            {{ addError }}
           </div>
-        </div>
-      </section>
-    </ng-container>
 
-    <div class="container py-5" *ngIf="!movie && error">
-      <div class="alert alert-danger">
-        {{ error }}
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section class="py-5" *ngIf="!movie && error">
+      <div class="container-xl">
+        <div class="alert alert-danger mb-0">
+          {{ error }}
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
