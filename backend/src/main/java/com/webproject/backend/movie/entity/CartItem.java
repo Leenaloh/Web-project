@@ -24,11 +24,15 @@ public class CartItem {
   @JoinColumn(name = "movie_id", nullable = false)
   private Movie movie;
 
+  @Column(nullable = false)
+  private Integer quantity;
+
   public CartItem() {}
 
-  public CartItem(Customer customer, Movie movie) {
+  public CartItem(Customer customer, Movie movie, Integer quantity) {
     this.customer = customer;
     this.movie = movie;
+    this.quantity = quantity;
   }
 
   public Long getId() {
@@ -43,6 +47,10 @@ public class CartItem {
     return movie;
   }
 
+  public Integer getQuantity() {
+    return quantity;
+  }
+
   public void setId(Long id) {
     this.id = id;
   }
@@ -53,5 +61,9 @@ public class CartItem {
 
   public void setMovie(Movie movie) {
     this.movie = movie;
+  }
+
+  public void setQuantity(Integer quantity) {
+    this.quantity = quantity;
   }
 }

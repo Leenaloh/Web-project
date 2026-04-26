@@ -7,30 +7,37 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.webproject.backend.TestConfig;
 import com.webproject.backend.service.impl.CartServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestConfig.class)
 class CartIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @MockitoSpyBean private CartServiceImpl cartServiceImpl;
 
+  private MockHttpSession session;
+
+  @BeforeEach
+  void setUp() {
+    session = new MockHttpSession();
+    session.setAttribute("customerId", 490001);
+  }
+
   @Test
   void getCart_integration_callsRealService_andReturns200Json() throws Exception {
     mockMvc
-        .perform(get("/api/v1/cart"))
+        .perform(get("/api/v1/cart").session(session))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -40,7 +47,11 @@ class CartIntegrationTest {
   @Test
   void addItem_integration_callsRealService_andReturns200Json() throws Exception {
     mockMvc
-        .perform(post("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "2"))
+        .perform(
+            post("/api/v1/cart/items")
+                .session(session)
+                .param("movieId", "tt0264464")
+                .param("quantity", "2"))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -50,14 +61,14 @@ class CartIntegrationTest {
   @Test
   void addItem_missingMovieId_integration_returns400() throws Exception {
     mockMvc
-        .perform(post("/api/v1/cart/items").param("quantity", "2"))
+        .perform(post("/api/v1/cart/items").session(session).param("quantity", "2"))
         .andExpect(status().isBadRequest());
   }
 
   @Test
   void addItem_noQuantity_integration_usesDefaultOfOne() throws Exception {
     mockMvc
-        .perform(post("/api/v1/cart/items").param("movieId", "tt0264464"))
+        .perform(post("/api/v1/cart/items").session(session).param("movieId", "tt0264464"))
         .andExpect(status().isOk());
 
     verify(cartServiceImpl).addItem("tt0264464", 1);
@@ -66,7 +77,11 @@ class CartIntegrationTest {
   @Test
   void updateItemQuantity_integration_callsRealService_andReturns200Json() throws Exception {
     mockMvc
-        .perform(put("/api/v1/cart/items").param("movieId", "tt0264464").param("quantity", "5"))
+        .perform(
+            put("/api/v1/cart/items")
+                .session(session)
+                .param("movieId", "tt0264464")
+                .param("quantity", "5"))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -76,14 +91,14 @@ class CartIntegrationTest {
   @Test
   void updateItemQuantity_missingQuantity_integration_returns400() throws Exception {
     mockMvc
-        .perform(put("/api/v1/cart/items").param("movieId", "tt0264464"))
+        .perform(put("/api/v1/cart/items").session(session).param("movieId", "tt0264464"))
         .andExpect(status().isBadRequest());
   }
 
   @Test
   void removeItem_integration_callsRealService_andReturns200Json() throws Exception {
     mockMvc
-        .perform(delete("/api/v1/cart/items/tt0264464"))
+        .perform(delete("/api/v1/cart/items/tt0264464").session(session))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -93,7 +108,7 @@ class CartIntegrationTest {
   @Test
   void clearCart_integration_callsRealService_andReturns200Json() throws Exception {
     mockMvc
-        .perform(delete("/api/v1/cart"))
+        .perform(delete("/api/v1/cart").session(session))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -114,6 +129,7 @@ class CartIntegrationTest {
     mockMvc
         .perform(
             post("/api/v1/cart/checkout")
+                .session(session)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validJson))
         .andExpect(status().isOk())
@@ -125,7 +141,8 @@ class CartIntegrationTest {
   @Test
   void checkout_missingBody_integration_returns400() throws Exception {
     mockMvc
-        .perform(post("/api/v1/cart/checkout").contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            post("/api/v1/cart/checkout").session(session).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 }

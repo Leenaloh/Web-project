@@ -282,7 +282,7 @@ public class MovieServiceImpl implements MovieService {
     return movie;
   }
 
-    public List<String> autocompleteTitles(String query) {
+  public List<String> autocompleteTitles(String query) {
     if (query == null || query.trim().isEmpty()) {
       return List.of();
     }
@@ -296,9 +296,6 @@ public class MovieServiceImpl implements MovieService {
         LIMIT 8
         """;
 
-    return jdbcTemplate.query(
-        sql,
-        (rs, rowNum) -> rs.getString("title"),
-        query.trim() + "%");
+    return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("title"), query.trim() + "%");
   }
 }

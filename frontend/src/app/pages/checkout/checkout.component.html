@@ -59,7 +59,12 @@
           <strong>{{ item.title }}</strong>
           <p>{{ item.year }} • {{ item.director }}</p>
         </div>
-        <strong>{{ item.rentalPrice | currency }}</strong>
+        <strong *ngIf="(item.unitPrice ?? 0) > 0; else checkoutPriceUnavailable">
+          {{ item.unitPrice | currency }}
+        </strong>
+        <ng-template #checkoutPriceUnavailable>
+          <strong>Not available</strong>
+        </ng-template>
       </div>
 
       <div class="summary-total">
@@ -69,7 +74,12 @@
 
       <div class="summary-total">
         <span>Total Amount</span>
-        <strong>{{ cart.totalAmount | currency }}</strong>
+        <strong *ngIf="(cart.totalAmount ?? cart.totalPrice ?? 0) > 0; else checkoutTotalUnavailable">
+          {{ (cart.totalAmount ?? cart.totalPrice ?? 0) | currency }}
+        </strong>
+        <ng-template #checkoutTotalUnavailable>
+          <strong>Not available</strong>
+        </ng-template>
       </div>
     </div>
   </div>

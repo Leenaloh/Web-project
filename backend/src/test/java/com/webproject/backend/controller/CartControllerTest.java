@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(CartControllerOld.class)
+@WebMvcTest(CartController.class)
 public class CartControllerTest {
 
   @Autowired private MockMvc mockMvc;
