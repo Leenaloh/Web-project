@@ -1,56 +1,132 @@
-<div class="top-link" data-testid="nav-movie-details">
-  <a
-    (click)="goBack()"
-    (keyup.enter)="goBack()"
-    (keyup.space)="goBack()"
-    [attr.tabindex]="0"
-    role="button"
-    style="cursor: pointer;"
-    data-testid="btn-back-movies">
-    Back to Movies
-  </a>
-</div>
-
-<div class="container" data-testid="page-movie-details" *ngIf="movie">
-  <div class="box">
-    <h2 class="title" [attr.data-testid]="'heading-movie-title-' + movie.id">{{ movie.title }}</h2>
-
-    <div class="meta">
-      <div [attr.data-testid]="'movie-year-' + movie.id"><b>Year:</b> {{ movie.year }}</div>
-      <div><b>Director:</b> {{ movie.director }}</div>
-      <div [attr.data-testid]="'movie-rating-' + movie.id"><b>Rating:</b> {{ movie.rating ?? 'N/A' }}/10</div>
-      <div><b>Genres:</b> <span *ngIf="movie.genres">{{ movie.genres.join(', ') }}</span></div>
-    </div>
-
-    <h3 class="section" data-testid="heading-stars">Stars</h3>
-    <ul class="links" data-testid="star-list" *ngIf="movie.stars">
-      <li *ngFor="let s of movie.stars" [attr.data-testid]="'star-item-' + s.id">
-        <a
-          (click)="goStar(s.id)"
-          (keyup.enter)="goStar(s.id)"
-          (keyup.space)="goStar(s.id)"
-          [attr.tabindex]="0"
-          [attr.data-testid]="'star-link-' + s.id">
-          {{ s.name }}
+<div class="app-background" data-testid="page-movie-details">
+  <div class="container-fluid px-0">
+    <nav class="navbar navbar-expand-lg app-navbar">
+      <div class="container">
+        <a class="navbar-brand app-brand" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
+          <span class="app-brand-text">ilmly</span>
         </a>
-      </li>
-    </ul>
 
-    <h3 class="section" data-testid="heading-add-to-cart">Add to Cart</h3>
-    <div class="qty-row" data-testid="qty-controls">
-      <button class="qty-btn" (click)="dec()" data-testid="btn-update-qty-dec">-</button>
-      <input class="qty" [value]="qty" readonly data-testid="input-qty" />
-      <button class="qty-btn" (click)="inc()" data-testid="btn-update-qty-inc">+</button>
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isMenuOpen = !isMenuOpen"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/cart" (click)="isMenuOpen = false">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/login" (click)="isMenuOpen = false">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <ng-container *ngIf="movie">
+      <section class="page-hero details-hero">
+        <div class="container">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+              <span class="page-badge">Movie Details</span>
+
+              <h1
+                class="page-hero-title"
+                [attr.data-testid]="'heading-movie-title-' + movie.id">
+                {{ movie.title }}
+              </h1>
+
+              <p class="movie-meta">
+                <span>Year</span> {{ movie.year || 'N/A' }}
+                <span class="dot">•</span>
+                <span>Director</span> {{ movie.director || 'N/A' }}
+                <span class="dot">•</span>
+                <span>Rating</span> {{ movie.rating ?? 'N/A' }}/10
+              </p>
+
+              <div class="genre-tags" *ngIf="movie.genres && movie.genres.length">
+                <span *ngFor="let g of movie.genres">{{ g }}</span>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="hero-cart-box">
+                <h2 class="cart-heading">Add to Cart</h2>
+
+                <div class="cart-qty-row">
+                  <button
+                    class="qty-chip"
+                    (click)="dec()"
+                    data-testid="btn-update-qty-dec">
+                    −
+                  </button>
+
+                  <span class="qty-display" data-testid="input-qty">{{ qty }}</span>
+
+                  <button
+                    class="qty-chip"
+                    (click)="inc()"
+                    data-testid="btn-update-qty-inc">
+                    +
+                  </button>
+                </div>
+
+                <button
+                  class="btn btn-primary cart-main-btn"
+                  (click)="add()"
+                  data-testid="btn-add-to-cart">
+                  Add to Cart
+                </button>
+
+                <div class="alert alert-success mt-3" data-testid="msg-success" [hidden]="!success">
+                  {{ success }}
+                </div>
+
+                <div class="alert alert-danger mt-3" data-testid="msg-error" [hidden]="!addError">
+                  {{ addError }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cast-section">
+        <div class="container">
+          <h2 class="section-title mb-3" data-testid="heading-stars">Cast</h2>
+
+          <div class="empty-state" *ngIf="!movie.stars || movie.stars.length === 0">
+            No stars found for this movie.
+          </div>
+
+          <div class="cast-list" data-testid="star-list">
+            <a
+              *ngFor="let s of movie.stars"
+              class="cast-chip"
+              (click)="goStar(s.id)"
+              (keyup.enter)="goStar(s.id)"
+              (keyup.space)="goStar(s.id)"
+              tabindex="0"
+              [attr.data-testid]="'star-link-' + s.id">
+              {{ s.name }}
+            </a>
+          </div>
+        </div>
+      </section>
+    </ng-container>
+
+    <div class="container py-5" *ngIf="!movie && error">
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
     </div>
-
-    <button class="btn btn-success" (click)="add()" data-testid="btn-add-to-cart">Add to Cart</button>
-    <div data-testid="msg-success" [hidden]="!success">{{ success }}</div>
-    <div data-testid="msg-error" [hidden]="!addError">{{ addError }}</div>
-  </div>
-</div>
-
-<div class="container" *ngIf="!movie && error">
-  <div class="box">
-    <div class="alert alert-danger">{{ error }}</div>
   </div>
 </div>

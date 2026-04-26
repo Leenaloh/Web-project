@@ -1,26 +1,96 @@
-<div class="top-link" data-testid="nav-star-details">
-  <a routerLink="/movie-list" data-testid="btn-back-movies">← Back to Movies</a>
-</div>
-
-<div class="container" data-testid="page-star-details">
-  <div class="box">
-    <h2 class="name" [attr.data-testid]="'heading-star-name-' + star.id">{{ star.name }}</h2>
-    <div class="meta" [attr.data-testid]="'star-birth-year-' + star.id"><b>Birth Year:</b> {{ star.birthYear }}</div>
-
-    <h3 class="section" data-testid="heading-star-movies">Movies</h3>
-    <ul class="movie-links" data-testid="star-movie-list">
-      <li *ngFor="let m of movies; let i = index" [attr.data-testid]="'movie-item-' + (m.id || i)">
-        <a 
-          (click)="goMovie(m.id)" 
-          (keyup.enter)="goMovie(m.id)"
-          (keyup.space)="goMovie(m.id)" 
-          [attr.tabindex]="0"
-          [attr.data-testid]="'movie-link-' + (m.id || i)">
-          {{ m.title }}
+<div class="app-background" data-testid="page-star-details">
+  <div class="container-fluid px-0">
+    <nav class="navbar navbar-expand-lg app-navbar">
+      <div class="container">
+        <a class="navbar-brand app-brand" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
+          <span class="app-brand-text">ilmly</span>
         </a>
-      </li>
-    </ul>
-    <div data-testid="msg-success" hidden></div>
-    <div data-testid="msg-error" hidden></div>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isMenuOpen = !isMenuOpen"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/cart" (click)="isMenuOpen = false">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/login" (click)="isMenuOpen = false">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="page-hero star-hero">
+      <div class="container">
+        <span class="page-badge">Star Profile</span>
+
+        <h1 class="page-hero-title" [attr.data-testid]="'heading-star-name-' + star.id">
+          {{ star.name }}
+        </h1>
+
+        <p class="star-meta">
+          Born {{ star.birthYear || 'N/A' }}
+          <span *ngIf="star.birthYear">
+            (Age {{ 2026 - star.birthYear }})
+          </span>
+        </p>
+      </div>
+    </section>
+
+    <section class="star-movies-wrap">
+      <div class="container">
+        <h2 class="section-title mb-4" data-testid="heading-star-movies">Movies</h2>
+
+        <div class="empty-state" *ngIf="movies.length === 0">
+          No movies found for this star.
+        </div>
+
+        <div class="row g-4" data-testid="star-movie-list">
+          <div
+            class="col-12 col-md-6 col-xl-4"
+            *ngFor="let m of movies; let i = index"
+            [attr.data-testid]="'movie-item-' + (m.id || i)">
+            <article
+              class="star-film-card clickable-card"
+              (click)="goMovie(m.id)"
+              (keyup.enter)="goMovie(m.id)"
+              (keyup.space)="goMovie(m.id)"
+              tabindex="0">
+              <h3 class="star-film-title">
+                <span [attr.data-testid]="'movie-link-' + (m.id || i)">
+                  {{ m.title }}
+                </span>
+              </h3>
+
+              <div class="star-film-meta">
+                <div *ngIf="m.year">
+                  <span>Year</span>
+                  {{ m.year }}
+                </div>
+
+                <div *ngIf="m.director">
+                  <span>Director</span>
+                  {{ m.director }}
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div data-testid="msg-success" hidden></div>
+        <div data-testid="msg-error" hidden></div>
+      </div>
+    </section>
   </div>
 </div>

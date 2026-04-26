@@ -11,6 +11,7 @@ import { StarsService } from '../../services/starsService/starsService';
   styleUrls: ['./star_details.css'],
 })
 export class StarDetailsComponent implements OnInit {
+  isMenuOpen = false;
   star: any = { id: '', name: '', birthYear: undefined };
   movies: any[] = [];
 
