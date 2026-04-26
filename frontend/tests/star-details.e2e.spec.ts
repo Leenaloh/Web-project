@@ -10,7 +10,7 @@ async function resetCart(request: APIRequestContext): Promise<void> {
 }
 
 async function openStarDetails(page: Page): Promise<void> {
-  await page.goto('/star_details?id=nm001');
+  await page.goto('/star_details?id=nm0749263');
   await expect(page.getByTestId('page-star-details')).toBeVisible();
 }
 
