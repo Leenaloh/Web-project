@@ -136,6 +136,15 @@
                     <span class="info-label">Director</span>
                     <span class="info-value">{{ m.director }}</span>
                   </div>
+
+                  <div class="info-row" *ngIf="m.stars && m.stars.length > 0">
+                    <span class="info-label">Stars</span>
+                    <span class="info-value">
+                      <span *ngFor="let star of m.stars; let last = last">
+                        {{ star.name }}<span *ngIf="!last">, </span>
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
 

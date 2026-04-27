@@ -96,7 +96,7 @@ public class MovieServiceImpl implements MovieService {
 
     long totalResults =
         jdbcTemplate.queryForObject(countSql.toString(), Long.class, countParams.toArray());
-
+    attachStars(movies);
     return buildPageState(movies, page, pageSize, totalResults);
   }
 
@@ -140,7 +140,7 @@ public class MovieServiceImpl implements MovieService {
                     List.of()));
 
     long totalResults = jdbcTemplate.queryForObject(countSql, Long.class, genreId);
-
+    attachStars(movies);
     return buildPageState(movies, page, pageSize, totalResults);
   }
 
@@ -212,7 +212,7 @@ public class MovieServiceImpl implements MovieService {
                     List.of()));
 
     long totalResults = jdbcTemplate.queryForObject(countSql, Long.class, countParams);
-
+    attachStars(movies);
     return buildPageState(movies, page, pageSize, totalResults);
   }
 
@@ -304,5 +304,31 @@ public class MovieServiceImpl implements MovieService {
         """;
 
     return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("title"), query.trim() + "%");
+  }
+
+  private void attachStars(List<Movie> movies) {
+    String starsSql =
+        """
+        SELECT s.id, s.name
+        FROM stars s
+        JOIN stars_in_movies sim ON s.id = sim.starid
+        WHERE sim.movieid = ?
+        ORDER BY s.name
+        """;
+
+    for (Movie movie : movies) {
+      List<com.webproject.backend.model.Star> stars =
+          jdbcTemplate.query(
+              starsSql,
+              (rs, rowNum) -> {
+                com.webproject.backend.model.Star star = new com.webproject.backend.model.Star();
+                star.setId(rs.getString("id"));
+                star.setName(rs.getString("name"));
+                return star;
+              },
+              movie.getId());
+
+      movie.setStars(stars);
+    }
   }
 }
