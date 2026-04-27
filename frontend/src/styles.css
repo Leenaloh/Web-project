@@ -831,7 +831,12 @@ img {
 }
 
 .form-card,
-.summary-card {
+.summary-card { 
+    background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #ececec;
+  border-radius: 1.5rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08);
+}
 
 
 /* ===== cart page ===== */
@@ -1314,5 +1319,4 @@ img {
   .cart-remove-btn {
     width: 100%;
   }
-}
-
+} 

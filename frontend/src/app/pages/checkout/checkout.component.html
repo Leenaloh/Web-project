@@ -61,40 +61,31 @@
             <strong>{{ item.title }}</strong>
             <p>{{ item.year ?? 'N/A' }} • {{ item.director || 'N/A' }}</p>
             <p>Quantity: {{ item.quantity }}</p>
-            <p>Price: {{ item.rentalPrice | currency }}</p>
+            <p *ngIf="item.rentalPrice > 0; else checkoutPriceUnavailable">
+              Price: {{ item.rentalPrice | currency }}
+            </p>
+            <ng-template #checkoutPriceUnavailable>
+              <p>Price: Not available</p>
+            </ng-template>
           </div>
+
           <strong>{{ item.subtotal | currency }}</strong>
         </div>
-
-        <strong *ngIf="(item.unitPrice ?? 0) > 0; else checkoutPriceUnavailable">
-          {{ item.unitPrice | currency }}
-        </strong>
-        <ng-template #checkoutPriceUnavailable>
-          <strong>Not available</strong>
-        </ng-template>
-      </div>
-
 
         <div class="summary-total">
           <span>Total Movies</span>
           <strong>{{ cart.totalItems }}</strong>
         </div>
 
-
         <div class="summary-total">
           <span>Total Amount</span>
-          <strong>{{ cart.totalAmount | currency }}</strong>
+          <strong *ngIf="(cart.totalAmount ?? cart.totalPrice ?? 0) > 0; else checkoutTotalUnavailable">
+            {{ (cart.totalAmount ?? cart.totalPrice ?? 0) | currency }}
+          </strong>
+          <ng-template #checkoutTotalUnavailable>
+            <strong>Not available</strong>
+          </ng-template>
         </div>
-
-      <div class="summary-total">
-        <span>Total Amount</span>
-        <strong *ngIf="(cart.totalAmount ?? cart.totalPrice ?? 0) > 0; else checkoutTotalUnavailable">
-          {{ (cart.totalAmount ?? cart.totalPrice ?? 0) | currency }}
-        </strong>
-        <ng-template #checkoutTotalUnavailable>
-          <strong>Not available</strong>
-        </ng-template>
-
       </div>
     </div>
   </div>
