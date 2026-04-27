@@ -1,64 +1,71 @@
-<div class="checkout-page">
-  <div class="page-header">
-    <h1>Checkout</h1>
-    <p>Verify your payment details to complete the rental.</p>
-  </div>
+<div class="app-background">
+  <div class="checkout-page">
+    <section class="page-hero">
+      <span class="page-badge">Payment • Review • Confirm</span>
+      <h1 class="page-hero-title">Checkout</h1>
+      <p class="page-subtitle">Verify your payment details to complete the rental.</p>
+    </section>
 
-  <div *ngIf="loading" class="state-card">Loading checkout...</div>
+    <div *ngIf="loading" class="state-card">Loading checkout...</div>
 
-  <div *ngIf="!loading && errorMessage" class="error-card">
-    {{ errorMessage }}
-  </div>
+    <div *ngIf="!loading && errorMessage" class="error-card">
+      {{ errorMessage }}
+    </div>
 
-  <div *ngIf="!loading && cart && !cart.empty" class="checkout-layout">
-    <form class="form-card" [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()">
-      <h2>Payment Verification</h2>
+    <div *ngIf="!loading && cart && !cart.empty" class="checkout-layout">
+      <form class="form-card" [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()">
+        <h2>Payment Verification</h2>
 
-      <label>
-        Credit Card ID
-        <input type="text" formControlName="creditCardId" />
-      </label>
-      <small class="field-error" *ngIf="creditCardId?.touched && creditCardId?.invalid">
-        Credit card ID is required.
-      </small>
+        <label>
+          Credit Card ID
+          <input type="text" formControlName="creditCardId" />
+        </label>
+        <small class="field-error" *ngIf="creditCardId?.touched && creditCardId?.invalid">
+          Credit card ID is required.
+        </small>
 
-      <label>
-        First Name
-        <input type="text" formControlName="firstName" />
-      </label>
-      <small class="field-error" *ngIf="firstName?.touched && firstName?.invalid">
-        First name is required.
-      </small>
+        <label>
+          First Name
+          <input type="text" formControlName="firstName" />
+        </label>
+        <small class="field-error" *ngIf="firstName?.touched && firstName?.invalid">
+          First name is required.
+        </small>
 
-      <label>
-        Last Name
-        <input type="text" formControlName="lastName" />
-      </label>
-      <small class="field-error" *ngIf="lastName?.touched && lastName?.invalid">
-        Last name is required.
-      </small>
+        <label>
+          Last Name
+          <input type="text" formControlName="lastName" />
+        </label>
+        <small class="field-error" *ngIf="lastName?.touched && lastName?.invalid">
+          Last name is required.
+        </small>
 
-      <label>
-        Expiration Date
-        <input type="date" formControlName="expiration" />
-      </label>
-      <small class="field-error" *ngIf="expiration?.touched && expiration?.invalid">
-        Expiration date is required.
-      </small>
+        <label>
+          Expiration Date
+          <input type="date" formControlName="expiration" />
+        </label>
+        <small class="field-error" *ngIf="expiration?.touched && expiration?.invalid">
+          Expiration date is required.
+        </small>
 
-      <button class="submit-btn" type="submit" [disabled]="submitting">
-        {{ submitting ? 'Processing...' : 'Confirm Checkout' }}
-      </button>
-    </form>
+        <button class="submit-btn" type="submit" [disabled]="submitting">
+          {{ submitting ? 'Processing...' : 'Confirm Checkout' }}
+        </button>
+      </form>
 
-    <div class="summary-card">
-      <h2>Order Summary</h2>
+      <div class="summary-card">
+        <h2>Order Summary</h2>
 
-      <div class="summary-item" *ngFor="let item of cart.items">
-        <div>
-          <strong>{{ item.title }}</strong>
-          <p>{{ item.year }} • {{ item.director }}</p>
+        <div class="summary-item" *ngFor="let item of summaryItems">
+          <div>
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.year ?? 'N/A' }} • {{ item.director || 'N/A' }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Price: {{ item.rentalPrice | currency }}</p>
+          </div>
+          <strong>{{ item.subtotal | currency }}</strong>
         </div>
+
         <strong *ngIf="(item.unitPrice ?? 0) > 0; else checkoutPriceUnavailable">
           {{ item.unitPrice | currency }}
         </strong>
@@ -67,10 +74,17 @@
         </ng-template>
       </div>
 
-      <div class="summary-total">
-        <span>Total Movies</span>
-        <strong>{{ cart.totalItems }}</strong>
-      </div>
+
+        <div class="summary-total">
+          <span>Total Movies</span>
+          <strong>{{ cart.totalItems }}</strong>
+        </div>
+
+
+        <div class="summary-total">
+          <span>Total Amount</span>
+          <strong>{{ cart.totalAmount | currency }}</strong>
+        </div>
 
       <div class="summary-total">
         <span>Total Amount</span>
@@ -80,6 +94,7 @@
         <ng-template #checkoutTotalUnavailable>
           <strong>Not available</strong>
         </ng-template>
+
       </div>
     </div>
   </div>

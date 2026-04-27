@@ -19,7 +19,10 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
            """)
   List<CartItem> findAllByCustomerId(Integer customerId);
 
-  Optional<CartItem> findByIdAndCustomerId(Long id, Integer customerId);
+  Optional<CartItem> findByIdAndCustomer_Id(Long id, Integer customerId);
+
+
+  void deleteByCustomer_Id(Integer customerId);
 
   @Query(
       """
@@ -33,4 +36,5 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
   Optional<CartItem> findByCustomerIdAndMovieId(Integer customerId, String movieId);
 
   void deleteByCustomerId(Integer customerId);
+
 }

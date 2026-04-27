@@ -26,7 +26,7 @@ public class MovieServiceImpl implements MovieService {
     StringBuilder dataSql =
         new StringBuilder(
             """
-            SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating
+            SELECT DISTINCT m.id, m.title, m.year, m.director, m.rental_price, r.rating
             FROM movies m
             LEFT JOIN ratings r ON m.id = r.movieId
             LEFT JOIN stars_in_movies sim ON m.id = sim.movieId
@@ -89,7 +89,8 @@ public class MovieServiceImpl implements MovieService {
                     rs.getString("title"),
                     rs.getInt("year"),
                     rs.getString("director"),
-                    rs.getDouble("rating"),
+                    rs.getObject("rating") != null ? rs.getDouble("rating") : null,
+                    rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
                     List.of(),
                     List.of()));
 
@@ -106,7 +107,7 @@ public class MovieServiceImpl implements MovieService {
 
     String dataSql =
         """
-        SELECT m.id, m.title, m.year, m.director, r.rating
+        SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
         FROM movies m
         JOIN genres_in_movies gim ON m.id = gim.movieId
         LEFT JOIN ratings r ON m.id = r.movieId
@@ -133,7 +134,8 @@ public class MovieServiceImpl implements MovieService {
                     rs.getString("title"),
                     rs.getInt("year"),
                     rs.getString("director"),
-                    rs.getDouble("rating"),
+                    rs.getObject("rating") != null ? rs.getDouble("rating") : null,
+                    rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
                     List.of(),
                     List.of()));
 
@@ -151,30 +153,31 @@ public class MovieServiceImpl implements MovieService {
     String countSql;
     Object[] dataParams;
     Object[] countParams;
+
     if ("*".equals(startsWith)) {
       dataSql =
           """
-            SELECT m.id, m.title, m.year, m.director, r.rating
-            FROM movies m
-            LEFT JOIN ratings r ON m.id = r.movieId
-            WHERE m.title ~ '^[^A-Za-z0-9]'
-            ORDER BY m.title
-            LIMIT ? OFFSET ?
-            """;
+          SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
+          FROM movies m
+          LEFT JOIN ratings r ON m.id = r.movieId
+          WHERE m.title ~ '^[^A-Za-z0-9]'
+          ORDER BY m.title
+          LIMIT ? OFFSET ?
+          """;
 
       countSql =
           """
-            SELECT COUNT(*)
-            FROM movies m
-            WHERE m.title ~ '^[^A-Za-z0-9]'
-            """;
+          SELECT COUNT(*)
+          FROM movies m
+          WHERE m.title ~ '^[^A-Za-z0-9]'
+          """;
 
       dataParams = new Object[] {pageSize, offset};
       countParams = new Object[] {};
     } else {
       dataSql =
           """
-          SELECT m.id, m.title, m.year, m.director, r.rating
+          SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
           FROM movies m
           LEFT JOIN ratings r ON m.id = r.movieId
           WHERE LOWER(m.title) LIKE LOWER(?)
@@ -203,7 +206,8 @@ public class MovieServiceImpl implements MovieService {
                     rs.getString("title"),
                     rs.getInt("year"),
                     rs.getString("director"),
-                    rs.getDouble("rating"),
+                    rs.getObject("rating") != null ? rs.getDouble("rating") : null,
+                    rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
                     List.of(),
                     List.of()));
 
@@ -222,7 +226,7 @@ public class MovieServiceImpl implements MovieService {
   public Movie getMovieById(String id) {
     String movieSql =
         """
-        SELECT m.id, m.title, m.year, m.director, r.rating
+        SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
         FROM movies m
         LEFT JOIN ratings r ON m.id = r.movieId
         WHERE m.id = ?
@@ -240,6 +244,7 @@ public class MovieServiceImpl implements MovieService {
                       rs.getInt("year"),
                       rs.getString("director"),
                       rs.getObject("rating") != null ? rs.getDouble("rating") : null,
+                      rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
                       new java.util.ArrayList<>(),
                       new java.util.ArrayList<>()),
               id);
@@ -281,6 +286,10 @@ public class MovieServiceImpl implements MovieService {
 
     return movie;
   }
+
+
+  @Override
+
 
   public List<String> autocompleteTitles(String query) {
     if (query == null || query.trim().isEmpty()) {

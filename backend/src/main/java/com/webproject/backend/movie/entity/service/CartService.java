@@ -51,7 +51,7 @@ public class CartService {
   public void removeCartItem(Integer customerId, Long cartItemId) {
     CartItem cartItem =
         cartItemRepository
-            .findByIdAndCustomerId(cartItemId, customerId)
+            .findByIdAndCustomer_Id(cartItemId, customerId)
             .orElseThrow(() -> new NoSuchElementException("Cart item not found"));
 
     cartItemRepository.delete(cartItem);
