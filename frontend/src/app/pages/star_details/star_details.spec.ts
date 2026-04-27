@@ -18,7 +18,7 @@ describe('StarDetailsComponent', () => {
     const activatedRouteStub = {
       snapshot: { queryParamMap: convertToParamMap({ id: 'nm001' }) },
       queryParams: of({ id: 'nm001' }),
-      paramMap: of(convertToParamMap({})),
+      paramMap: of(convertToParamMap({}))
     };
 
     await TestBed.configureTestingModule({
@@ -26,8 +26,8 @@ describe('StarDetailsComponent', () => {
       providers: [
         { provide: StarsService, useValue: starsServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
-        provideRouter([]),
-      ],
+        provideRouter([])
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(StarDetailsComponent);
@@ -46,14 +46,16 @@ describe('StarDetailsComponent', () => {
     component.goMovie(movieId);
 
     expect(navSpy).toHaveBeenCalledWith(['/movie_details'], {
-      queryParams: { id: movieId },
+      queryParams: { id: movieId }
     });
   });
 
-  it('PHASE-3 (expected to fail now): should load star by id from route on init', () => {
-    starsServiceSpy.getStarById.and.returnValue(of({ id: 'nm001', name: 'X' } as any));
+  it('should load star by id from route on init', () => {
+    starsServiceSpy.getStarById.and.returnValue(
+      of({ id: 'nm001', name: 'X' } as any)
+    );
 
-    fixture.detectChanges();
+    component.ngOnInit();
 
     expect(starsServiceSpy.getStarById).toHaveBeenCalledWith('nm001');
   });
