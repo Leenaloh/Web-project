@@ -54,6 +54,12 @@ export class HomeComponent {
   isLoadingSuggestions = false;
   isMenuOpen = false;
 
+  // Added for sorting and page size
+  sortBy = 'title';
+  sortDir = 'asc';
+  pageSize = 20;
+  pageSizes = [10, 25, 50, 100];
+
   constructor(
     private router: Router,
     private moviesService: MoviesService
@@ -108,28 +114,39 @@ export class HomeComponent {
         starName: this.form.starName || null,
         genreId,
         startsWith,
+
+        // Added query params
+        sortBy: this.sortBy,
+        sortDir: this.sortDir,
+
         page: 1,
-        pageSize: 20,
+        pageSize: this.pageSize,
       },
     });
   }
 
   browseAction(): void {
-  this.router.navigate(['/movie-list'], {
-    queryParams: { genre: 'Action' },
-  });
-}
+    this.router.navigate(['/movie-list'], {
+      queryParams: { genre: 'Action' },
+    });
+  }
 
-browseA(): void {
-  this.router.navigate(['/movie-list'], {
-    queryParams: { startsWith: 'A' },
-  });
-}
+  browseA(): void {
+    this.router.navigate(['/movie-list'], {
+      queryParams: { startsWith: 'A' },
+    });
+  }
 
   clear(): void {
     this.form = { title: '', year: '', director: '', starName: '' };
     this.selectedGenreString = '';
     this.selectedTitleChar = '';
+
+    // Added reset for new fields
+    this.sortBy = 'title';
+    this.sortDir = 'asc';
+    this.pageSize = 20;
+
     this.titleSuggestions = [];
     this.showSuggestions = false;
     this.isLoadingSuggestions = false;

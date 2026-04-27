@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Movie, MoviesPageState, MoviesService } from '../../services/movieService/movieService';
 import { CartService } from '../../services/cartService/cartService';
 
 @Component({
   selector: 'app-movie-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './movie_list.html',
   styleUrls: ['./movie_list.css'],
 })
@@ -20,6 +21,9 @@ export class MovieListComponent implements OnInit {
   error = '';
   success = '';
   isMenuOpen = false;
+
+  sortOption = 'none';
+  pageSizeOptions = [10, 25, 50, 100];
 
   constructor(
     private router: Router,
@@ -38,9 +42,11 @@ export class MovieListComponent implements OnInit {
       const starName = params['starName'] ?? '';
       const page = Number(params['page'] ?? 1);
       const pageSize = Number(params['pageSize'] ?? 20);
+      const sortOption = params['sort'] ?? 'none';
 
       this.page = page;
       this.pageSize = pageSize;
+      this.sortOption = sortOption;
       this.error = '';
       this.success = '';
 
@@ -94,6 +100,56 @@ export class MovieListComponent implements OnInit {
     this.totalPages = res.totalPages ?? 1;
     this.totalResults = res.totalResults ?? this.movies.length;
     this.error = '';
+
+    this.applySorting();
+  }
+
+  applySorting(): void {
+    if (this.sortOption === 'none') {
+      return;
+    }
+
+    this.movies = [...this.movies].sort((a, b) => {
+      if (this.sortOption === 'title-asc') {
+        return (a.title ?? '').localeCompare(b.title ?? '');
+      }
+
+      if (this.sortOption === 'title-desc') {
+        return (b.title ?? '').localeCompare(a.title ?? '');
+      }
+
+      if (this.sortOption === 'rating-asc') {
+        return Number(a.rating ?? 0) - Number(b.rating ?? 0);
+      }
+
+      if (this.sortOption === 'rating-desc') {
+        return Number(b.rating ?? 0) - Number(a.rating ?? 0);
+      }
+
+      return 0;
+    });
+  }
+
+  onPageSizeChange(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        page: 1,
+        pageSize: this.pageSize,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  onSortChange(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        page: 1,
+        sort: this.sortOption,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   goDetails(movieId: string): void {

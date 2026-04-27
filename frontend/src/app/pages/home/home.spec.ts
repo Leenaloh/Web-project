@@ -30,7 +30,7 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('search() should navigate to /movie-list with form, filters, and paging params', () => {
+  it('search() should navigate to /movie-list with form, filters, sorting, and paging params', () => {
     const navSpy = spyOn(router, 'navigate');
 
     component.form = {
@@ -42,6 +42,10 @@ describe('HomeComponent', () => {
     component.selectedGenreString = '1';
     component.selectedTitleChar = 'A';
 
+    component.sortBy = 'rating';
+    component.sortDir = 'desc';
+    component.pageSize = 50;
+
     component.search();
 
     expect(navSpy).toHaveBeenCalledWith(['/movie-list'], {
@@ -52,13 +56,15 @@ describe('HomeComponent', () => {
         starName: 'Sam Worthington',
         genreId: 1,
         startsWith: 'A',
+        sortBy: 'rating',
+        sortDir: 'desc',
         page: 1,
-        pageSize: 20,
+        pageSize: 50,
       },
     });
   });
 
-  it('search() should send null for empty optional fields', () => {
+  it('search() should send null for empty optional fields and default sorting params', () => {
     const navSpy = spyOn(router, 'navigate');
 
     component.search();
@@ -71,13 +77,15 @@ describe('HomeComponent', () => {
         starName: null,
         genreId: null,
         startsWith: null,
+        sortBy: 'title',
+        sortDir: 'asc',
         page: 1,
         pageSize: 20,
       },
     });
   });
 
-  it('clear() should reset form fields and autocomplete state', () => {
+  it('clear() should reset form fields, sorting, page size, and autocomplete state', () => {
     component.form = {
       title: 'Inception',
       year: '2010',
@@ -86,6 +94,9 @@ describe('HomeComponent', () => {
     };
     component.selectedGenreString = '3';
     component.selectedTitleChar = 'I';
+    component.sortBy = 'rating';
+    component.sortDir = 'desc';
+    component.pageSize = 50;
     component.titleSuggestions = ['Inception'];
     component.showSuggestions = true;
     component.isLoadingSuggestions = true;
@@ -100,6 +111,9 @@ describe('HomeComponent', () => {
     });
     expect(component.selectedGenreString).toBe('');
     expect(component.selectedTitleChar).toBe('');
+    expect(component.sortBy).toBe('title');
+    expect(component.sortDir).toBe('asc');
+    expect(component.pageSize).toBe(20);
     expect(component.titleSuggestions).toEqual([]);
     expect(component.showSuggestions).toBeFalse();
     expect(component.isLoadingSuggestions).toBeFalse();
