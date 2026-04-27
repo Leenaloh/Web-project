@@ -322,3 +322,42 @@ Important Notes
 	•	./gradlew test
 	•	If tests fail locally, they will fail in CI.
 	•	Use headless mode to accurately simulate CI behavior.
+
+## Phase 4 & Phase 5 Implementation
+
+### Phase 4 – Feature Implementation
+In Phase 4, all required system features were fully implemented across the frontend, backend, and database layers.  
+This includes movie browsing, searching, authentication, cart operations, checkout, and full backend integration.
+
+## Team Distribution – Phase 4
+
+The responsibilities for Phase 4 were distributed as follows:
+
+| Team Member | Responsibility |
+|-------------|---------------|
+| Noof Alkhalifa | Login, Logout, Get Movie Details |
+| Reema Almunasser | Browse by Title, Browse by Genre, Search for Movie |
+| Leen Alohali | Get Movie of Star, Get Stars of Movie, Get Star Details |
+| Rowa Alshehri | Add Item to Cart, Update Item in Cart, Delete Item in Cart |
+| Muntaha Alnasser | Get Cart, Checkout |
+
+### Phase 5 – UI Styling (Bootstrap)
+In Phase 5, the user interface was enhanced using Bootstrap.
+
+The following improvements were made:
+- Responsive design across different screen sizes
+- Consistent and clean UI components
+- Improved layout and user experience
+- Reusable styling across pages
+
+
+## Integration Test Setup
+
+For integration tests to run correctly, make sure to unset any existing database environment variables and set your local database configuration.
+
+Run the following commands in your terminal:
+
+cd backend
+export DB_URL=jdbc:postgresql://localhost:5432/imdb
+export DB_USER=your_local_username
+export DB_PASSWORD=your_local_password
