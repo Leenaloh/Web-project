@@ -107,6 +107,34 @@
               </select>
             </div>
 
+            <!-- Sorting filter -->
+<div class="col-12 col-md-6 col-lg-3">
+  <label for="sortBy" class="form-label">Sort By</label>
+  <select id="sortBy" class="form-select" [(ngModel)]="sortBy">
+    <option value="title">Title</option>
+    <option value="rating">Rating</option>
+  </select>
+</div>
+
+<!-- Order filter -->
+<div class="col-12 col-md-6 col-lg-3">
+  <label for="sortDir" class="form-label">Order</label>
+  <select id="sortDir" class="form-select" [(ngModel)]="sortDir">
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
+</div>
+
+<!-- Movies per page -->
+<div class="col-12 col-md-6 col-lg-3">
+  <label for="pageSize" class="form-label">Movies Per Page</label>
+  <select id="pageSize" class="form-select" [(ngModel)]="pageSize">
+    <option *ngFor="let size of pageSizes" [ngValue]="size">
+      {{ size }}
+    </option>
+  </select>
+</div>
+
             <!-- Optional advanced fields -->
             <div class="col-12 col-md-6">
               <label for="director" class="form-label">Director</label>

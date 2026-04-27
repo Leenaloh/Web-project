@@ -39,6 +39,44 @@
         <h1 class="page-hero-title" data-testid="heading-movie-list">Browse Movies</h1>
       </div>
     </section>
+      
+    <!-- Controls -->
+<section class="movie-list-controls">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 mb-4">
+      <div class="d-flex align-items-center gap-2">
+        <label for="pageSize" class="form-label mb-0 fw-bold">Items per page:</label>
+        <select
+          id="pageSize"
+          class="form-select"
+          style="width: 120px;"
+          [(ngModel)]="pageSize"
+          (change)="onPageSizeChange()">
+          <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
+            {{ size }}
+          </option>
+        </select>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <label for="sortOption" class="form-label mb-0 fw-bold">Sort:</label>
+        <select
+          id="sortOption"
+          class="form-select"
+          style="width: 220px;"
+          [(ngModel)]="sortOption"
+          (change)="onSortChange()">
+          <option value="none">None</option>
+          <option value="title-asc">Title Ascending</option>
+          <option value="title-desc">Title Descending</option>
+          <option value="rating-asc">Rating Ascending</option>
+          <option value="rating-desc">Rating Descending</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <!-- Messages -->
     <section class="movie-list-feedback" *ngIf="success || error">
