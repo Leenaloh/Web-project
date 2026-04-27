@@ -8,8 +8,15 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    defer-datasource-initialization: true
+
 server:
   port: 8080
 
 frontend:
- url: http://localhost:4200
+  url: http://localhost:4200
