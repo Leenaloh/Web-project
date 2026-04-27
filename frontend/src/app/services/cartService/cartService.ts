@@ -2,8 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-
 export interface CartItem {
   cartItemId?: number;
   movieId: string;
@@ -59,36 +57,48 @@ export class CartService {
 
   constructor(private http: HttpClient) {}
 
+  private getCustomerId(): number {
+    return Number(localStorage.getItem('customerId') ?? 0);
+  }
+
   getCart(_customerId?: number): Observable<CartState> {
+    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
+
     return this.http
-      .get<CartState>(this.base, this.requestOptions)
+      .get<CartState>(this.base, { ...this.requestOptions, params })
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
   addItem(movieId: string, quantity: number): Observable<CartState> {
+    const params = new HttpParams()
+      .set('customerId', String(this.getCustomerId()))
+      .set('movieId', movieId)
+      .set('quantity', String(quantity));
+
     return this.http
-      .post<CartState>(
-        `${this.base}/items${this.buildItemQuery(movieId, quantity)}`,
-        {},
-        this.requestOptions
-      )
+      .post<CartState>(`${this.base}/items`, null, { ...this.requestOptions, params })
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
   updateItemQuantity(movieId: string, quantity: number): Observable<CartState> {
     const params = new HttpParams()
+      .set('customerId', String(this.getCustomerId()))
       .set('movieId', movieId)
       .set('quantity', String(quantity));
 
-    return this.http.put<CartState>(`${this.base}/items`, null, {
-      params,
-      withCredentials: true
-    });
+    return this.http
+      .put<CartState>(`${this.base}/items`, null, { ...this.requestOptions, params })
+      .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
   removeItem(movieId: string): Observable<CartState> {
+    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
+
     return this.http
-      .delete<CartState>(`${this.base}/items/${encodeURIComponent(movieId)}`, this.requestOptions)
+      .delete<CartState>(`${this.base}/items/${encodeURIComponent(movieId)}`, {
+        ...this.requestOptions,
+        params
+      })
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
@@ -103,16 +113,20 @@ export class CartService {
   }
 
   clearCart(): Observable<CartState> {
+    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
+
     return this.http
-      .delete<CartState>(this.base, this.requestOptions)
+      .delete<CartState>(this.base, { ...this.requestOptions, params })
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
   checkout(request: CheckoutRequest): Observable<CheckoutResponse> {
+    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
+
     return this.http.post<CheckoutResponse>(
       `${this.base}/checkout`,
       request,
-      this.requestOptions
+      { ...this.requestOptions, params }
     );
   }
 
@@ -128,10 +142,6 @@ export class CartService {
     return this.movieTitles[movieId];
   }
 
-  private buildItemQuery(movieId: string, quantity: number): string {
-    return `?movieId=${encodeURIComponent(movieId)}&quantity=${quantity}`;
-  }
-
   private normalizeCartState(cart: CartState): CartState {
     const nextCartItemIdsByMovieId: Record<string, number> = {};
     const nextMovieIdsByCartItemId: Record<number, string> = {};
@@ -145,6 +155,7 @@ export class CartService {
 
     const totalItems =
       cart.totalItems ?? items.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
+
     const totalAmount =
       cart.totalAmount ??
       cart.totalPrice ??

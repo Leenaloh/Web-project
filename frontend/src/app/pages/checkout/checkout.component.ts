@@ -126,12 +126,7 @@ export class CheckoutComponent implements OnInit {
       this.moviesService.getMovieById(item.movieId).pipe(
         map((movie: Movie) => {
           const quantity = item.quantity ?? 1;
-          const rentalPrice =
-            movie.rentalPrice ??
-            movie.price ??
-            item.rentalPrice ??
-            item.unitPrice ??
-            0;
+          const rentalPrice = item.unitPrice ?? 0;
 
           return {
             movieId: item.movieId,
@@ -147,7 +142,7 @@ export class CheckoutComponent implements OnInit {
           console.error(`Failed to load movie details for ${item.movieId}`, err);
 
           const quantity = item.quantity ?? 1;
-          const rentalPrice = item.rentalPrice ?? item.unitPrice ?? 0;
+          const rentalPrice = item.unitPrice ?? 0;
 
           return of({
             movieId: item.movieId,
