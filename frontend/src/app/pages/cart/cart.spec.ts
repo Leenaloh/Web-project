@@ -16,8 +16,8 @@ describe('CartComponent', () => {
 
   const rawCart: CartState = {
     items: [
-      { movieId: 'tt001', quantity: 2 },
-      { movieId: 'tt002', quantity: 1 }
+      { movieId: 'tt001', quantity: 2, unitPrice: 10, subtotal: 20 },
+      { movieId: 'tt002', quantity: 1, unitPrice: 25, subtotal: 25 }
     ]
   };
 
@@ -51,8 +51,7 @@ describe('CartComponent', () => {
         id: 'tt001',
         title: 'The Shawshank Redemption',
         year: 1994,
-        director: 'Frank Darabont',
-        price: 10
+        director: 'Frank Darabont'
       })
     );
     mockMoviesService.getMovieById.withArgs('tt002').and.returnValue(
@@ -60,8 +59,7 @@ describe('CartComponent', () => {
         id: 'tt002',
         title: 'The Wandering Soap Opera',
         year: 2017,
-        director: 'Raul Ruiz',
-        rentalPrice: 25
+        director: 'Raul Ruiz'
       })
     );
 
@@ -90,16 +88,16 @@ describe('CartComponent', () => {
   it('updates quantity and re-enriches the cart', () => {
     mockCartService.getCart.and.returnValue(of(rawCart));
     mockMoviesService.getMovieById.and.returnValues(
-      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
-      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 }),
-      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
-      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 })
+      of({ id: 'tt001', title: 'The Shawshank Redemption' }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera' }),
+      of({ id: 'tt001', title: 'The Shawshank Redemption' }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera' })
     );
     mockCartService.updateItemQuantity.and.returnValue(
       of({
         items: [
-          { movieId: 'tt001', quantity: 3 },
-          { movieId: 'tt002', quantity: 1 }
+          { movieId: 'tt001', quantity: 3, unitPrice: 10, subtotal: 30 },
+          { movieId: 'tt002', quantity: 1, unitPrice: 25, subtotal: 25 }
         ]
       })
     );
@@ -115,8 +113,8 @@ describe('CartComponent', () => {
   it('clears the cart', () => {
     mockCartService.getCart.and.returnValue(of(rawCart));
     mockMoviesService.getMovieById.and.returnValues(
-      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
-      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 })
+      of({ id: 'tt001', title: 'The Shawshank Redemption' }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera' })
     );
     mockCartService.clearCart.and.returnValue(of({ items: [] }));
 
@@ -131,8 +129,8 @@ describe('CartComponent', () => {
   it('navigates to checkout when the cart has items', () => {
     mockCartService.getCart.and.returnValue(of(rawCart));
     mockMoviesService.getMovieById.and.returnValues(
-      of({ id: 'tt001', title: 'The Shawshank Redemption', price: 10 }),
-      of({ id: 'tt002', title: 'The Wandering Soap Opera', price: 25 })
+      of({ id: 'tt001', title: 'The Shawshank Redemption' }),
+      of({ id: 'tt002', title: 'The Wandering Soap Opera' })
     );
 
     fixture.detectChanges();

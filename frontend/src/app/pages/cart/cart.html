@@ -1,76 +1,191 @@
-<div class="cart-page">
-  <h1>Your Cart</h1>
-  <p>Review your selected movies before checkout.</p>
+<div class="app-background">
+  <div class="container-fluid px-0">
+    <nav class="navbar navbar-expand-lg app-navbar">
+      <div class="container">
+        <a class="navbar-brand app-brand" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
+          <span class="app-brand-text">ilmly</span>
+        </a>
 
-  <div *ngIf="loading" class="state-box">
-    Loading cart...
-  </div>
+        <button
+          class="navbar-toggler"
+          type="button"
+          (click)="isMenuOpen = !isMenuOpen"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-  <div *ngIf="!loading && errorMessage" class="error-box">
-    {{ errorMessage }}
-  </div>
-
-  <div *ngIf="!loading && isEmpty" class="state-box">
-    Your cart is empty.
-  </div>
-
-  <div *ngIf="!loading && !isEmpty" class="cart-layout">
-    <div class="cart-items">
-      <div class="cart-item" *ngFor="let item of cartItems">
-        <div class="movie-info">
-          <h3>{{ item.title }}</h3>
-          <p><strong>Year:</strong> {{ item.year ?? 'Not available' }}</p>
-          <p><strong>Director:</strong> {{ item.director || 'Not available' }}</p>
-          <p><strong>Quantity:</strong> {{ item.quantity }}</p>
-          <p *ngIf="hasPrice(item); else priceUnavailable">
-            <strong>Price:</strong> {{ item.price | currency }}
-          </p>
-          <ng-template #priceUnavailable>
-            <p><strong>Price:</strong> Not available</p>
-          </ng-template>
-          <p *ngIf="hasPrice(item); else subtotalUnavailable">
-            <strong>Subtotal:</strong> {{ getItemSubtotal(item) | currency }}
-          </p>
-          <ng-template #subtotalUnavailable>
-            <p><strong>Subtotal:</strong> Not available</p>
-          </ng-template>
-        </div>
-
-        <div class="item-actions">
-          <div class="quantity-controls">
-            <button type="button" class="quantity-btn" (click)="decrease(item)">
-              -
-            </button>
-            <span class="quantity-value">{{ item.quantity }}</span>
-            <button type="button" class="quantity-btn" (click)="increase(item)">
-              +
-            </button>
-          </div>
-
-          <button type="button" class="remove-btn" (click)="remove(item)">
-            Remove
-          </button>
+        <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLink="/home"
+                (click)="isMenuOpen = false"
+                data-testid="link-home">
+                Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                routerLink="/cart"
+                (click)="isMenuOpen = false"
+                data-testid="link-cart">
+                Cart
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLink="/login"
+                (click)="isMenuOpen = false"
+                data-testid="link-logout">
+                Logout
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
-    <div class="summary-box">
-      <h2>Summary</h2>
-      <p><strong>Total Movies:</strong> {{ totalItems }}</p>
-      <p *ngIf="!hasUnavailablePricing; else totalUnavailable">
-        <strong>Total Amount:</strong> {{ totalPrice | currency }}
-      </p>
-      <ng-template #totalUnavailable>
-        <p><strong>Total Amount:</strong> Not available</p>
-      </ng-template>
+    <section class="page-hero">
+      <div class="container">
+        <span class="page-badge">Movie Cart</span>
+        <h1 class="page-hero-title">Your Cart</h1>
+        <p class="page-subtitle cart-page-subtitle">
+          Review your selected movies before checkout.
+        </p>
+      </div>
+    </section>
 
-      <button type="button" class="clear-btn" (click)="clear()" [disabled]="isEmpty">
-        Clear Cart
-      </button>
+    <section class="cart-page-wrap" data-testid="page-cart">
+      <div class="container">
+        <div *ngIf="loading" class="cart-page-box cart-page-status-card">
+          Loading cart...
+        </div>
 
-      <button type="button" class="checkout-btn" (click)="goToCheckout()">
-        Proceed to Checkout
-      </button>
-    </div>
+        <div *ngIf="!loading && errorMessage" class="cart-page-box cart-page-status-card cart-page-status-card-error">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="!loading && isEmpty" class="cart-page-box cart-page-status-card cart-page-status-card-empty">
+          Your cart is empty.
+        </div>
+
+        <div *ngIf="!loading && !isEmpty" class="cart-page-grid" data-testid="cart-table">
+          <div class="cart-page-box">
+            <div class="cart-page-header-row">
+              <div>
+                <h2 class="section-title cart-page-section-title">Selected Movies</h2>
+                <p class="section-subtitle cart-page-section-subtitle">
+                  Adjust quantities or remove items before checkout.
+                </p>
+              </div>
+              <span class="soft-pill">{{ totalItems }} item{{ totalItems === 1 ? '' : 's' }}</span>
+            </div>
+
+            <article class="cart-item-card" *ngFor="let item of cartItems">
+              <div class="cart-item-main">
+                <div class="cart-item-title-wrap">
+                  <h3 class="cart-item-title">{{ item.title }}</h3>
+                </div>
+
+                <div class="info-block cart-page-info-block">
+                  <div class="info-row">
+                    <span class="info-label">Year</span>
+                    <span class="info-value">{{ item.year ?? 'Not available' }}</span>
+                  </div>
+
+                  <div class="info-row">
+                    <span class="info-label">Director</span>
+                    <span class="info-value">{{ item.director || 'Not available' }}</span>
+                  </div>
+                </div>
+
+                <div class="cart-item-meta-row">
+                  <span class="soft-pill">Quantity {{ item.quantity }}</span>
+                </div>
+
+                <div class="info-block cart-page-info-block" *ngIf="hasPrice(item)">
+                  <div class="info-row">
+                    <span class="info-label">Price</span>
+                    <span class="info-value">{{ item.price | currency }}</span>
+                  </div>
+
+                  <div class="info-row">
+                    <span class="info-label">Subtotal</span>
+                    <span class="info-value">{{ getItemSubtotal(item) | currency }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cart-actions-row">
+                <div class="cart-quantity-control">
+                  <button
+                     type="button"
+                     class="cart-quantity-btn"
+                      (click)="decrease(item)"
+                      [attr.data-testid]="'btn-update-qty-dec-' + item.movieId">
+                      -
+                  </button>
+
+                  <span class="cart-quantity-value">{{ item.quantity }}</span>
+
+                  <button
+                    type="button"
+                    class="cart-quantity-btn"
+                    (click)="increase(item)"
+                    [attr.data-testid]="'btn-update-qty-inc-' + item.movieId">
+                    +
+                  </button>
+
+
+                  
+                </div>
+
+               <button
+                  type="button"
+                  class="btn btn-outline-primary cart-remove-btn"
+                  (click)="remove(item)"
+                  [attr.data-testid]="'btn-remove-' + item.movieId">
+                  Remove
+                </button>   
+              </div>
+            </article>
+          </div>
+
+          <aside class="cart-summary-card">
+            <h2 class="section-title cart-page-section-title">Summary</h2>
+
+            <div class="info-block cart-page-info-block">
+              <div class="info-row">
+                <span class="info-label">Total Movies</span>
+                <span class="info-value">{{ totalItems }}</span>
+              </div>
+
+              <div class="info-row" *ngIf="!hasUnavailablePricing">
+                <span class="info-label">Total Amount</span>
+                <span class="info-value">{{ totalPrice | currency }}</span>
+              </div>
+            </div>
+
+            <div class="cart-summary-actions">
+              <button
+                type="button"
+                class="btn btn-outline-primary cart-summary-btn"
+                (click)="clear()"
+                [disabled]="isEmpty"
+                data-testid="btn-clear">
+                  Clear Cart
+              </button>
+              <button type="button" class="btn btn-dark cart-summary-btn" (click)="goToCheckout()">
+                Proceed to Checkout
+              </button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </div>
 </div>

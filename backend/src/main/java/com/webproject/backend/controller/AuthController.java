@@ -40,6 +40,7 @@ public class AuthController {
       HttpSession session = httpRequest.getSession();
       session.setAttribute("userId", response.getUserId());
       session.setAttribute("name", response.getName());
+      session.setAttribute("customerId", Integer.valueOf(response.getUserId()));
       return ResponseEntity.ok(response);
     } else {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);

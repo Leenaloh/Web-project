@@ -62,8 +62,6 @@ public class CheckoutService {
     for (CartItem cartItem : cartItems) {
       Sale sale = new Sale(customer, cartItem.getMovie(), today);
       saleRepository.save(sale);
-
-      totalAmount = totalAmount.add(cartItem.getMovie().getRentalPrice());
     }
 
     cartItemRepository.deleteByCustomerId(request.customerId());

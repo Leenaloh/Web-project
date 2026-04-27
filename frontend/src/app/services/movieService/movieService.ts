@@ -13,8 +13,6 @@ export interface Movie {
   year?: number;
   director?: string;
   rating?: number;
-  price?: number;
-  rentalPrice?: number;
   genres?: string[];
   stars?: Star[];
 }

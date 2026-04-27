@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, throwError } from 'rxjs';
 
@@ -10,7 +10,6 @@ export interface CartItem {
   title?: string;
   year?: number;
   director?: string;
-  rentalPrice?: number;
   quantity?: number;
   unitPrice?: number;
   subtotal?: number;
@@ -51,7 +50,7 @@ export interface CheckoutResponse {
   providedIn: 'root'
 })
 export class CartService {
-  private readonly baseUrl = `${environment.apiUrl}/api/v1/cart`;
+  private readonly base = 'http://localhost:8080/api/v1/cart';
   private readonly requestOptions = { withCredentials: true };
   private movieTitles: Record<string, string> = {};
   private cartItemIdsByMovieId: Record<string, number> = {};
@@ -62,14 +61,14 @@ export class CartService {
 
   getCart(_customerId?: number): Observable<CartState> {
     return this.http
-      .get<CartState>(this.baseUrl, this.requestOptions)
+      .get<CartState>(this.base, this.requestOptions)
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
   addItem(movieId: string, quantity: number): Observable<CartState> {
     return this.http
       .post<CartState>(
-        `${this.baseUrl}/items${this.buildItemQuery(movieId, quantity)}`,
+        `${this.base}/items${this.buildItemQuery(movieId, quantity)}`,
         {},
         this.requestOptions
       )
@@ -77,18 +76,19 @@ export class CartService {
   }
 
   updateItemQuantity(movieId: string, quantity: number): Observable<CartState> {
-    return this.http
-      .put<CartState>(
-        `${this.baseUrl}/items${this.buildItemQuery(movieId, quantity)}`,
-        {},
-        this.requestOptions
-      )
-      .pipe(map((cart) => this.normalizeCartState(cart)));
+    const params = new HttpParams()
+      .set('movieId', movieId)
+      .set('quantity', String(quantity));
+
+    return this.http.put<CartState>(`${this.base}/items`, null, {
+      params,
+      withCredentials: true
+    });
   }
 
   removeItem(movieId: string): Observable<CartState> {
     return this.http
-      .delete<CartState>(`${this.baseUrl}/items/${encodeURIComponent(movieId)}`, this.requestOptions)
+      .delete<CartState>(`${this.base}/items/${encodeURIComponent(movieId)}`, this.requestOptions)
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
@@ -104,13 +104,13 @@ export class CartService {
 
   clearCart(): Observable<CartState> {
     return this.http
-      .delete<CartState>(this.baseUrl, this.requestOptions)
+      .delete<CartState>(this.base, this.requestOptions)
       .pipe(map((cart) => this.normalizeCartState(cart)));
   }
 
   checkout(request: CheckoutRequest): Observable<CheckoutResponse> {
     return this.http.post<CheckoutResponse>(
-      `${this.baseUrl}/checkout`,
+      `${this.base}/checkout`,
       request,
       this.requestOptions
     );
@@ -168,7 +168,7 @@ export class CartService {
     const movieId = item.movieId;
     const cartItemId = item.cartItemId ?? this.getOrCreateCartItemId(movieId);
     const quantity = item.quantity ?? 1;
-    const unitPrice = item.unitPrice ?? item.rentalPrice ?? 0;
+    const unitPrice = item.unitPrice ?? 0;
     const subtotal = item.subtotal ?? unitPrice * quantity;
     const title = item.title ?? this.getRememberedMovieTitle(movieId) ?? movieId;
 
@@ -186,7 +186,6 @@ export class CartService {
       title,
       quantity,
       unitPrice,
-      rentalPrice: item.rentalPrice ?? unitPrice,
       subtotal
     };
   }

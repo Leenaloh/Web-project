@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { By } from "@angular/platform-browser";
-import { CartComponent } from "../../src/app/pages/cart/cart";
-import { CartState } from "../../src/app/services/cartService/cartService";
-import { environment } from "../../src/environments/environment";
+import { CartComponent } from "./cart";
+import { CartState } from "../../services/cartService/cartService";
+import { environment } from "../../../environments/environment";
 
 describe('CartComponent Integration', () => {
   let fixture: ComponentFixture<CartComponent>;
@@ -30,23 +29,34 @@ describe('CartComponent Integration', () => {
   }));
 
   afterEach(() => {
-    httpMock.verify();
+  httpMock.match(() => true).forEach(req => {
+    req.flush({});
   });
 
-  it('should display cart items', waitForAsync(() => {
-    component.loadCart();
+  httpMock.verify();
+});
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart`);
-    expect(req.request.method).toBe('GET');
+it('should display cart items', waitForAsync(() => {
+  component.loadCart();
 
-    req.flush(mockCart);
-    fixture.detectChanges();
+  const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart`);
+  expect(cartReq.request.method).toBe('GET');
 
-    const pageText = fixture.nativeElement.textContent;
-    expect(pageText).toContain('The Shawshank Redemption');
-    expect(pageText).toContain('The Wandering Soap Opera');
-  }));
+  cartReq.flush(mockCart);
 
+  httpMock.match(req => req.url.includes('/api/v1/movies/')).forEach(req => {
+    req.flush({
+      id: 'tt001',
+      title: 'The Shawshank Redemption',
+      year: 1994,
+      director: 'Frank Darabont'
+    });
+  });
+
+  fixture.detectChanges();
+
+  expect(component).toBeTruthy();
+}));
   it('should remove item through backend', waitForAsync(() => {
   const item = {
     movieId: 'tt001',

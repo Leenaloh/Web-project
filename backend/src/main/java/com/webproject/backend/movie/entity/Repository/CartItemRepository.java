@@ -21,5 +21,16 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
   Optional<CartItem> findByIdAndCustomerId(Long id, Integer customerId);
 
+  @Query(
+      """
+           select ci
+           from CartItem ci
+           join fetch ci.movie m
+           join fetch ci.customer c
+           where c.id = :customerId
+             and m.id = :movieId
+           """)
+  Optional<CartItem> findByCustomerIdAndMovieId(Integer customerId, String movieId);
+
   void deleteByCustomerId(Integer customerId);
 }
