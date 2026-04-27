@@ -77,6 +77,7 @@ public class CheckoutService {
 
       Sale sale = new Sale(customer, cartItem.getMovie(), today);
 
+
       Sale savedSale = saleRepository.save(sale);
 
       lastSaleId = savedSale.getId();
@@ -84,6 +85,9 @@ public class CheckoutService {
       totalAmount = totalAmount.add(cartItem.getMovie().getRentalPrice());
 
       totalItems++;
+
+      saleRepository.save(sale);
+
     }
 
     cartItemRepository.deleteByCustomer_Id(request.customerId());

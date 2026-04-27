@@ -37,7 +37,8 @@ class AuthControllerLoginTest {
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
         .andExpect(request().sessionAttribute("userId", notNullValue()))
-        .andExpect(request().sessionAttribute("name", notNullValue()));
+        .andExpect(request().sessionAttribute("name", notNullValue()))
+        .andExpect(request().sessionAttribute("customerId", 1));
   }
 
   // TC2: Empty JSON SHOULD be 400

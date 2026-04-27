@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/cart")
 @Validated
-public class CartController {
+public class MovieCartController {
 
   private final CartService cartService;
 
-  public CartController(CartService cartService) {
+  public MovieCartController(CartService cartService) {
     this.cartService = cartService;
   }
 

@@ -39,12 +39,10 @@ public class CartService {
                         item.getMovie().getId(),
                         item.getMovie().getTitle(),
                         item.getMovie().getYear(),
-                        item.getMovie().getDirector(),
-                        item.getMovie().getRentalPrice()))
+                        item.getMovie().getDirector()))
             .toList();
 
-    BigDecimal totalAmount =
-        items.stream().map(CartItemResponse::rentalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal totalAmount = BigDecimal.ZERO;
 
     return new CartResponse(customerId, items, items.size(), totalAmount, items.isEmpty());
   }

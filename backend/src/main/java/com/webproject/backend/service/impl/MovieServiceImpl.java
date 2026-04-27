@@ -287,7 +287,10 @@ public class MovieServiceImpl implements MovieService {
     return movie;
   }
 
+
   @Override
+
+
   public List<String> autocompleteTitles(String query) {
     if (query == null || query.trim().isEmpty()) {
       return List.of();

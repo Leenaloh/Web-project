@@ -114,6 +114,18 @@ export class HomeComponent {
     });
   }
 
+  browseAction(): void {
+  this.router.navigate(['/movie-list'], {
+    queryParams: { genre: 'Action' },
+  });
+}
+
+browseA(): void {
+  this.router.navigate(['/movie-list'], {
+    queryParams: { startsWith: 'A' },
+  });
+}
+
   clear(): void {
     this.form = { title: '', year: '', director: '', starName: '' };
     this.selectedGenreString = '';

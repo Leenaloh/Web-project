@@ -1,28 +1,74 @@
-<div class="page" data-testid="page-login">
-  <div class="card">
-    <h1 data-testid="heading-login-title">Login</h1>
+<div class="min-vh-100 d-flex align-items-center bg-light bg-gradient">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
 
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" [(ngModel)]="email" type="text" data-testid="input-email" />
+        <div
+          class="bg-white rounded-4 shadow border p-4 p-md-5"
+          data-testid="page-login">
+
+          <div class="text-center mb-4">
+            <h1 class="fw-bold mb-2" data-testid="heading-login-title">
+              Login
+            </h1>
+            <p class="text-secondary mb-0">
+              Sign in to continue browsing movies
+            </p>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">
+              Email
+            </label>
+            <input
+              id="email"
+              [(ngModel)]="email"
+              type="text"
+              class="form-control rounded-4"
+              placeholder="Enter your email"
+              data-testid="input-email" />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label fw-semibold">
+              Password
+            </label>
+            <input
+              id="password"
+              [(ngModel)]="password"
+              type="password"
+              class="form-control rounded-4"
+              placeholder="Enter your password"
+              data-testid="input-password" />
+          </div>
+
+          <button
+            class="btn btn-danger w-100 py-2 rounded-pill fw-semibold"
+            (click)="login()"
+            data-testid="btn-login">
+            Login
+          </button>
+
+          <div data-testid="msg-success" hidden></div>
+
+          <div
+            data-testid="msg-error"
+            *ngIf="errorMessage"
+            class="alert alert-danger mt-3 mb-0"
+            role="alert">
+            {{ errorMessage }}
+          </div>
+
+          <p class="text-center mt-4 mb-0">
+            Don’t have an account?
+            <a routerLink="/register" class="text-dark fw-bold text-decoration-none">
+              Register
+            </a>
+          </p>
+
+        </div>
+
+      </div>
     </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input id="password" [(ngModel)]="password" type="password" data-testid="input-password" />
-    </div>
-
-    <button class="btn btn-primary" (click)="login()" data-testid="btn-login">Login</button>
-
-    <div data-testid="msg-success" hidden></div>
-
-    <div data-testid="msg-error" *ngIf="errorMessage" style="color: red;">
-      {{ errorMessage }}
-    </div>
-
-    <p style="margin-top: 12px; text-align: center;">
-      Don’t have an account?
-      <a routerLink="/register">Register</a>
-    </p>
   </div>
 </div>

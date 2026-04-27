@@ -32,6 +32,7 @@ interface CartViewModel {
 export class CartComponent implements OnInit {
   customerId = 0;
 
+  isMenuOpen = false;
   cartItems: EnrichedCartItem[] = [];
   totalItems = 0;
   totalPrice = 0;
@@ -103,10 +104,20 @@ export class CartComponent implements OnInit {
       });
   }
 
-  increase(item: EnrichedCartItem): void {
-    this.updateQuantity(item.movieId, item.quantity + 1);
-  }
+  increase(item: any): void {
+  const nextQty = item.quantity + 1;
 
+  this.cartService.updateItemQuantity(item.movieId, nextQty).subscribe({
+    next: () => {
+      item.quantity = nextQty;
+      this.loadCart();
+    },
+    error: (err) => {
+      console.error('Failed to update quantity', err);
+      this.errorMessage = 'Failed to update quantity.';
+    }
+  });
+}
   decrease(item: EnrichedCartItem): void {
     if (item.quantity <= 1) {
       this.remove(item);
@@ -117,21 +128,18 @@ export class CartComponent implements OnInit {
   }
 
   clear(): void {
-    this.errorMessage = '';
-
-    this.cartService
-      .clearCart()
-      .pipe(switchMap((cartData) => this.enrichCartState(cartData)))
-      .subscribe({
-        next: (viewModel) => {
-          this.applyViewModel(viewModel);
-        },
-        error: (err: unknown) => {
-          console.error('Failed to clear cart', err);
-          this.errorMessage = 'Failed to clear cart.';
-        }
-      });
-  }
+  this.cartService.clearCart().subscribe({
+    next: () => {
+      this.cartItems = [];
+      this.totalPrice = 0;
+      this.errorMessage = '';
+      this.loadCart();
+    },
+    error: () => {
+      this.errorMessage = 'Failed to clear cart.';
+    }
+  });
+}
 
   goToCheckout(): void {
     if (this.isEmpty) {
@@ -199,15 +207,13 @@ export class CartComponent implements OnInit {
   }
 
   private buildEnrichedCartItem(item: CartItem, movie: Movie): EnrichedCartItem {
-    const quantity = item.quantity ?? 1;
-
     return {
       movieId: item.movieId,
-      quantity,
+      quantity: item.quantity ?? 1,
       title: movie.title || item.title || item.movieId,
       year: movie.year ?? item.year,
       director: movie.director ?? item.director,
-      price: this.resolvePrice(movie, item)
+      price: this.resolvePrice(item)
     };
   }
 
@@ -218,16 +224,15 @@ export class CartComponent implements OnInit {
       title: item.title ?? item.movieId,
       year: item.year,
       director: item.director,
-      price: item.rentalPrice ?? item.unitPrice ?? 0
+      price: this.resolvePrice(item)
     };
   }
 
-  private resolvePrice(movie: Movie, item: CartItem): number | null {
+  private resolvePrice(item: CartItem): number | null {
+    const quantity = item.quantity ?? 1;
     const candidatePrices = [
-      movie.price,
-      movie.rentalPrice,
-      item.rentalPrice,
-      item.unitPrice
+      item.unitPrice,
+      typeof item.subtotal === 'number' && quantity > 0 ? item.subtotal / quantity : null
     ];
 
     const knownPrice = candidatePrices.find(
