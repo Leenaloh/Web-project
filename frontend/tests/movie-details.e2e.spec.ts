@@ -36,7 +36,8 @@ async function getCartItems(request: APIRequestContext): Promise<CartItem[]> {
   throw new Error(`Unexpected /cart response shape: ${JSON.stringify(body)}`);
 }
 async function openMovieDetails(page: Page): Promise<void> {
-  await page.goto('/movie_details?id=tt001');
+  await page.goto('/movie_details?id=tt0337563');
+  //await page.goto('/movie_details?id=tt001');
   await expect(page.getByTestId('page-movie-details')).toBeVisible();
 }
 
@@ -68,8 +69,10 @@ test.describe('Movie Details', () => {
 
     await expect(page.getByTestId('msg-success')).toBeVisible();
 
+    
     const items = await getCartItems(page.request);
-    const added = items.find((i) => i.movieId === 'tt001');
+    const added = items.find((i) => i.movieId === 'tt0337563');
+    //const added = items.find((i) => i.movieId === 'tt001');
     expect(added).toBeDefined();
     expect(added?.quantity).toBeGreaterThanOrEqual(2);
   });
