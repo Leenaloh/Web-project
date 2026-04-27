@@ -9,6 +9,7 @@ public class Movie {
   private Integer year;
   private String director;
   private Double rating;
+  private Double rentalPrice;
   private List<String> genres;
   private List<Star> stars;
 
@@ -20,6 +21,7 @@ public class Movie {
       Integer year,
       String director,
       Double rating,
+      Double rentalPrice,
       List<String> genres,
       List<Star> stars) {
     this.id = id;
@@ -27,6 +29,7 @@ public class Movie {
     this.year = year;
     this.director = director;
     this.rating = rating;
+    this.rentalPrice = rentalPrice;
     this.genres = genres;
     this.stars = stars;
   }
@@ -69,6 +72,14 @@ public class Movie {
 
   public void setRating(Double rating) {
     this.rating = rating;
+  }
+
+  public Double getRentalPrice() {
+    return rentalPrice;
+  }
+
+  public void setRentalPrice(Double rentalPrice) {
+    this.rentalPrice = rentalPrice;
   }
 
   public List<String> getGenres() {

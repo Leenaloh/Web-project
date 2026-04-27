@@ -30,7 +30,7 @@ interface CartViewModel {
   styleUrls: ['./cart.css'],
 })
 export class CartComponent implements OnInit {
-  private readonly customerId = 1;
+  customerId = 0;
 
   cartItems: EnrichedCartItem[] = [];
   totalItems = 0;
@@ -47,6 +47,22 @@ export class CartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const storedCustomerId = localStorage.getItem('customerId');
+
+    if (!storedCustomerId) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    const parsedCustomerId = Number(storedCustomerId);
+
+    if (Number.isNaN(parsedCustomerId) || parsedCustomerId <= 0) {
+      localStorage.removeItem('customerId');
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.customerId = parsedCustomerId;
     this.loadCart();
   }
 

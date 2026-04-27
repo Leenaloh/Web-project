@@ -11,17 +11,17 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 })
 export class CheckoutResultComponent implements OnInit {
   orderId = '';
-  totalAmount = '';
-  totalItems = '';
-  status = '';
+  totalAmount = 0;
+  totalItems = 0;
+  status = 'SUCCESS';
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
       this.orderId = params.get('orderId') || '';
-      this.totalAmount = params.get('totalAmount') || '';
-      this.totalItems = params.get('totalItems') || '';
+      this.totalAmount = Number(params.get('totalAmount') || 0);
+      this.totalItems = Number(params.get('totalItems') || 0);
       this.status = params.get('status') || 'SUCCESS';
     });
   }

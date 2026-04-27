@@ -63,6 +63,7 @@ public class StarServiceImpl implements StarService {
                     rs.getInt("year"),
                     rs.getString("director"),
                     null,
+                    null,
                     List.of(),
                     List.of()));
 

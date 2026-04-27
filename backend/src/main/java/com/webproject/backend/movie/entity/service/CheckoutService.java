@@ -21,8 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class CheckoutService {
 
   private final CustomerRepository customerRepository;
+
   private final CreditCardRepository creditCardRepository;
+
   private final CartItemRepository cartItemRepository;
+
   private final SaleRepository saleRepository;
 
   public CheckoutService(
@@ -30,14 +33,19 @@ public class CheckoutService {
       CreditCardRepository creditCardRepository,
       CartItemRepository cartItemRepository,
       SaleRepository saleRepository) {
+
     this.customerRepository = customerRepository;
+
     this.creditCardRepository = creditCardRepository;
+
     this.cartItemRepository = cartItemRepository;
+
     this.saleRepository = saleRepository;
   }
 
   @Transactional
   public CheckoutResponse checkout(CheckoutRequest request) {
+
     Customer customer =
         customerRepository
             .findWithCreditCardById(request.customerId())
@@ -46,6 +54,7 @@ public class CheckoutService {
     List<CartItem> cartItems = cartItemRepository.findAllByCustomerId(request.customerId());
 
     if (cartItems.isEmpty()) {
+
       throw new IllegalArgumentException("Cannot checkout because the cart is empty");
     }
 
@@ -57,40 +66,59 @@ public class CheckoutService {
     validateCard(customer, creditCard, request);
 
     LocalDate today = LocalDate.now();
+
     BigDecimal totalAmount = BigDecimal.ZERO;
 
+    int totalItems = 0;
+
+    Integer lastSaleId = null;
+
     for (CartItem cartItem : cartItems) {
+
       Sale sale = new Sale(customer, cartItem.getMovie(), today);
-      saleRepository.save(sale);
+
+      Sale savedSale = saleRepository.save(sale);
+
+      lastSaleId = savedSale.getId();
 
       totalAmount = totalAmount.add(cartItem.getMovie().getRentalPrice());
+
+      totalItems++;
     }
 
-    cartItemRepository.deleteByCustomerId(request.customerId());
+    cartItemRepository.deleteByCustomer_Id(request.customerId());
 
     return new CheckoutResponse(
+        lastSaleId,
+        "SUCCESS",
         "Checkout completed successfully",
         request.customerId(),
-        cartItems.size(),
+        totalItems,
         totalAmount,
         today);
   }
 
   private void validateCard(Customer customer, CreditCard creditCard, CheckoutRequest request) {
+
     if (!customer.getCreditCard().getId().equals(creditCard.getId())) {
+
       throw new IllegalArgumentException("This credit card does not belong to the customer");
     }
 
     if (!creditCard.getFirstName().equalsIgnoreCase(request.firstName().trim())) {
+
       throw new IllegalArgumentException("Credit card first name does not match");
     }
 
     if (!creditCard.getLastName().equalsIgnoreCase(request.lastName().trim())) {
+
       throw new IllegalArgumentException("Credit card last name does not match");
     }
 
     LocalDate expiration = LocalDate.parse(request.expiration());
+
     if (!creditCard.getExpiration().equals(expiration)) {
+
       throw new IllegalArgumentException("Credit card expiration date does not match");
     }
   }

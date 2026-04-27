@@ -11,9 +11,11 @@ export interface CheckoutRequest {
 }
 
 export interface CheckoutResponse {
+  orderId: number;
+  status: string;
   message: string;
   customerId: number;
-  rentedMoviesCount: number;
+  totalItems: number;
   totalAmount: number;
   saleDate: string;
 }

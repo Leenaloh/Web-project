@@ -3,9 +3,7 @@ package com.webproject.backend.controller;
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
 import com.webproject.backend.service.serviceInterface.MovieService;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -55,19 +53,19 @@ public class MovieController {
    * @param pageSize number of movies per page (default is 20)
    * @return MoviesPageState containing the list of movies filtered by genre
    */
-    @GetMapping("/browseByGenre")
-    public ResponseEntity<MoviesPageState> browseMoviesByGenre(
-        @RequestParam(required = false) Integer genreId,
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "20") int pageSize) {
+  @GetMapping("/browseByGenre")
+  public ResponseEntity<MoviesPageState> browseMoviesByGenre(
+      @RequestParam(required = false) Integer genreId,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int pageSize) {
 
-      if (genreId == null) {
-        return ResponseEntity.badRequest().build();
-      }
-
-      MoviesPageState result = movieService.browseMoviesByGenre(genreId, page, pageSize);
-      return ResponseEntity.ok(result);
+    if (genreId == null) {
+      return ResponseEntity.badRequest().build();
     }
+
+    MoviesPageState result = movieService.browseMoviesByGenre(genreId, page, pageSize);
+    return ResponseEntity.ok(result);
+  }
 
   /**
    * Browse movies by the first letter of the movie title.
@@ -77,19 +75,19 @@ public class MovieController {
    * @param pageSize number of movies per page (default is 20)
    * @return MoviesPageState containing the list of movies that match the given starting letter
    */
-    @GetMapping("/browseByFirstLetter")
-    public ResponseEntity<MoviesPageState> browseMoviesByFirstLetter(
-        @RequestParam(required = false) String startsWith,
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "20") int pageSize) {
+  @GetMapping("/browseByFirstLetter")
+  public ResponseEntity<MoviesPageState> browseMoviesByFirstLetter(
+      @RequestParam(required = false) String startsWith,
+      @RequestParam(defaultValue = "1") int page,
+      @RequestParam(defaultValue = "20") int pageSize) {
 
-      if (startsWith == null || startsWith.isBlank()) {
-        return ResponseEntity.badRequest().build();
-      }
-
-      MoviesPageState result = movieService.browseMoviesByFirstLetter(startsWith, page, pageSize);
-      return ResponseEntity.ok(result);
+    if (startsWith == null || startsWith.isBlank()) {
+      return ResponseEntity.badRequest().build();
     }
+
+    MoviesPageState result = movieService.browseMoviesByFirstLetter(startsWith, page, pageSize);
+    return ResponseEntity.ok(result);
+  }
 
   /**
    * Retrieve a single movie by its unique identifier.
