@@ -1,5 +1,13 @@
 package com.webproject.backend.service.impl;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.webproject.backend.model.CartItem;
 import com.webproject.backend.model.CartState;
 import com.webproject.backend.model.CheckoutRequest;
@@ -10,14 +18,8 @@ import com.webproject.backend.movie.entity.Repository.CartItemRepository;
 import com.webproject.backend.movie.entity.Repository.CustomerRepository;
 import com.webproject.backend.movie.entity.Repository.MovieRepository;
 import com.webproject.backend.service.serviceInterface.CartService;
+
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -160,19 +162,19 @@ public class CartServiceImpl implements CartService {
     Integer customerId = getCurrentCustomerId();
     return customerRepository
         .findById(customerId)
-        .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
   }
 
   private void ensureCustomerExists(Integer customerId) {
     customerRepository
         .findById(customerId)
-        .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
   }
 
   private Movie getMovie(String movieId) {
     return movieRepository
         .findById(movieId)
-        .orElseThrow(() -> new NoSuchElementException("Movie not found"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
   }
 
   private CartState snapshot(List<com.webproject.backend.movie.entity.CartItem> persistedItems) {

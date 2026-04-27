@@ -1,12 +1,14 @@
 package com.webproject.backend.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
 import com.webproject.backend.service.serviceInterface.MovieService;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -26,11 +28,11 @@ public class MovieServiceImpl implements MovieService {
     StringBuilder dataSql =
         new StringBuilder(
             """
-            SELECT DISTINCT m.id, m.title, m.year, m.director, m.rental_price, r.rating
+            SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating
             FROM movies m
-            LEFT JOIN ratings r ON m.id = r.movieId
-            LEFT JOIN stars_in_movies sim ON m.id = sim.movieId
-            LEFT JOIN stars s ON sim.starId = s.id
+            LEFT JOIN ratings r ON m.id = r.movieid
+            LEFT JOIN stars_in_movies sim ON m.id = sim.movieid
+            LEFT JOIN stars s ON sim.starid = s.id
             WHERE 1=1
             """);
 
@@ -39,8 +41,8 @@ public class MovieServiceImpl implements MovieService {
             """
             SELECT COUNT(DISTINCT m.id)
             FROM movies m
-            LEFT JOIN stars_in_movies sim ON m.id = sim.movieId
-            LEFT JOIN stars s ON sim.starId = s.id
+            LEFT JOIN stars_in_movies sim ON m.id = sim.movieid
+            LEFT JOIN stars s ON sim.starid = s.id
             WHERE 1=1
             """);
 
@@ -90,7 +92,7 @@ public class MovieServiceImpl implements MovieService {
                     rs.getInt("year"),
                     rs.getString("director"),
                     rs.getObject("rating") != null ? rs.getDouble("rating") : null,
-                    rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
+                    null,
                     List.of(),
                     List.of()));
 
@@ -107,11 +109,11 @@ public class MovieServiceImpl implements MovieService {
 
     String dataSql =
         """
-        SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
+        SELECT m.id, m.title, m.year, m.director, r.rating
         FROM movies m
-        JOIN genres_in_movies gim ON m.id = gim.movieId
-        LEFT JOIN ratings r ON m.id = r.movieId
-        WHERE gim.genreId = ?
+        JOIN genres_in_movies gim ON m.id = gim.movieid
+        LEFT JOIN ratings r ON m.id = r.movieid
+        WHERE gim.genreid = ?
         ORDER BY m.title
         LIMIT ? OFFSET ?
         """;
@@ -120,8 +122,8 @@ public class MovieServiceImpl implements MovieService {
         """
         SELECT COUNT(*)
         FROM movies m
-        JOIN genres_in_movies gim ON m.id = gim.movieId
-        WHERE gim.genreId = ?
+        JOIN genres_in_movies gim ON m.id = gim.movieid
+        WHERE gim.genreid = ?
         """;
 
     List<Movie> movies =
@@ -135,7 +137,7 @@ public class MovieServiceImpl implements MovieService {
                     rs.getInt("year"),
                     rs.getString("director"),
                     rs.getObject("rating") != null ? rs.getDouble("rating") : null,
-                    rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
+                    null,
                     List.of(),
                     List.of()));
 
@@ -157,9 +159,9 @@ public class MovieServiceImpl implements MovieService {
     if ("*".equals(startsWith)) {
       dataSql =
           """
-          SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
+          SELECT m.id, m.title, m.year, m.director, r.rating
           FROM movies m
-          LEFT JOIN ratings r ON m.id = r.movieId
+          LEFT JOIN ratings r ON m.id = r.movieid
           WHERE m.title ~ '^[^A-Za-z0-9]'
           ORDER BY m.title
           LIMIT ? OFFSET ?
@@ -177,9 +179,9 @@ public class MovieServiceImpl implements MovieService {
     } else {
       dataSql =
           """
-          SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
+          SELECT m.id, m.title, m.year, m.director, r.rating
           FROM movies m
-          LEFT JOIN ratings r ON m.id = r.movieId
+          LEFT JOIN ratings r ON m.id = r.movieid
           WHERE LOWER(m.title) LIKE LOWER(?)
           ORDER BY m.title
           LIMIT ? OFFSET ?
@@ -207,7 +209,7 @@ public class MovieServiceImpl implements MovieService {
                     rs.getInt("year"),
                     rs.getString("director"),
                     rs.getObject("rating") != null ? rs.getDouble("rating") : null,
-                    rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
+                    null,
                     List.of(),
                     List.of()));
 
@@ -226,9 +228,9 @@ public class MovieServiceImpl implements MovieService {
   public Movie getMovieById(String id) {
     String movieSql =
         """
-        SELECT m.id, m.title, m.year, m.director, m.rental_price, r.rating
+        SELECT m.id, m.title, m.year, m.director, r.rating
         FROM movies m
-        LEFT JOIN ratings r ON m.id = r.movieId
+        LEFT JOIN ratings r ON m.id = r.movieid
         WHERE m.id = ?
         """;
 
@@ -244,9 +246,9 @@ public class MovieServiceImpl implements MovieService {
                       rs.getInt("year"),
                       rs.getString("director"),
                       rs.getObject("rating") != null ? rs.getDouble("rating") : null,
-                      rs.getObject("rental_price") != null ? rs.getDouble("rental_price") : null,
-                      new java.util.ArrayList<>(),
-                      new java.util.ArrayList<>()),
+                      null,
+                      new ArrayList<>(),
+                      new ArrayList<>()),
               id);
     } catch (org.springframework.dao.EmptyResultDataAccessException e) {
       return null;
@@ -256,10 +258,11 @@ public class MovieServiceImpl implements MovieService {
         """
         SELECT g.name
         FROM genres g
-        JOIN genres_in_movies gim ON g.id = gim.genreId
-        WHERE gim.movieId = ?
+        JOIN genres_in_movies gim ON g.id = gim.genreid
+        WHERE gim.movieid = ?
         ORDER BY g.name
         """;
+
     List<String> genres = jdbcTemplate.query(genresSql, (rs, rowNum) -> rs.getString("name"), id);
     movie.setGenres(genres);
 
@@ -267,8 +270,8 @@ public class MovieServiceImpl implements MovieService {
         """
         SELECT s.id, s.name
         FROM stars s
-        JOIN stars_in_movies sim ON s.id = sim.starId
-        WHERE sim.movieId = ?
+        JOIN stars_in_movies sim ON s.id = sim.starid
+        WHERE sim.movieid = ?
         ORDER BY s.name
         """;
 
@@ -282,15 +285,12 @@ public class MovieServiceImpl implements MovieService {
               return star;
             },
             id);
-    movie.setStars(stars);
 
+    movie.setStars(stars);
     return movie;
   }
 
-
   @Override
-
-
   public List<String> autocompleteTitles(String query) {
     if (query == null || query.trim().isEmpty()) {
       return List.of();
