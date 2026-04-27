@@ -1,13 +1,5 @@
 package com.webproject.backend.movie.entity.service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.webproject.backend.movie.entity.CartItem;
 import com.webproject.backend.movie.entity.CreditCard;
 import com.webproject.backend.movie.entity.Customer;
@@ -18,6 +10,12 @@ import com.webproject.backend.movie.entity.Repository.SaleRepository;
 import com.webproject.backend.movie.entity.Sale;
 import com.webproject.backend.movie.entity.dto.CheckoutRequest;
 import com.webproject.backend.movie.entity.dto.CheckoutResponse;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CheckoutService {
@@ -79,17 +77,15 @@ public class CheckoutService {
 
       Sale sale = new Sale(customer, cartItem.getMovie(), today);
 
-
       Sale savedSale = saleRepository.save(sale);
 
       lastSaleId = savedSale.getId();
 
-      //totalAmount = totalAmount.add(cartItem.getMovie().getRentalPrice());
+      // totalAmount = totalAmount.add(cartItem.getMovie().getRentalPrice());
 
       totalItems++;
 
       saleRepository.save(sale);
-
     }
 
     cartItemRepository.deleteByCustomer_Id(request.customerId());

@@ -1,13 +1,5 @@
 package com.webproject.backend.service.impl;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.webproject.backend.model.CartItem;
 import com.webproject.backend.model.CartState;
 import com.webproject.backend.model.CheckoutRequest;
@@ -18,8 +10,13 @@ import com.webproject.backend.movie.entity.Repository.CartItemRepository;
 import com.webproject.backend.movie.entity.Repository.CustomerRepository;
 import com.webproject.backend.movie.entity.Repository.MovieRepository;
 import com.webproject.backend.service.serviceInterface.CartService;
-
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CartServiceImpl implements CartService {

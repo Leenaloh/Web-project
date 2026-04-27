@@ -26,8 +26,7 @@ public class CartController {
 
   @GetMapping
   public ResponseEntity<CartState> getCart(
-      @RequestParam(required = false) Integer customerId,
-      HttpServletRequest request) {
+      @RequestParam(required = false) Integer customerId, HttpServletRequest request) {
     bindCustomerSession(request, customerId);
     CartState cart = cartService.getCart();
     return ResponseEntity.ok(cart);
@@ -86,8 +85,7 @@ public class CartController {
 
   @DeleteMapping
   public ResponseEntity<CartState> clearCart(
-      @RequestParam(required = false) Integer customerId,
-      HttpServletRequest request) {
+      @RequestParam(required = false) Integer customerId, HttpServletRequest request) {
     bindCustomerSession(request, customerId);
     CartState updated = cartService.clearCart();
     return ResponseEntity.ok(updated);
