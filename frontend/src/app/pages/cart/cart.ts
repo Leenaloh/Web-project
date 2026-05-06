@@ -28,7 +28,6 @@ interface CartViewModel {
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './cart.html',
-  styleUrls: ['./cart.css'],
 })
 export class CartComponent implements OnInit {
   customerId = 0;

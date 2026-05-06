@@ -7,7 +7,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './checkout-result.component.html',
-  styleUrl: './checkout-result.component.css'
 })
 export class CheckoutResultComponent implements OnInit {
   orderId = '';

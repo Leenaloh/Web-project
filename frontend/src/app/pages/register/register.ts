@@ -9,7 +9,6 @@ import { AuthService } from '../../services/authService/authService';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.html',
-  styleUrls: ['./register.css']
 })
 export class RegisterComponent {
   firstName = '';

@@ -30,7 +30,7 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('search() should navigate to /movie-list with form, filters, sorting, and paging params', () => {
+  it('search() should navigate to /movie-list with form and filters params', () => {
     const navSpy = spyOn(router, 'navigate');
 
     component.form = {
@@ -39,12 +39,9 @@ describe('HomeComponent', () => {
       director: 'James Cameron',
       starName: 'Sam Worthington',
     };
+
     component.selectedGenreString = '1';
     component.selectedTitleChar = 'A';
-
-    component.sortBy = 'rating';
-    component.sortDir = 'desc';
-    component.pageSize = 50;
 
     component.search();
 
@@ -56,15 +53,12 @@ describe('HomeComponent', () => {
         starName: 'Sam Worthington',
         genreId: 1,
         startsWith: 'A',
-        sortBy: 'rating',
-        sortDir: 'desc',
         page: 1,
-        pageSize: 50,
       },
     });
   });
 
-  it('search() should send null for empty optional fields and default sorting params', () => {
+  it('search() should send null for empty optional fields', () => {
     const navSpy = spyOn(router, 'navigate');
 
     component.search();
@@ -77,26 +71,22 @@ describe('HomeComponent', () => {
         starName: null,
         genreId: null,
         startsWith: null,
-        sortBy: 'title',
-        sortDir: 'asc',
         page: 1,
-        pageSize: 20,
       },
     });
   });
 
-  it('clear() should reset form fields, sorting, page size, and autocomplete state', () => {
+  it('clear() should reset form fields and autocomplete state', () => {
     component.form = {
       title: 'Inception',
       year: '2010',
       director: 'Christopher Nolan',
       starName: 'Leonardo DiCaprio',
     };
+
     component.selectedGenreString = '3';
     component.selectedTitleChar = 'I';
-    component.sortBy = 'rating';
-    component.sortDir = 'desc';
-    component.pageSize = 50;
+
     component.titleSuggestions = ['Inception'];
     component.showSuggestions = true;
     component.isLoadingSuggestions = true;
@@ -109,11 +99,9 @@ describe('HomeComponent', () => {
       director: '',
       starName: '',
     });
+
     expect(component.selectedGenreString).toBe('');
     expect(component.selectedTitleChar).toBe('');
-    expect(component.sortBy).toBe('title');
-    expect(component.sortDir).toBe('asc');
-    expect(component.pageSize).toBe(20);
     expect(component.titleSuggestions).toEqual([]);
     expect(component.showSuggestions).toBeFalse();
     expect(component.isLoadingSuggestions).toBeFalse();
@@ -145,6 +133,7 @@ describe('HomeComponent', () => {
     moviesServiceSpy.autocompleteTitles.and.returnValue(
       throwError(() => new Error('Autocomplete failed'))
     );
+
     component.form.title = 'Av';
 
     component.onTitleInput();

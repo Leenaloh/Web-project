@@ -10,7 +10,6 @@ import { CartService } from '../../services/cartService/cartService';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './movie_list.html',
-  styleUrls: ['./movie_list.css'],
 })
 export class MovieListComponent implements OnInit {
   movies: Movie[] = [];
@@ -23,7 +22,8 @@ export class MovieListComponent implements OnInit {
   isMenuOpen = false;
 
   sortOption = 'none';
-  pageSizeOptions = [10, 25, 50, 100];
+  pageSizeOptions = [20, 25, 50, 100];
+  isPageSizeDisabled = false;
 
   constructor(
     private router: Router,
@@ -96,10 +96,17 @@ export class MovieListComponent implements OnInit {
   private applyResponse(res: MoviesPageState): void {
     this.movies = res.movies ?? [];
     this.page = res.page ?? this.page;
-    this.pageSize = res.pageSize ?? this.pageSize;
     this.totalPages = res.totalPages ?? 1;
     this.totalResults = res.totalResults ?? this.movies.length;
     this.error = '';
+
+    if (this.totalResults <= 20) {
+      this.pageSize = this.totalResults;
+      this.isPageSizeDisabled = true;
+    } else {
+      this.pageSize = res.pageSize ?? this.pageSize;
+      this.isPageSizeDisabled = false;
+    }
 
     this.applySorting();
   }

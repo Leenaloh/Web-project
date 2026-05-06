@@ -8,7 +8,6 @@ import { StarsService } from '../../services/starsService/starsService';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './star_details.html',
-  styleUrls: ['./star_details.css'],
 })
 export class StarDetailsComponent implements OnInit {
   isMenuOpen = false;
