@@ -1,90 +1,179 @@
-<div class="app-background">
-  <div class="checkout-page">
-    <section class="page-hero">
-      <span class="page-badge">Payment • Review • Confirm</span>
-      <h1 class="page-hero-title">Checkout</h1>
-      <p class="page-subtitle">Verify your payment details to complete the rental.</p>
+<div class="min-vh-100 bg-light py-5">
+  <div class="container">
+
+    <!-- Hero -->
+    <section class="mb-5 text-center text-lg-start">
+      <span
+        class="badge rounded-pill text-danger bg-danger bg-opacity-10 border border-danger px-3 py-2 mb-3">
+        Payment • Review • Confirm
+      </span>
+
+      <h1 class="display-4 fw-bold mb-2">
+        Checkout
+      </h1>
+
+      <p class="text-secondary fs-5 mb-0">
+        Verify your payment details to complete the rental.
+      </p>
     </section>
 
-    <div *ngIf="loading" class="state-card">Loading checkout...</div>
+    <!-- Loading -->
+    <div *ngIf="loading" class="alert alert-light border shadow-sm rounded-4">
+      Loading checkout...
+    </div>
 
-    <div *ngIf="!loading && errorMessage" class="error-card">
+    <!-- Error -->
+    <div
+      *ngIf="!loading && errorMessage"
+      class="alert alert-danger shadow-sm rounded-4">
       {{ errorMessage }}
     </div>
 
-    <div *ngIf="!loading && cart && !cart.empty" class="checkout-layout">
-      <form class="form-card" [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()">
-        <h2>Payment Verification</h2>
+    <!-- Content -->
+    <div
+      *ngIf="!loading && cart && !cart.empty"
+      class="row g-4 align-items-start">
 
-        <label>
-          Credit Card ID
-          <input type="text" formControlName="creditCardId" />
-        </label>
-        <small class="field-error" *ngIf="creditCardId?.touched && creditCardId?.invalid">
-          Credit card ID is required.
-        </small>
+      <!-- Form -->
+      <div class="col-12 col-lg-7">
 
-        <label>
-          First Name
-          <input type="text" formControlName="firstName" />
-        </label>
-        <small class="field-error" *ngIf="firstName?.touched && firstName?.invalid">
-          First name is required.
-        </small>
+        <form
+          class="card border-0 shadow-sm rounded-4 p-4 p-lg-5"
+          [formGroup]="checkoutForm"
+          (ngSubmit)="submitCheckout()">
 
-        <label>
-          Last Name
-          <input type="text" formControlName="lastName" />
-        </label>
-        <small class="field-error" *ngIf="lastName?.touched && lastName?.invalid">
-          Last name is required.
-        </small>
+          <div class="mb-4">
+            <h2 class="h3 fw-bold mb-1">
+              Payment Verification
+            </h2>
 
-        <label>
-          Expiration Date
-          <input type="date" formControlName="expiration" />
-        </label>
-        <small class="field-error" *ngIf="expiration?.touched && expiration?.invalid">
-          Expiration date is required.
-        </small>
-
-        <button class="submit-btn" type="submit" [disabled]="submitting">
-          {{ submitting ? 'Processing...' : 'Confirm Checkout' }}
-        </button>
-      </form>
-
-      <div class="summary-card">
-        <h2>Order Summary</h2>
-
-        <div class="summary-item" *ngFor="let item of summaryItems">
-          <div>
-            <strong>{{ item.title }}</strong>
-            <p>{{ item.year ?? 'N/A' }} • {{ item.director || 'N/A' }}</p>
-            <p>Quantity: {{ item.quantity }}</p>
-            <p *ngIf="item.rentalPrice > 0; else checkoutPriceUnavailable">
-              Price: {{ item.rentalPrice | currency }}
+            <p class="text-secondary mb-0">
+              Enter your payment information below.
             </p>
-            <ng-template #checkoutPriceUnavailable>
-              <p>Price: Not available</p>
-            </ng-template>
           </div>
 
-          <strong>{{ item.subtotal | currency }}</strong>
-        </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              Credit Card ID
+            </label>
 
-        <div class="summary-total">
-          <span>Total Movies</span>
-          <strong>{{ cart.totalItems }}</strong>
-        </div>
+            <input
+              type="text"
+              formControlName="creditCardId"
+              class="form-control rounded-4 py-3" />
 
-        <div class="summary-total">
-          <span>Total Amount</span>
-          <strong *ngIf="(cart.totalAmount ?? cart.totalPrice ?? 0) > 0; else checkoutTotalUnavailable">
-            {{ (cart.totalAmount ?? cart.totalPrice ?? 0) | currency }}
-          </strong>
-          <ng-template #checkoutTotalUnavailable>
-            <strong>Not available</strong>
-          </ng-template>
+            <div
+              class="text-danger small mt-2"
+              *ngIf="creditCardId?.touched && creditCardId?.invalid">
+              Credit card ID is required.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              First Name
+            </label>
+
+            <input
+              type="text"
+              formControlName="firstName"
+              class="form-control rounded-4 py-3" />
+
+            <div
+              class="text-danger small mt-2"
+              *ngIf="firstName?.touched && firstName?.invalid">
+              First name is required.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">
+              Last Name
+            </label>
+
+            <input
+              type="text"
+              formControlName="lastName"
+              class="form-control rounded-4 py-3" />
+
+            <div
+              class="text-danger small mt-2"
+              *ngIf="lastName?.touched && lastName?.invalid">
+              Last name is required.
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">
+              Expiration Date
+            </label>
+
+            <input
+              type="date"
+              formControlName="expiration"
+              class="form-control rounded-4 py-3" />
+
+            <div
+              class="text-danger small mt-2"
+              *ngIf="expiration?.touched && expiration?.invalid">
+              Expiration date is required.
+            </div>
+          </div>
+
+          <button
+            class="btn btn-danger rounded-pill py-3 fw-semibold w-100"
+            type="submit"
+            [disabled]="submitting">
+
+            {{ submitting ? 'Processing...' : 'Confirm Checkout' }}
+          </button>
+
+        </form>
+      </div>
+
+      <!-- Summary -->
+      <div class="col-12 col-lg-5">
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 position-lg-sticky top-0">
+
+          <div class="mb-4">
+            <h2 class="h3 fw-bold mb-1">
+              Order Summary
+            </h2>
+
+            <p class="text-secondary mb-0">
+              Review your selected movies.
+            </p>
+          </div>
+
+          <div
+            class="border-bottom pb-3 mb-3"
+            *ngFor="let item of summaryItems">
+
+            <h3 class="h5 fw-bold mb-2">
+              {{ item.title }}
+            </h3>
+
+            <p class="text-secondary mb-1">
+              {{ item.year ?? 'N/A' }} • {{ item.director || 'N/A' }}
+            </p>
+
+            <p class="text-secondary mb-0">
+              Quantity: {{ item.quantity }}
+            </p>
+
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <span class="fw-semibold">
+              Total Movies
+            </span>
+
+            <strong>
+              {{ cart.totalItems }}
+            </strong>
+          </div>
+
         </div>
       </div>
     </div>

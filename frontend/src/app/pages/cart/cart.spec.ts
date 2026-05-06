@@ -22,10 +22,13 @@ describe('CartComponent', () => {
   };
 
   beforeEach(async () => {
+    localStorage.setItem('customerId', '1');
+
     mockCartService = jasmine.createSpyObj('CartService', [
       'getCart',
       'updateItemQuantity',
       'removeItem',
+      'removeCartItem',
       'clearCart'
     ]);
 
@@ -44,8 +47,13 @@ describe('CartComponent', () => {
     router = TestBed.inject(Router);
   });
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   it('loads cart items and enriches them with movie details', () => {
     mockCartService.getCart.and.returnValue(of(rawCart));
+
     mockMoviesService.getMovieById.withArgs('tt001').and.returnValue(
       of({
         id: 'tt001',
@@ -54,6 +62,7 @@ describe('CartComponent', () => {
         director: 'Frank Darabont'
       })
     );
+
     mockMoviesService.getMovieById.withArgs('tt002').and.returnValue(
       of({
         id: 'tt002',
@@ -74,7 +83,12 @@ describe('CartComponent', () => {
   });
 
   it('falls back to movieId when the movie details request fails', () => {
-    mockCartService.getCart.and.returnValue(of({ items: [{ movieId: 'tt404', quantity: 1 }] }));
+    mockCartService.getCart.and.returnValue(
+      of({
+        items: [{ movieId: 'tt404', quantity: 1 }]
+      })
+    );
+
     mockMoviesService.getMovieById.and.returnValue(
       throwError(() => new Error('movie lookup failed'))
     );
@@ -87,12 +101,14 @@ describe('CartComponent', () => {
 
   it('updates quantity and re-enriches the cart', () => {
     mockCartService.getCart.and.returnValue(of(rawCart));
+
     mockMoviesService.getMovieById.and.returnValues(
       of({ id: 'tt001', title: 'The Shawshank Redemption' }),
       of({ id: 'tt002', title: 'The Wandering Soap Opera' }),
       of({ id: 'tt001', title: 'The Shawshank Redemption' }),
       of({ id: 'tt002', title: 'The Wandering Soap Opera' })
     );
+
     mockCartService.updateItemQuantity.and.returnValue(
       of({
         items: [
@@ -103,6 +119,7 @@ describe('CartComponent', () => {
     );
 
     fixture.detectChanges();
+
     component.increase(component.cartItems[0]);
 
     expect(mockCartService.updateItemQuantity).toHaveBeenCalledWith('tt001', 3);
@@ -111,14 +128,20 @@ describe('CartComponent', () => {
   });
 
   it('clears the cart', () => {
-    mockCartService.getCart.and.returnValue(of(rawCart));
+    mockCartService.getCart.and.returnValues(
+      of(rawCart),
+      of({ items: [] })
+    );
+
     mockMoviesService.getMovieById.and.returnValues(
       of({ id: 'tt001', title: 'The Shawshank Redemption' }),
       of({ id: 'tt002', title: 'The Wandering Soap Opera' })
     );
+
     mockCartService.clearCart.and.returnValue(of({ items: [] }));
 
     fixture.detectChanges();
+
     component.clear();
 
     expect(mockCartService.clearCart).toHaveBeenCalled();
@@ -128,6 +151,7 @@ describe('CartComponent', () => {
 
   it('navigates to checkout when the cart has items', () => {
     mockCartService.getCart.and.returnValue(of(rawCart));
+
     mockMoviesService.getMovieById.and.returnValues(
       of({ id: 'tt001', title: 'The Shawshank Redemption' }),
       of({ id: 'tt002', title: 'The Wandering Soap Opera' })
@@ -136,6 +160,7 @@ describe('CartComponent', () => {
     fixture.detectChanges();
 
     const navigateSpy = spyOn(router, 'navigate');
+
     component.goToCheckout();
 
     expect(navigateSpy).toHaveBeenCalledWith(['/checkout']);

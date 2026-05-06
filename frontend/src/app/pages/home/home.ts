@@ -9,7 +9,6 @@ import { MoviesService } from '../../services/movieService/movieService';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home.html',
-  styleUrls: ['./home.css'],
 })
 export class HomeComponent {
   form = { title: '', year: '', director: '', starName: '' };
@@ -53,12 +52,6 @@ export class HomeComponent {
   showSuggestions = false;
   isLoadingSuggestions = false;
   isMenuOpen = false;
-
-  // Added for sorting and page size
-  sortBy = 'title';
-  sortDir = 'asc';
-  pageSize = 20;
-  pageSizes = [10, 25, 50, 100];
 
   constructor(
     private router: Router,
@@ -114,13 +107,7 @@ export class HomeComponent {
         starName: this.form.starName || null,
         genreId,
         startsWith,
-
-        // Added query params
-        sortBy: this.sortBy,
-        sortDir: this.sortDir,
-
         page: 1,
-        pageSize: this.pageSize,
       },
     });
   }
@@ -141,11 +128,6 @@ export class HomeComponent {
     this.form = { title: '', year: '', director: '', starName: '' };
     this.selectedGenreString = '';
     this.selectedTitleChar = '';
-
-    // Added reset for new fields
-    this.sortBy = 'title';
-    this.sortDir = 'asc';
-    this.pageSize = 20;
 
     this.titleSuggestions = [];
     this.showSuggestions = false;

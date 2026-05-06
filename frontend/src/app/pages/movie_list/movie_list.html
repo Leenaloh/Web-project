@@ -1,11 +1,10 @@
-<div class="app-background" data-testid="page-movie-list">
+<div class="min-vh-100 bg-light bg-gradient" data-testid="page-movie-list">
   <div class="container-fluid px-0">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg app-navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
       <div class="container">
-        <a class="navbar-brand app-brand" routerLink="/home">
-          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
-          <span class="app-brand-text">ilmly</span>
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-2" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" width="48" height="48" class="object-fit-contain me-n2" />
+          <span>ilmly</span>
         </a>
 
         <button
@@ -17,7 +16,7 @@
         </button>
 
         <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
-          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3 fw-bold">
             <li class="nav-item">
               <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false">Home</a>
             </li>
@@ -32,69 +31,70 @@
       </div>
     </nav>
 
-    <!-- Header -->
-    <section class="page-hero">
-      <div class="container">
-        <span class="page-badge">Movie Collection</span>
-        <h1 class="page-hero-title" data-testid="heading-movie-list">Browse Movies</h1>
+    <section class="py-5">
+      <div class="container py-4">
+        <span class="badge rounded-pill text-danger bg-danger bg-opacity-10 border border-danger px-3 py-2 mb-3">
+          Movie Collection
+        </span>
+        <h1 class="display-4 fw-bold lh-1 mb-0" data-testid="heading-movie-list">Browse Movies</h1>
       </div>
     </section>
-      
-    <!-- Controls -->
-<section class="movie-list-controls">
-  <div class="container">
-    <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 mb-4">
-      <div class="d-flex align-items-center gap-2">
-        <label for="pageSize" class="form-label mb-0 fw-bold">Items per page:</label>
-        <select
-          id="pageSize"
-          class="form-select"
-          style="width: 120px;"
-          [(ngModel)]="pageSize"
-          (change)="onPageSizeChange()">
-          <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
-            {{ size }}
-          </option>
-        </select>
-      </div>
 
-      <div class="d-flex align-items-center gap-2">
-        <label for="sortOption" class="form-label mb-0 fw-bold">Sort:</label>
-        <select
-          id="sortOption"
-          class="form-select"
-          style="width: 220px;"
-          [(ngModel)]="sortOption"
-          (change)="onSortChange()">
-          <option value="none">None</option>
-          <option value="title-asc">Title Ascending</option>
-          <option value="title-desc">Title Descending</option>
-          <option value="rating-asc">Rating Ascending</option>
-          <option value="rating-desc">Rating Descending</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-    <!-- Messages -->
-    <section class="movie-list-feedback" *ngIf="success || error">
+    <section class="pb-4">
       <div class="container">
-        <div class="alert alert-success" data-testid="msg-success" [hidden]="!success">
+        <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 mb-4">
+          <div class="d-flex align-items-center gap-2">
+            <label for="pageSize" class="form-label mb-0 fw-bold">Items per page:</label>
+            <select
+              id="pageSize"
+              class="form-select rounded-4 w-auto"
+              [(ngModel)]="pageSize"
+              (change)="onPageSizeChange()"
+              [disabled]="isPageSizeDisabled">
+
+              <option *ngIf="totalResults <= 20" [ngValue]="totalResults">
+                {{ totalResults }}
+              </option>
+
+              <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
+                {{ size }}
+              </option>
+            </select>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <label for="sortOption" class="form-label mb-0 fw-bold">Sort:</label>
+            <select
+              id="sortOption"
+              class="form-select rounded-4 w-auto"
+              [(ngModel)]="sortOption"
+              (change)="onSortChange()">
+              <option value="none">None</option>
+              <option value="title-asc">Title Ascending</option>
+              <option value="title-desc">Title Descending</option>
+              <option value="rating-asc">Rating Ascending</option>
+              <option value="rating-desc">Rating Descending</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section *ngIf="success || error">
+      <div class="container">
+        <div class="alert alert-success rounded-4" data-testid="msg-success" [hidden]="!success">
           {{ success }}
         </div>
 
-        <div class="alert alert-danger" data-testid="msg-error" [hidden]="!error">
+        <div class="alert alert-danger rounded-4" data-testid="msg-error" [hidden]="!error">
           {{ error }}
         </div>
       </div>
     </section>
 
-    <!-- Cards -->
-    <section class="movie-list-wrap">
+    <section class="pb-5">
       <div class="container">
-        <div class="movie-list-empty empty-state" *ngIf="!error && movies.length === 0">
+        <div class="text-center text-secondary py-5" *ngIf="!error && movies.length === 0">
           No movies found.
         </div>
 
@@ -105,52 +105,53 @@
             [attr.data-testid]="'movie-card-' + (m.id || i)">
 
             <article
-              class="movie-list-card clickable-card"
+              class="card h-100 border-0 shadow rounded-4 p-4 overflow-hidden"
+              role="button"
               (click)="goDetails(m.id)"
               (keyup.enter)="goDetails(m.id)"
               (keyup.space)="goDetails(m.id)"
               tabindex="0">
 
-              <div class="movie-list-card-top">
-                <span class="soft-pill" [attr.data-testid]="'movie-rating-' + (m.id || i)">
+              <div class="d-flex justify-content-end mb-3">
+                <span
+                  class="badge rounded-pill text-danger bg-danger bg-opacity-10 border border-danger px-3 py-2"
+                  [attr.data-testid]="'movie-rating-' + (m.id || i)">
                   {{ m.rating ?? 'N/A' }}/10
                 </span>
               </div>
 
-              <div class="movie-list-card-body">
-                <h3 class="movie-list-title" [attr.data-testid]="'movie-title-' + (m.id || i)">
+              <div class="card-body d-flex flex-column p-0">
+                <h3 class="h2 fw-bold lh-sm mb-3" [attr.data-testid]="'movie-title-' + (m.id || i)">
                   <span
-                    class="movie-list-link"
+                    class="text-dark text-decoration-none"
                     [attr.data-testid]="'movie-link-' + (m.id || i)">
                     {{ m.title }}
                   </span>
                 </h3>
 
-                <div class="info-block">
-                  <div class="info-row" [attr.data-testid]="'movie-year-' + (m.id || i)">
-                    <span class="info-label">Year</span>
-                    <span class="info-value">{{ m.year }}</span>
-                  </div>
+                <div class="border rounded-4 p-3 bg-light bg-opacity-50 mb-3">
+                  <div class="row gy-2" [attr.data-testid]="'movie-year-' + (m.id || i)">
+                    <div class="col-5 text-secondary text-uppercase fw-bold small">Year</div>
+                    <div class="col-7 text-end fw-bold">{{ m.year }}</div>
 
-                  <div class="info-row">
-                    <span class="info-label">Director</span>
-                    <span class="info-value">{{ m.director }}</span>
-                  </div>
+                    <div class="col-5 text-secondary text-uppercase fw-bold small">Director</div>
+                    <div class="col-7 text-end fw-bold">{{ m.director }}</div>
 
-                  <div class="info-row" *ngIf="m.stars && m.stars.length > 0">
-                    <span class="info-label">Stars</span>
-                    <span class="info-value">
-                      <span *ngFor="let star of m.stars; let last = last">
-                        {{ star.name }}<span *ngIf="!last">, </span>
-                      </span>
-                    </span>
+                    <ng-container *ngIf="m.stars && m.stars.length > 0">
+                      <div class="col-5 text-secondary text-uppercase fw-bold small">Stars</div>
+                      <div class="col-7 text-end fw-bold">
+                        <span *ngFor="let star of m.stars; let last = last">
+                          {{ star.name }}<span *ngIf="!last">, </span>
+                        </span>
+                      </div>
+                    </ng-container>
                   </div>
                 </div>
               </div>
 
-              <div class="movie-list-actions">
+              <div class="mt-auto">
                 <button
-                  class="btn btn-primary movie-list-cart-btn"
+                  class="btn btn-danger w-100 rounded-pill fw-bold py-2"
                   (click)="$event.stopPropagation(); addToCart(m)"
                   [attr.data-testid]="'btn-add-to-cart-' + (m.id || i)">
                   Add to Cart
@@ -160,37 +161,30 @@
           </div>
         </div>
 
-        <!-- Pagination -->
-        <div
-          class="movie-list-pagination"
-          *ngIf="totalPages > 1"
-          data-testid="pagination">
+        <nav class="mt-5" *ngIf="totalPages > 1" data-testid="pagination" aria-label="Movie pagination">
+          <ul class="pagination justify-content-center flex-wrap gap-2">
+            <li class="page-item" [class.disabled]="page === 1">
+              <button class="page-link rounded-pill px-4" (click)="goToPage(page - 1)" [disabled]="page === 1">
+                Previous
+              </button>
+            </li>
 
-          <button
-            class="movie-list-nav-btn"
-            (click)="goToPage(page - 1)"
-            [disabled]="page === 1">
-            Previous
-          </button>
+            <li class="page-item" *ngFor="let p of pages" [class.active]="p === page">
+              <button
+                class="page-link rounded-pill"
+                (click)="goToPage(p)"
+                [attr.data-testid]="'page-btn-' + p">
+                {{ p }}
+              </button>
+            </li>
 
-          <div class="movie-list-page-numbers">
-            <button
-              class="movie-list-page-btn"
-              *ngFor="let p of pages"
-              (click)="goToPage(p)"
-              [class.active]="p === page"
-              [attr.data-testid]="'page-btn-' + p">
-              {{ p }}
-            </button>
-          </div>
-
-          <button
-            class="movie-list-nav-btn"
-            (click)="goToPage(page + 1)"
-            [disabled]="page === totalPages">
-            Next
-          </button>
-        </div>
+            <li class="page-item" [class.disabled]="page === totalPages">
+              <button class="page-link rounded-pill px-4" (click)="goToPage(page + 1)" [disabled]="page === totalPages">
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </section>
   </div>

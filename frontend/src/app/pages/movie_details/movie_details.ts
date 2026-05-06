@@ -9,7 +9,6 @@ import { CartService } from '../../services/cartService/cartService';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './movie_details.html',
-  styleUrls: ['./movie_details.css'],
 })
 export class MovieDetailsComponent implements OnInit {
   isMenuOpen = false;

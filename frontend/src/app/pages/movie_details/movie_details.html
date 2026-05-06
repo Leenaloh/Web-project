@@ -1,11 +1,11 @@
-<div class="min-vh-100 bg-light" data-testid="page-movie-details">
+<div class="min-vh-100 bg-light bg-gradient" data-testid="page-movie-details">
   <div class="container-fluid px-0">
 
-    <nav class="navbar navbar-expand-lg app-navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
       <div class="container">
-        <a class="navbar-brand app-brand" routerLink="/home">
-          <img src="/logo.png" alt="Filmly logo" class="app-brand-logo" />
-          <span class="app-brand-text">ilmly</span>
+        <a class="navbar-brand d-flex align-items-center fw-bold fs-2" routerLink="/home">
+          <img src="/logo.png" alt="Filmly logo" width="48" height="48" class="object-fit-contain me-n2" />
+          <span>ilmly</span>
         </a>
 
         <button
@@ -17,7 +17,7 @@
         </button>
 
         <div class="collapse navbar-collapse" [class.show]="isMenuOpen">
-          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3 fw-bold">
             <li class="nav-item">
               <a class="nav-link" routerLink="/home" (click)="isMenuOpen = false" data-testid="link-home">Home</a>
             </li>
@@ -31,6 +31,7 @@
         </div>
       </div>
     </nav>
+
     <section class="bg-white bg-opacity-75 py-5 border-bottom" *ngIf="movie">
       <div class="container-xl py-4">
         <h1
@@ -43,7 +44,7 @@
 
     <section class="py-5" *ngIf="movie">
       <div class="container-xl">
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-lg-5">
+        <div class="card border-0 shadow rounded-4 p-4 p-lg-5">
 
           <div class="row g-4">
 
@@ -61,7 +62,7 @@
                 </span>
               </div>
 
-              <div class="border rounded-4 p-4">
+              <div class="border rounded-4 p-4 bg-light bg-opacity-50">
                 <div class="row gy-3">
                   <div class="col-6 text-secondary text-uppercase fw-bold small">Year</div>
                   <div class="col-6 text-end fw-bold" [attr.data-testid]="'movie-year-' + movie.id">
@@ -87,7 +88,7 @@
               </h2>
               <p class="text-secondary mb-4">Select quantity</p>
 
-              <div class="border rounded-4 p-4">
+              <div class="border rounded-4 p-4 bg-light bg-opacity-50">
                 <div
                   class="d-flex justify-content-center align-items-center gap-3 mb-4"
                   data-testid="qty-controls">
@@ -101,7 +102,7 @@
                   </button>
 
                   <input
-                    class="form-control text-center w-25"
+                    class="form-control text-center w-25 rounded-4"
                     [value]="qty"
                     readonly
                     data-testid="input-qty" />
@@ -147,11 +148,11 @@
             </div>
           </div>
 
-          <div class="alert alert-success mt-4 mb-0" data-testid="msg-success" [hidden]="!success">
+          <div class="alert alert-success mt-4 mb-0 rounded-4" data-testid="msg-success" [hidden]="!success">
             {{ success }}
           </div>
 
-          <div class="alert alert-danger mt-4 mb-0" data-testid="msg-error" [hidden]="!addError">
+          <div class="alert alert-danger mt-4 mb-0 rounded-4" data-testid="msg-error" [hidden]="!addError">
             {{ addError }}
           </div>
 
@@ -161,7 +162,7 @@
 
     <section class="py-5" *ngIf="!movie && error">
       <div class="container-xl">
-        <div class="alert alert-danger mb-0">
+        <div class="alert alert-danger rounded-4 mb-0">
           {{ error }}
         </div>
       </div>

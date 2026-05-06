@@ -29,7 +29,6 @@ interface CheckoutSummaryItem {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './checkout.component.html',
-  styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
   customerId = 0;

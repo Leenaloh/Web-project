@@ -12,13 +12,15 @@ describe('CartComponent Integration', () => {
 
   const mockCart: CartState = {
     items: [
-      { movieId: 'tt001', title: 'The Shawshank Redemption', quantity: 2 },
-      { movieId: 'tt002', title: 'The Wandering Soap Opera', quantity: 1 },
+      { cartItemId: 1, movieId: 'tt001', title: 'The Shawshank Redemption', quantity: 2 },
+      { cartItemId: 2, movieId: 'tt002', title: 'The Wandering Soap Opera', quantity: 1 },
     ],
     totalPrice: 45,
   };
 
   beforeEach(waitForAsync(() => {
+    localStorage.setItem('customerId', '1');
+
     TestBed.configureTestingModule({
       imports: [CartComponent, HttpClientTestingModule, RouterTestingModule],
     }).compileComponents();
@@ -29,56 +31,54 @@ describe('CartComponent Integration', () => {
   }));
 
   afterEach(() => {
-  httpMock.match(() => true).forEach(req => {
-    req.flush({});
+    httpMock.match(() => true).forEach(req => req.flush({}));
+    httpMock.verify();
+    localStorage.clear();
   });
 
-  httpMock.verify();
-});
+  it('should display cart items', waitForAsync(() => {
+    component.loadCart();
 
-it('should display cart items', waitForAsync(() => {
-  component.loadCart();
+    const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart?customerId=1`);
+    expect(cartReq.request.method).toBe('GET');
+    cartReq.flush(mockCart);
 
-  const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart`);
-  expect(cartReq.request.method).toBe('GET');
-
-  cartReq.flush(mockCart);
-
-  httpMock.match(req => req.url.includes('/api/v1/movies/')).forEach(req => {
-    req.flush({
-      id: 'tt001',
-      title: 'The Shawshank Redemption',
-      year: 1994,
-      director: 'Frank Darabont'
+    httpMock.match(req => req.url.includes('/api/v1/movies/')).forEach(req => {
+      req.flush({
+        id: 'tt001',
+        title: 'The Shawshank Redemption',
+        year: 1994,
+        director: 'Frank Darabont'
+      });
     });
-  });
 
-  fixture.detectChanges();
+    fixture.detectChanges();
 
-  expect(component).toBeTruthy();
-}));
+    expect(component).toBeTruthy();
+  }));
+
   it('should remove item through backend', waitForAsync(() => {
-  const item = {
-    movieId: 'tt001',
-    title: 'The Shawshank Redemption',
-    quantity: 2,
-    year: 1994,
-    director: 'Frank Darabont'
-  } as any;
+    component.loadCart();
 
-  component.remove(item);
+    const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart?customerId=1`);
+    cartReq.flush(mockCart);
 
-  const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart/items/tt001`);
-  expect(req.request.method).toBe('DELETE');
+    httpMock.match(req => req.url.includes('/api/v1/movies/')).forEach(req => {
+      req.flush({
+        id: 'tt001',
+        title: 'The Shawshank Redemption',
+        year: 1994,
+        director: 'Frank Darabont'
+      });
+    });
 
-  req.flush({
-    items: [{ movieId: 'tt002', title: 'The Wandering Soap Opera', quantity: 1 }],
-    totalPrice: 25,
-  });
+    component.remove(component.cartItems[0]);
 
-  fixture.detectChanges();
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart/items/tt001?customerId=1`);
+    expect(req.request.method).toBe('DELETE');
 
-  expect(component).toBeTruthy();
-}));
-  
+    req.flush({ items: [] });
+
+    expect(component).toBeTruthy();
+  }));
 });

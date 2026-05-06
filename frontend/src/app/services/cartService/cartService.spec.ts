@@ -38,7 +38,7 @@ describe("CartService", () => {
       expect(response.totalPrice).toBe(20);
     });
 
-    const req = httpMock.expectOne(`${baseUrl}`);
+    const req = httpMock.expectOne(`${baseUrl}?customerId=0`);
 
     expect(req.request.method).toBe("GET");
     expect(req.request.withCredentials).toBeTrue();
@@ -55,7 +55,7 @@ describe("CartService", () => {
       expect(response.items.length).toBe(1);
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/items?movieId=tt001&quantity=3`);
+    const req = httpMock.expectOne(`${baseUrl}/items?customerId=0&movieId=tt001&quantity=3`);
 
     expect(req.request.method).toBe("POST");
     req.flush(mockResponse);
@@ -71,7 +71,7 @@ describe("CartService", () => {
       expect(response.items[0].quantity).toBe(5);
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/items?movieId=tt002&quantity=5`);
+    const req = httpMock.expectOne(`${baseUrl}/items?customerId=0&movieId=tt002&quantity=5`);
 
     expect(req.request.method).toBe("PUT");
     req.flush(mockResponse);
@@ -87,7 +87,7 @@ describe("CartService", () => {
       expect(response.items.length).toBe(0);
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/items/tt003`);
+    const req = httpMock.expectOne(`${baseUrl}/items/tt003?customerId=0`);
 
     expect(req.request.method).toBe("DELETE");
     req.flush(mockResponse);
@@ -103,7 +103,7 @@ describe("CartService", () => {
       expect(response.totalPrice).toBe(0);
     });
 
-    const req = httpMock.expectOne(`${baseUrl}`);
+    const req = httpMock.expectOne(`${baseUrl}?customerId=0`);
 
     expect(req.request.method).toBe("DELETE");
     req.flush(mockResponse);
@@ -122,7 +122,7 @@ describe("CartService", () => {
       expect(response.message).toBe("Order placed successfully");
     });
 
-    const req = httpMock.expectOne(`${baseUrl}/checkout`);
+    const req = httpMock.expectOne(`${baseUrl}/checkout?customerId=0`);
 
     expect(req.request.method).toBe("POST");
     expect(req.request.body).toEqual(checkoutRequest);
