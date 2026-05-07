@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/authService/authService';
 import { StarsService } from '../../services/starsService/starsService';
 
 @Component({
@@ -15,10 +16,11 @@ export class StarDetailsComponent implements OnInit {
   movies: any[] = [];
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private starsService: StarsService
-  ) {}
+  private router: Router,
+  private route: ActivatedRoute,
+  private starsService: StarsService,
+  private authService: AuthService
+) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.queryParamMap.get('id');
@@ -40,4 +42,11 @@ export class StarDetailsComponent implements OnInit {
   goMovie(movieId: string): void {
     this.router.navigate(['/movie_details'], { queryParams: { id: movieId } });
   }
+
+  logout(): void {
+  this.authService.logout().subscribe({
+    next: () => this.router.navigate(['/']),
+    error: () => this.router.navigate(['/'])
+  });
+}
 }

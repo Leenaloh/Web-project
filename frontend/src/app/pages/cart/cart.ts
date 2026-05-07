@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
-
+import { AuthService } from '../../services/authService/authService';
 import { CartItem, CartService, CartState } from '../../services/cartService/cartService';
 import { Movie, MoviesService } from '../../services/movieService/movieService';
 
@@ -42,37 +42,28 @@ export class CartComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    private cartService: CartService,
-    private moviesService: MoviesService,
-    private router: Router
-  ) {}
+  private cartService: CartService,
+  private moviesService: MoviesService,
+  private router: Router,
+  private authService: AuthService
+) {}
 
   ngOnInit(): void {
-    const storedCustomerId = localStorage.getItem('customerId');
-
-    if (!storedCustomerId) {
+  this.authService.me().subscribe({
+    next: () => {
+      this.loadCart();
+    },
+    error: () => {
       this.router.navigate(['/']);
-      return;
     }
-
-    const parsedCustomerId = Number(storedCustomerId);
-
-    if (Number.isNaN(parsedCustomerId) || parsedCustomerId <= 0) {
-      localStorage.removeItem('customerId');
-      this.router.navigate(['/']);
-      return;
-    }
-
-    this.customerId = parsedCustomerId;
-    this.loadCart();
-  }
+  });
+}
 
   loadCart(): void {
     this.loading = true;
     this.errorMessage = '';
 
-    this.cartService
-      .getCart(this.customerId)
+    this.cartService.getCart()
       .pipe(switchMap((cartData) => this.enrichCartState(cartData)))
       .subscribe({
         next: (viewModel) => {
@@ -156,6 +147,13 @@ export class CartComponent implements OnInit {
   hasPrice(item: EnrichedCartItem): boolean {
     return item.price !== null;
   }
+
+  logout(): void {
+  this.authService.logout().subscribe({
+    next: () => this.router.navigate(['/']),
+    error: () => this.router.navigate(['/'])
+  });
+}
 
   private updateQuantity(movieId: string, quantity: number): void {
     this.errorMessage = '';

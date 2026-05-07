@@ -29,7 +29,6 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           if (response.status === 'SUCCESS') {
-            localStorage.setItem('customerId', String(response.userId));
             this.router.navigate(['/home']);
           }
         },
