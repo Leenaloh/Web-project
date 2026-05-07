@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/authService/authService';
 import { Movie, MoviesPageState, MoviesService } from '../../services/movieService/movieService';
 import { CartService } from '../../services/cartService/cartService';
 
@@ -26,11 +27,12 @@ export class MovieListComponent implements OnInit {
   isPageSizeDisabled = false;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private moviesService: MoviesService,
-    private cartService: CartService
-  ) {}
+  private router: Router,
+  private route: ActivatedRoute,
+  private moviesService: MoviesService,
+  private cartService: CartService,
+  private authService: AuthService
+) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -218,4 +220,11 @@ export class MovieListComponent implements OnInit {
 
     return Array.from({ length: windowSize }, (_, i) => start + i);
   }
+
+  logout(): void {
+  this.authService.logout().subscribe({
+    next: () => this.router.navigate(['/']),
+    error: () => this.router.navigate(['/'])
+  });
+}
 }

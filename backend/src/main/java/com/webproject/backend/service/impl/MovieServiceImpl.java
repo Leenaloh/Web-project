@@ -1,12 +1,14 @@
 package com.webproject.backend.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
 import com.webproject.backend.model.Movie;
 import com.webproject.backend.model.MoviesPageState;
 import com.webproject.backend.service.serviceInterface.MovieService;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -330,5 +332,36 @@ public class MovieServiceImpl implements MovieService {
 
       movie.setStars(stars);
     }
+  }
+
+  @Override
+  public MoviesPageState getTopRatedMovies(int pageSize) {
+    String sql =
+        """
+        SELECT m.id, m.title, m.year, m.director, r.rating
+        FROM movies m
+        JOIN ratings r ON m.id = r.movieid
+        WHERE r.rating IS NOT NULL
+        ORDER BY r.rating DESC, m.title
+        LIMIT ?
+        """;
+
+    List<Movie> movies =
+        jdbcTemplate.query(
+            sql,
+            new Object[] {pageSize},
+            (rs, rowNum) ->
+                new Movie(
+                    rs.getString("id"),
+                    rs.getString("title"),
+                    rs.getInt("year"),
+                    rs.getString("director"),
+                    rs.getObject("rating") != null ? rs.getDouble("rating") : null,
+                    null,
+                    List.of(),
+                    List.of()));
+
+    attachStars(movies);
+    return buildPageState(movies, 1, pageSize, movies.size());
   }
 }

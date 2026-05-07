@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/authService/authService';
 import { MoviesService } from '../../services/movieService/movieService';
 
 @Component({
@@ -10,8 +11,11 @@ import { MoviesService } from '../../services/movieService/movieService';
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home.html',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   form = { title: '', year: '', director: '', starName: '' };
+
+  topRatedMovies: any[] = [];
+  isLoadingTopRated = false;
 
   genres = [
     { id: 1, name: 'Action' },
@@ -54,9 +58,29 @@ export class HomeComponent {
   isMenuOpen = false;
 
   constructor(
-    private router: Router,
-    private moviesService: MoviesService
-  ) {}
+  private router: Router,
+  private moviesService: MoviesService,
+  private authService: AuthService
+) {}
+
+  ngOnInit(): void {
+    this.loadTopRatedMovies();
+  }
+
+  loadTopRatedMovies(): void {
+    this.isLoadingTopRated = true;
+
+    this.moviesService.getTopRatedMovies(9).subscribe({
+      next: (response: any) => {
+        this.topRatedMovies = response.movies;
+        this.isLoadingTopRated = false;
+      },
+      error: () => {
+        this.topRatedMovies = [];
+        this.isLoadingTopRated = false;
+      },
+    });
+  }
 
   onTitleInput(): void {
     const value = this.form.title.trim();
@@ -133,4 +157,15 @@ export class HomeComponent {
     this.showSuggestions = false;
     this.isLoadingSuggestions = false;
   }
+
+  goDetails(movieId: string): void {
+    this.router.navigate(['/movie_details'], { queryParams: { id: movieId } });
+  }
+
+  logout(): void {
+  this.authService.logout().subscribe({
+    next: () => this.router.navigate(['/']),
+    error: () => this.router.navigate(['/'])
+  });
+}
 }

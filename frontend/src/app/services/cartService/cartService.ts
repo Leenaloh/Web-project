@@ -57,50 +57,37 @@ export class CartService {
 
   constructor(private http: HttpClient) {}
 
-  private getCustomerId(): number {
-    return Number(localStorage.getItem('customerId') ?? 0);
-  }
-
-  getCart(_customerId?: number): Observable<CartState> {
-    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
-
-    return this.http
-      .get<CartState>(this.base, { ...this.requestOptions, params })
-      .pipe(map((cart) => this.normalizeCartState(cart)));
-  }
+  getCart(): Observable<CartState> {
+  return this.http
+    .get<CartState>(this.base, this.requestOptions)
+    .pipe(map((cart) => this.normalizeCartState(cart)));
+}
 
   addItem(movieId: string, quantity: number): Observable<CartState> {
-    const params = new HttpParams()
-      .set('customerId', String(this.getCustomerId()))
-      .set('movieId', movieId)
-      .set('quantity', String(quantity));
+  const params = new HttpParams()
+    .set('movieId', movieId)
+    .set('quantity', String(quantity));
 
-    return this.http
-      .post<CartState>(`${this.base}/items`, null, { ...this.requestOptions, params })
-      .pipe(map((cart) => this.normalizeCartState(cart)));
-  }
+  return this.http
+    .post<CartState>(`${this.base}/items`, null, { ...this.requestOptions, params })
+    .pipe(map((cart) => this.normalizeCartState(cart)));
+}
 
   updateItemQuantity(movieId: string, quantity: number): Observable<CartState> {
-    const params = new HttpParams()
-      .set('customerId', String(this.getCustomerId()))
-      .set('movieId', movieId)
-      .set('quantity', String(quantity));
+  const params = new HttpParams()
+    .set('movieId', movieId)
+    .set('quantity', String(quantity));
 
-    return this.http
-      .put<CartState>(`${this.base}/items`, null, { ...this.requestOptions, params })
-      .pipe(map((cart) => this.normalizeCartState(cart)));
-  }
+  return this.http
+    .put<CartState>(`${this.base}/items`, null, { ...this.requestOptions, params })
+    .pipe(map((cart) => this.normalizeCartState(cart)));
+}
 
   removeItem(movieId: string): Observable<CartState> {
-    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
-
-    return this.http
-      .delete<CartState>(`${this.base}/items/${encodeURIComponent(movieId)}`, {
-        ...this.requestOptions,
-        params
-      })
-      .pipe(map((cart) => this.normalizeCartState(cart)));
-  }
+  return this.http
+    .delete<CartState>(`${this.base}/items/${encodeURIComponent(movieId)}`, this.requestOptions)
+    .pipe(map((cart) => this.normalizeCartState(cart)));
+}
 
   removeCartItem(_customerId: number, cartItemId: number): Observable<CartState> {
     const movieId = this.movieIdsByCartItemId[cartItemId];
@@ -113,22 +100,18 @@ export class CartService {
   }
 
   clearCart(): Observable<CartState> {
-    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
-
-    return this.http
-      .delete<CartState>(this.base, { ...this.requestOptions, params })
-      .pipe(map((cart) => this.normalizeCartState(cart)));
-  }
+  return this.http
+    .delete<CartState>(this.base, this.requestOptions)
+    .pipe(map((cart) => this.normalizeCartState(cart)));
+}
 
   checkout(request: CheckoutRequest): Observable<CheckoutResponse> {
-    const params = new HttpParams().set('customerId', String(this.getCustomerId()));
-
-    return this.http.post<CheckoutResponse>(
-      `${this.base}/checkout`,
-      request,
-      { ...this.requestOptions, params }
-    );
-  }
+  return this.http.post<CheckoutResponse>(
+    `${this.base}/checkout`,
+    request,
+    this.requestOptions
+  );
+}
 
   rememberMovieTitle(movieId: string, title: string): void {
     if (!movieId || !title) {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../services/authService/authService';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 
 import {
@@ -49,11 +50,12 @@ export class CheckoutComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    private fb: FormBuilder,
-    private cartService: CartService,
-    private moviesService: MoviesService,
-    private router: Router
-  ) {
+  private fb: FormBuilder,
+  private cartService: CartService,
+  private moviesService: MoviesService,
+  private router: Router,
+  private authService: AuthService
+) {
     this.checkoutForm = this.fb.group({
       creditCardId: ['', Validators.required],
       firstName: ['', Validators.required],
@@ -63,32 +65,22 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const storedCustomerId = localStorage.getItem('customerId');
-
-    if (!storedCustomerId) {
+  this.authService.me().subscribe({
+    next: () => {
+      this.loadCart();
+    },
+    error: () => {
       this.router.navigate(['/']);
-      return;
     }
-
-    const parsedCustomerId = Number(storedCustomerId);
-
-    if (Number.isNaN(parsedCustomerId) || parsedCustomerId <= 0) {
-      localStorage.removeItem('customerId');
-      this.router.navigate(['/']);
-      return;
-    }
-
-    this.customerId = parsedCustomerId;
-    this.cart.customerId = this.customerId;
-    this.loadCart();
-  }
+  });
+}
 
   loadCart(): void {
     this.loading = true;
     this.errorMessage = '';
 
     this.cartService
-      .getCart(this.customerId)
+      .getCart()
       .pipe(switchMap((response: CartState) => this.enrichCheckoutCart(response)))
       .subscribe({
         next: (response: CartState) => {
@@ -184,12 +176,11 @@ export class CheckoutComponent implements OnInit {
     const formValue = this.checkoutForm.value;
 
     const request: CheckoutRequest = {
-      customerId: this.customerId,
-      creditCardId: formValue.creditCardId ?? '',
-      firstName: formValue.firstName ?? '',
-      lastName: formValue.lastName ?? '',
-      expiration: formValue.expiration ?? ''
-    };
+  creditCardId: formValue.creditCardId ?? '',
+  firstName: formValue.firstName ?? '',
+  lastName: formValue.lastName ?? '',
+  expiration: formValue.expiration ?? ''
+};
 
     this.submitting = true;
     this.errorMessage = '';

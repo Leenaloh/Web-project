@@ -76,4 +76,9 @@ export class MoviesService {
       params: { query }
     });
   }
+
+  getTopRatedMovies(pageSize = 9): Observable<MoviesPageState> {
+    const params = new HttpParams().set('pageSize', String(pageSize));
+    return this.http.get<MoviesPageState>(`${this.base}/top-rated`, { params });
+  }
 }

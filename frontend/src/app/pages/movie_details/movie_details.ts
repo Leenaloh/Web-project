@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common'; 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MoviesService, Movie } from '../../services/movieService/movieService';
+import { AuthService } from '../../services/authService/authService';
 import { CartService } from '../../services/cartService/cartService';
 
 @Component({
@@ -19,12 +20,13 @@ export class MovieDetailsComponent implements OnInit {
   addError = '';
 
   constructor(
-    private router: Router, 
-    private route: ActivatedRoute,
-    private moviesService: MoviesService,
-    private cartService: CartService,
-    private location: Location 
-  ) {}
+  private router: Router, 
+  private route: ActivatedRoute,
+  private moviesService: MoviesService,
+  private cartService: CartService,
+  private location: Location,
+  private authService: AuthService
+) {}
 
   ngOnInit(): void {
   this.route.queryParams.subscribe((params) => {
@@ -77,4 +79,11 @@ export class MovieDetailsComponent implements OnInit {
   goBack(): void {
     this.location.back();
   }
+
+  logout(): void {
+  this.authService.logout().subscribe({
+    next: () => this.router.navigate(['/']),
+    error: () => this.router.navigate(['/'])
+  });
+}
 }
