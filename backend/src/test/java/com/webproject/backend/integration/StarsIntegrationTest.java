@@ -1,12 +1,10 @@
 package com.webproject.backend.integration;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.webproject.backend.model.Star;
 import com.webproject.backend.service.impl.StarServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +24,18 @@ class StarsIntegrationTest {
 
   @Test
   void getStarById_whenFound_integration_returns200Json() throws Exception {
-    doReturn(new Star()).when(starServiceImpl).getStarById("nm001");
-
     mockMvc
-        .perform(get("/api/v1/stars/nm001"))
+        .perform(get("/api/v1/stars/nm0817431"))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
-    verify(starServiceImpl).getStarById("nm001");
+    verify(starServiceImpl).getStarById("nm0817431");
   }
 
   @Test
   void getStarById_whenNotFound_integration_returns404() throws Exception {
-    doReturn(null).when(starServiceImpl).getStarById("nm999");
+    mockMvc.perform(get("/api/v1/stars/nm000000000000")).andExpect(status().isNotFound());
 
-    mockMvc.perform(get("/api/v1/stars/nm999")).andExpect(status().isNotFound());
-
-    verify(starServiceImpl).getStarById("nm999");
+    verify(starServiceImpl).getStarById("nm000000000000");
   }
 }

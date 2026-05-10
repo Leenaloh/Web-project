@@ -15,6 +15,17 @@ spring:
   jpa:
     defer-datasource-initialization: true
 
+  cache:
+    type: simple
+    cache-names:
+      - movieSearch
+      - moviesByGenre
+      - moviesByFirstLetter
+      - movieDetails
+      - autocompleteTitles
+      - topRatedMovies
+      - starDetails
+
 server:
   port: 8443
   ssl:

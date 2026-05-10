@@ -1,13 +1,10 @@
 package com.webproject.backend.integration;
 
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.webproject.backend.model.Movie;
 import com.webproject.backend.service.impl.MovieServiceImpl;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -93,31 +90,24 @@ class MovieIntegrationTest {
 
   @Test
   void getMovieById_whenFound_integration_returns200Json() throws Exception {
-    doReturn(new Movie()).when(movieServiceImpl).getMovieById("tt001");
+    mockMvc.perform(get("/api/v1/movies/tt0364189")).andExpect(status().isOk());
 
-    mockMvc.perform(get("/api/v1/movies/tt001")).andExpect(status().isOk());
-
-    verify(movieServiceImpl).getMovieById("tt001");
+    verify(movieServiceImpl).getMovieById("tt0364189");
   }
 
   @Test
   void getMovieById_whenNotFound_integration_returns404() throws Exception {
-    doReturn(null).when(movieServiceImpl).getMovieById("tt999");
+    mockMvc.perform(get("/api/v1/movies/tt000000000000")).andExpect(status().isNotFound());
 
-    mockMvc.perform(get("/api/v1/movies/tt999")).andExpect(status().isNotFound());
-
-    verify(movieServiceImpl).getMovieById("tt999");
+    verify(movieServiceImpl).getMovieById("tt000000000000");
   }
 
   @Test
   void autocompleteTitles_integration_returns200Json() throws Exception {
-    doReturn(List.of("Avatar", "Avengers")).when(movieServiceImpl).autocompleteTitles("av");
-
     mockMvc
         .perform(get("/api/v1/movies/autocomplete").param("query", "av"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0]").value("Avatar"))
-        .andExpect(jsonPath("$[1]").value("Avengers"));
+        .andExpect(content().contentTypeCompatibleWith("application/json"));
 
     verify(movieServiceImpl).autocompleteTitles("av");
   }

@@ -1,7 +1,15 @@
 package com.webproject.backend.controller;
 
 import static org.hamcrest.Matchers.notNullValue;
+import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
@@ -9,15 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.webproject.backend.model.LoginResponse;
 import com.webproject.backend.service.serviceInterface.AuthService;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(AuthController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class AuthControllerLoginTest {
 
   @Autowired private MockMvc mockMvc;

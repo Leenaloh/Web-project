@@ -5,6 +5,7 @@ import com.webproject.backend.model.Star;
 import com.webproject.backend.service.serviceInterface.StarService;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,10 @@ public class StarServiceImpl implements StarService {
     this.jdbcTemplate = jdbcTemplate;
   }
 
+  @Cacheable(value = "starDetails", key = "#id")
   @Override
   public Star getStarById(String id) {
+
     String starSql =
         """
         SELECT id, name, birthyear
@@ -45,10 +48,11 @@ public class StarServiceImpl implements StarService {
 
     String moviesSql =
         """
-        SELECT m.id, m.title, m.year, m.director
-        FROM movies m
-        JOIN stars_in_movies sim ON m.id = sim.movieId
-        WHERE sim.starId = ?
+        SELECT m.id, m.title, m.year, m.director, r.rating
+        FROM stars_in_movies sim
+        JOIN movies m ON m.id = sim.movieid
+        LEFT JOIN ratings r ON r.movieid = m.id
+        WHERE sim.starid = ?
         ORDER BY m.title
         """;
 
@@ -62,12 +66,13 @@ public class StarServiceImpl implements StarService {
                     rs.getString("title"),
                     rs.getInt("year"),
                     rs.getString("director"),
-                    null,
+                    rs.getObject("rating") != null ? rs.getDouble("rating") : null,
                     null,
                     List.of(),
                     List.of()));
 
     star.setMovies(movies);
+
     return star;
   }
 }
