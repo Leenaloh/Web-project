@@ -16,7 +16,13 @@ spring:
     defer-datasource-initialization: true
 
 server:
-  port: 8080
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: groupone
+    key-store-type: PKCS12
+    key-alias: webproject
 
 frontend:
-  url: http://localhost:4200
+  url: https://localhost:4200

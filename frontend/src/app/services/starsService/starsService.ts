@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface StarMovie {
   id: string;
@@ -16,7 +17,7 @@ export interface Star {
 
 @Injectable({ providedIn: 'root' })
 export class StarsService {
-  private readonly base = 'http://localhost:8080/api/v1/stars';
+  private readonly base = `${environment.apiUrl}/api/v1/stars`;
 
   constructor(private http: HttpClient) {}
 
