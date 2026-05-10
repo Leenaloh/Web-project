@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface CheckoutRequest {
   customerId: number;
@@ -24,7 +25,7 @@ export interface CheckoutResponse {
   providedIn: 'root'
 })
 export class CheckoutService {
-  private readonly baseUrl = 'http://localhost:8080/api/checkout';
+  private readonly baseUrl = `${environment.apiUrl}/api/checkout`;
 
   constructor(private http: HttpClient) {}
 

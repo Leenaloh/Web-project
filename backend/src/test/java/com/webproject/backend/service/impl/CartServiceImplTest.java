@@ -1,13 +1,28 @@
 package com.webproject.backend.service.impl;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import org.mockito.Mock;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.webproject.backend.model.CartState;
 import com.webproject.backend.model.CheckoutRequest;
@@ -16,19 +31,8 @@ import com.webproject.backend.movie.entity.Movie;
 import com.webproject.backend.movie.entity.Repository.CartItemRepository;
 import com.webproject.backend.movie.entity.Repository.CustomerRepository;
 import com.webproject.backend.movie.entity.Repository.MovieRepository;
+
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class CartServiceImplTest {
@@ -36,6 +40,7 @@ class CartServiceImplTest {
   @Mock private CartItemRepository cartItemRepository;
   @Mock private MovieRepository movieRepository;
   @Mock private CustomerRepository customerRepository;
+  @Mock private JdbcTemplate jdbcTemplate;
 
   private final Map<Integer, Map<String, com.webproject.backend.movie.entity.CartItem>> cartStore =
       new HashMap<>();
@@ -53,10 +58,13 @@ class CartServiceImplTest {
 
     when(customerRepository.findById(anyInt()))
         .thenAnswer(invocation -> Optional.ofNullable(customers.get(invocation.getArgument(0))));
+
     when(movieRepository.findById(anyString()))
         .thenAnswer(invocation -> Optional.ofNullable(movies.get(invocation.getArgument(0))));
+
     when(cartItemRepository.findAllByCustomerId(anyInt()))
         .thenAnswer(invocation -> getCartItemsForCustomer(invocation.getArgument(0)));
+
     when(cartItemRepository.findByCustomerIdAndMovieId(anyInt(), anyString()))
         .thenAnswer(
             invocation ->
@@ -64,10 +72,12 @@ class CartServiceImplTest {
                     cartStore
                         .getOrDefault(invocation.getArgument(0), Map.of())
                         .get(invocation.getArgument(1))));
+
     when(cartItemRepository.save(any(com.webproject.backend.movie.entity.CartItem.class)))
         .thenAnswer(
             invocation -> {
               com.webproject.backend.movie.entity.CartItem entity = invocation.getArgument(0);
+
               if (entity.getId() == null) {
                 entity.setId(idSequence.getAndIncrement());
               }
@@ -78,6 +88,7 @@ class CartServiceImplTest {
 
               return entity;
             });
+
     lenient()
         .doAnswer(
             invocation -> {
@@ -93,6 +104,7 @@ class CartServiceImplTest {
             })
         .when(cartItemRepository)
         .delete(any(com.webproject.backend.movie.entity.CartItem.class));
+
     lenient()
         .doAnswer(
             invocation -> {
@@ -101,6 +113,14 @@ class CartServiceImplTest {
             })
         .when(cartItemRepository)
         .deleteByCustomerId(anyInt());
+
+    lenient()
+        .when(jdbcTemplate.queryForObject(anyString(), eq(Integer.class), any(), any()))
+        .thenReturn(1);
+
+    lenient()
+        .when(jdbcTemplate.queryForObject(anyString(), eq(Integer.class), any(), any(), any(), any(), any()))
+        .thenReturn(1);
   }
 
   @Test
@@ -155,7 +175,7 @@ class CartServiceImplTest {
     customerAService.addItem("tt0328500", 1);
     customerBService.addItem("tt0461892", 2);
 
-    customerAService.checkout(new CheckoutRequest());
+    customerAService.checkout(validCheckoutRequest());
 
     assertTrue(customerAService.getCart().getItems().isEmpty());
     assertEquals(1, customerBService.getCart().getItems().size());
@@ -163,7 +183,18 @@ class CartServiceImplTest {
   }
 
   private CartServiceImpl createService(HttpSession session) {
-    return new CartServiceImpl(session, cartItemRepository, movieRepository, customerRepository);
+    return new CartServiceImpl(
+        session, cartItemRepository, movieRepository, customerRepository, jdbcTemplate);
+  }
+
+  private CheckoutRequest validCheckoutRequest() {
+    CheckoutRequest request = new CheckoutRequest();
+    request.setCustomerId(1);
+    request.setCreditCardId("123456789");
+    request.setFirstName("Alice");
+    request.setLastName("Tester");
+    request.setExpiration("2027-01-01");
+    return request;
   }
 
   private HttpSession sessionWithCustomerId(int customerId) {
@@ -176,7 +207,9 @@ class CartServiceImplTest {
       Integer customerId) {
     List<com.webproject.backend.movie.entity.CartItem> items =
         new ArrayList<>(cartStore.getOrDefault(customerId, Map.of()).values());
+
     items.sort(Comparator.comparing(item -> item.getMovie().getTitle()));
+
     return items;
   }
 
