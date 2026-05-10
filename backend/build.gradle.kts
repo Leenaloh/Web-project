@@ -36,6 +36,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-test")
     testImplementation("org.springframework.boot:spring-boot-test-autoconfigure")
     testImplementation("org.mockito:mockito-junit-jupiter")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
 }
 
 tasks.withType<Test> {

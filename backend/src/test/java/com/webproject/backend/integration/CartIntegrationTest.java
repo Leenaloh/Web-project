@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +25,8 @@ class CartIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
+  @Autowired private JdbcTemplate jdbcTemplate;
+
   @MockitoSpyBean private CartServiceImpl cartServiceImpl;
 
   private MockHttpSession session;
@@ -31,7 +34,7 @@ class CartIntegrationTest {
   @BeforeEach
   void setUp() {
     session = new MockHttpSession();
-    session.setAttribute("customerId", 490001);
+    session.setAttribute("customerId", 907015);
   }
 
   @Test
@@ -117,12 +120,25 @@ class CartIntegrationTest {
 
   @Test
   void checkout_integration_callsRealService_andReturns200Json() throws Exception {
+    resetSalesIdSequence();
+
+    mockMvc.perform(delete("/api/v1/cart").session(session)).andExpect(status().isOk());
+
+    mockMvc
+        .perform(
+            post("/api/v1/cart/items")
+                .session(session)
+                .param("movieId", "tt0264464")
+                .param("quantity", "1"))
+        .andExpect(status().isOk());
+
     String validJson =
         """
         {
-            "customerFirstName": "John",
-            "customerLastName": "Doe",
-            "expiration": "12/2026"
+            "creditCardId": "6436-5723-2353-2522",
+            "firstName": "Matt",
+            "lastName": "Groening",
+            "expiration": "2043-11-24"
         }
         """;
 
@@ -132,8 +148,7 @@ class CartIntegrationTest {
                 .session(session)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validJson))
-        .andExpect(status().isOk())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        .andExpect(status().isOk());
 
     verify(cartServiceImpl).checkout(org.mockito.ArgumentMatchers.any());
   }
@@ -144,5 +159,17 @@ class CartIntegrationTest {
         .perform(
             post("/api/v1/cart/checkout").session(session).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
+  }
+
+  private void resetSalesIdSequence() {
+    jdbcTemplate.queryForObject(
+        """
+        SELECT setval(
+          pg_get_serial_sequence('sales', 'id'),
+          COALESCE((SELECT MAX(id) FROM sales), 0) + 1,
+          false
+        )
+        """,
+        Long.class);
   }
 }

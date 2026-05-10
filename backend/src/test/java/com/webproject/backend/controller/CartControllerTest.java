@@ -25,6 +25,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.webproject.backend.config.TestCacheConfig;
+import org.springframework.context.annotation.Import;
+
+@Import(TestCacheConfig.class)
 @WebMvcTest(CartController.class)
 public class CartControllerTest {
 

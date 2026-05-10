@@ -1,16 +1,5 @@
 package com.webproject.backend.service.impl;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.webproject.backend.model.CartItem;
 import com.webproject.backend.model.CartState;
 import com.webproject.backend.model.CheckoutRequest;
@@ -21,8 +10,17 @@ import com.webproject.backend.movie.entity.Repository.CartItemRepository;
 import com.webproject.backend.movie.entity.Repository.CustomerRepository;
 import com.webproject.backend.movie.entity.Repository.MovieRepository;
 import com.webproject.backend.service.serviceInterface.CartService;
-
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -106,6 +104,7 @@ public class CartServiceImpl implements CartService {
     validateMovieId(movieId);
 
     Integer customerId = getCurrentCustomerId();
+
     cartItemRepository
         .findByCustomerIdAndMovieId(customerId, movieId)
         .ifPresent(cartItemRepository::delete);
@@ -129,7 +128,8 @@ public class CartServiceImpl implements CartService {
     Customer customer =
         customerRepository
             .findById(customerId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
 
     validateCheckoutRequest(request, customer);
 
@@ -142,23 +142,32 @@ public class CartServiceImpl implements CartService {
 
     CartState currentCart = snapshot(customerCartItems);
 
-    for (com.webproject.backend.movie.entity.CartItem item : customerCartItems) {
-  String insertSaleSql =
-      """
-      INSERT INTO sales (id, customerId, movieId, saleDate)
-      VALUES ((SELECT COALESCE(MAX(id), 0) + 1 FROM sales), ?, ?, CURRENT_DATE)
-      """;
+    String insertSaleSql =
+        """
+        INSERT INTO sales (customerId, movieId, saleDate)
+        VALUES (?, ?, CURRENT_DATE)
+        """;
 
-  jdbcTemplate.update(insertSaleSql, customerId, item.getMovie().getId());
-}
+    jdbcTemplate.batchUpdate(
+        insertSaleSql,
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(java.sql.PreparedStatement ps, int i) throws java.sql.SQLException {
+            com.webproject.backend.movie.entity.CartItem item = customerCartItems.get(i);
+            ps.setInt(1, customerId);
+            ps.setString(2, item.getMovie().getId());
+          }
+
+          @Override
+          public int getBatchSize() {
+            return customerCartItems.size();
+          }
+        });
 
     cartItemRepository.deleteByCustomerId(customerId);
 
     return new CheckoutResponse(
-        true,
-        "Order placed",
-        UUID.randomUUID().toString(),
-        currentCart.getTotalPrice());
+        true, "Order placed", UUID.randomUUID().toString(), currentCart.getTotalPrice());
   }
 
   private void validateCheckoutRequest(CheckoutRequest request, Customer customer) {
