@@ -1,6 +1,6 @@
 import { test, expect, APIRequestContext, Page } from '@playwright/test';
 
-const API_BASE = process.env.E2E_API_BASE ?? 'https://localhost:8443/api/v1';
+const API_BASE = process.env['E2E_API_BASE'] ?? 'https://localhost:8443/api/v1';
 const TEST_CUSTOMER_ID = '490003';
 
 type CartItem = { movieId: string; quantity: number };
