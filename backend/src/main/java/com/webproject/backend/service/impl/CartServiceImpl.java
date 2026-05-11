@@ -137,7 +137,8 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.findAllByCustomerId(customerId);
 
     if (customerCartItems.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot checkout with an empty cart");
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Cannot checkout with an empty cart");
     }
 
     CartState currentCart = snapshot(customerCartItems);

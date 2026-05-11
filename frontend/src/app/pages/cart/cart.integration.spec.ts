@@ -39,7 +39,7 @@ describe('CartComponent Integration', () => {
   it('should display cart items', waitForAsync(() => {
     component.loadCart();
 
-    const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart?customerId=1`);
+    const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart`);
     expect(cartReq.request.method).toBe('GET');
     cartReq.flush(mockCart);
 
@@ -52,15 +52,14 @@ describe('CartComponent Integration', () => {
       });
     });
 
-    fixture.detectChanges();
-
     expect(component).toBeTruthy();
+    expect(component.cartItems.length).toBe(2);
   }));
 
   it('should remove item through backend', waitForAsync(() => {
     component.loadCart();
 
-    const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart?customerId=1`);
+    const cartReq = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart`);
     cartReq.flush(mockCart);
 
     httpMock.match(req => req.url.includes('/api/v1/movies/')).forEach(req => {
@@ -74,7 +73,7 @@ describe('CartComponent Integration', () => {
 
     component.remove(component.cartItems[0]);
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart/items/tt001?customerId=1`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/v1/cart/items/tt001`);
     expect(req.request.method).toBe('DELETE');
 
     req.flush({ items: [] });

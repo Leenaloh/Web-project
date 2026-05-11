@@ -3,6 +3,7 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { MovieListComponent } from './movie_list';
 import { MoviesService } from '../../services/movieService/movieService';
 import { CartService } from '../../services/cartService/cartService';
+import { AuthService } from '../../services/authService/authService';
 import { of } from 'rxjs';
 
 describe('MovieListComponent', () => {
@@ -10,6 +11,7 @@ describe('MovieListComponent', () => {
   let component: MovieListComponent;
   let moviesServiceSpy: jasmine.SpyObj<MoviesService>;
   let cartServiceSpy: jasmine.SpyObj<CartService>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
   let router: Router;
 
   beforeEach(async () => {
@@ -19,6 +21,8 @@ describe('MovieListComponent', () => {
       'browseByFirstLetter',
     ]);
     cartServiceSpy = jasmine.createSpyObj('CartService', ['addItem', 'rememberMovieTitle']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['logout']);
+    authServiceSpy.logout.and.returnValue(of(void 0));
 
     const activatedRouteStub = {
       queryParams: of({}),
@@ -29,6 +33,7 @@ describe('MovieListComponent', () => {
       providers: [
         { provide: MoviesService, useValue: moviesServiceSpy },
         { provide: CartService, useValue: cartServiceSpy },
+        { provide: AuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         provideRouter([]),
       ],

@@ -1,0 +1,3 @@
+[     481ms] [LOG] Angular is running in development mode. @ https://localhost:4200/@fs/C:/Users/roaal/Documents/GitHub/Web-project/frontend/.angular/cache/19.2.22/frontend/vite/deps/chunk-GDQ7QKAD.js?v=a688df97:15063
+[     539ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://localhost:4200/:0
+[    6186ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://localhost:4200/register:0

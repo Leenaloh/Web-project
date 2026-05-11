@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { throwError, of } from 'rxjs';
 
 import { CartComponent } from './cart';
+import { AuthService } from '../../services/authService/authService';
 import { CartService, CartState } from '../../services/cartService/cartService';
 import { MoviesService } from '../../services/movieService/movieService';
 
@@ -12,6 +13,7 @@ describe('CartComponent', () => {
   let fixture: ComponentFixture<CartComponent>;
   let mockCartService: jasmine.SpyObj<CartService>;
   let mockMoviesService: jasmine.SpyObj<MoviesService>;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
   let router: Router;
 
   const rawCart: CartState = {
@@ -33,12 +35,16 @@ describe('CartComponent', () => {
     ]);
 
     mockMoviesService = jasmine.createSpyObj('MoviesService', ['getMovieById']);
+    mockAuthService = jasmine.createSpyObj('AuthService', ['me', 'logout']);
+    mockAuthService.me.and.returnValue(of({ status: 'SUCCESS' }));
+    mockAuthService.logout.and.returnValue(of(void 0));
 
     await TestBed.configureTestingModule({
       imports: [CartComponent, RouterTestingModule],
       providers: [
         { provide: CartService, useValue: mockCartService },
-        { provide: MoviesService, useValue: mockMoviesService }
+        { provide: MoviesService, useValue: mockMoviesService },
+        { provide: AuthService, useValue: mockAuthService }
       ]
     }).compileComponents();
 
@@ -74,7 +80,7 @@ describe('CartComponent', () => {
 
     fixture.detectChanges();
 
-    expect(mockCartService.getCart).toHaveBeenCalledWith(1);
+    expect(mockCartService.getCart).toHaveBeenCalledWith();
     expect(mockMoviesService.getMovieById).toHaveBeenCalledWith('tt001');
     expect(mockMoviesService.getMovieById).toHaveBeenCalledWith('tt002');
     expect(component.cartItems[0].title).toBe('The Shawshank Redemption');

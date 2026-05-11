@@ -12,7 +12,7 @@ describe('MoviesService', () => {
   let service: MoviesService;
   let httpMock: HttpTestingController;
 
-  const base = 'http://localhost:8080/api/v1/movies';
+  const base = '/api/v1/movies';
 
   beforeEach(() => {
     TestBed.configureTestingModule({

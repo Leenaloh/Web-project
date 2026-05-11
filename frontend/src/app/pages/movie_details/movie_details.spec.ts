@@ -3,6 +3,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { MovieDetailsComponent } from './movie_details';
 import { MoviesService } from '../../services/movieService/movieService';
 import { of } from 'rxjs';
+import { AuthService } from '../../services/authService/authService';
 import { CartService } from '../../services/cartService/cartService';
 
 describe('MovieDetailsComponent', () => {
@@ -11,11 +12,14 @@ describe('MovieDetailsComponent', () => {
 
   let moviesServiceSpy: jasmine.SpyObj<MoviesService>;
   let cartServiceSpy: jasmine.SpyObj<CartService>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
   let router: Router;
 
   beforeEach(async () => {
     moviesServiceSpy = jasmine.createSpyObj('MoviesService', ['getMovieById']);
     cartServiceSpy = jasmine.createSpyObj('CartService', ['addItem', 'rememberMovieTitle']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['logout']);
+    authServiceSpy.logout.and.returnValue(of(void 0));
 
     const activatedRouteStub = {
       snapshot: { queryParamMap: convertToParamMap({ id: 'tt001' }) },
@@ -29,6 +33,7 @@ describe('MovieDetailsComponent', () => {
         provideRouter([]),
         { provide: MoviesService, useValue: moviesServiceSpy },
         { provide: CartService, useValue: cartServiceSpy },
+        { provide: AuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },    
       ],
     }).compileComponents();

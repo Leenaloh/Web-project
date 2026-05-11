@@ -1,28 +1,14 @@
 package com.webproject.backend.service.impl;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import org.mockito.Mock;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.webproject.backend.model.CartState;
 import com.webproject.backend.model.CheckoutRequest;
@@ -31,8 +17,20 @@ import com.webproject.backend.movie.entity.Movie;
 import com.webproject.backend.movie.entity.Repository.CartItemRepository;
 import com.webproject.backend.movie.entity.Repository.CustomerRepository;
 import com.webproject.backend.movie.entity.Repository.MovieRepository;
-
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @ExtendWith(MockitoExtension.class)
 class CartServiceImplTest {
@@ -119,7 +117,9 @@ class CartServiceImplTest {
         .thenReturn(1);
 
     lenient()
-        .when(jdbcTemplate.queryForObject(anyString(), eq(Integer.class), any(), any(), any(), any(), any()))
+        .when(
+            jdbcTemplate.queryForObject(
+                anyString(), eq(Integer.class), any(), any(), any(), any(), any()))
         .thenReturn(1);
   }
 

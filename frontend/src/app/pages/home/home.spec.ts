@@ -2,6 +2,7 @@ import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testin
 import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { HomeComponent } from './home';
+import { AuthService } from '../../services/authService/authService';
 import { MoviesService } from '../../services/movieService/movieService';
 
 describe('HomeComponent', () => {
@@ -9,15 +10,19 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let router: Router;
   let moviesServiceSpy: jasmine.SpyObj<MoviesService>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
     moviesServiceSpy = jasmine.createSpyObj('MoviesService', ['autocompleteTitles']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['logout']);
+    authServiceSpy.logout.and.returnValue(of(void 0));
 
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
         provideRouter([]),
         { provide: MoviesService, useValue: moviesServiceSpy },
+        { provide: AuthService, useValue: authServiceSpy },
       ],
     }).compileComponents();
 

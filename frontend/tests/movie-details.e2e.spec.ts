@@ -1,11 +1,13 @@
 import { test, expect, APIRequestContext, Page } from '@playwright/test';
 
-const API_BASE = 'http://localhost:8080/api/v1';
+const API_BASE = process.env.E2E_API_BASE ?? 'https://localhost:8443/api/v1';
+const TEST_CUSTOMER_ID = '490003';
 
 type CartItem = { movieId: string; quantity: number };
 
 async function resetCart(request: APIRequestContext): Promise<void> {
   const response = await request.delete(`${API_BASE}/cart`, {
+    params: { customerId: TEST_CUSTOMER_ID },
     failOnStatusCode: false
   });
   expect(response.ok()).toBeTruthy();
@@ -13,6 +15,7 @@ async function resetCart(request: APIRequestContext): Promise<void> {
 
 async function getCartItems(request: APIRequestContext): Promise<CartItem[]> {
   const response = await request.get(`${API_BASE}/cart`, {
+    params: { customerId: TEST_CUSTOMER_ID },
     failOnStatusCode: false
   });
   expect(response.ok()).toBeTruthy();

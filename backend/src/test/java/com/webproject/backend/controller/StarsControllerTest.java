@@ -7,17 +7,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.webproject.backend.config.TestCacheConfig;
 import com.webproject.backend.model.Star;
 import com.webproject.backend.service.serviceInterface.StarService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.webproject.backend.config.TestCacheConfig;
-import org.springframework.context.annotation.Import;
 
 @Import(TestCacheConfig.class)
 @WebMvcTest(StarsController.class)
