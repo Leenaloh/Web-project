@@ -1,0 +1,8 @@
+[allowlist]
+description = "Ignore historical self-signed localhost TLS files that are no longer tracked."
+paths = [
+  '''backend/ssl/localhost-key\.pem''',
+  '''backend/ssl/localhost\.pem''',
+  '''frontend/ssl/localhost-key\.pem''',
+  '''frontend/ssl/localhost\.pem''',
+]
