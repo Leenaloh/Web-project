@@ -3,16 +3,20 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { of } from 'rxjs';
 
 import { StarDetailsComponent } from './star_details';
+import { AuthService } from '../../services/authService/authService';
 import { StarsService } from '../../services/starsService/starsService';
 
 describe('StarDetailsComponent', () => {
   let fixture: ComponentFixture<StarDetailsComponent>;
   let component: StarDetailsComponent;
   let starsServiceSpy: jasmine.SpyObj<StarsService>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
   let router: Router;
 
   beforeEach(async () => {
     starsServiceSpy = jasmine.createSpyObj('StarsService', ['getStarById']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['logout']);
+    authServiceSpy.logout.and.returnValue(of(void 0));
 
     starsServiceSpy.getStarById.and.returnValue(
       of({ id: 'nm001', name: 'X', movies: [] } as any)
@@ -29,6 +33,7 @@ describe('StarDetailsComponent', () => {
       providers: [
         provideRouter([]),
         { provide: StarsService, useValue: starsServiceSpy },
+        { provide: AuthService, useValue: authServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ],
     }).compileComponents();

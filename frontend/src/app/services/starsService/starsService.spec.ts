@@ -35,9 +35,7 @@ describe('StarsService', () => {
       expect(res).toEqual(mockStar);
     });
 
-    const req = httpMock.expectOne(
-      'http://localhost:8080/api/v1/stars/nm001'
-    );
+    const req = httpMock.expectOne('/api/v1/stars/nm001');
     expect(req.request.method).toBe('GET');
     req.flush(mockStar);
   });

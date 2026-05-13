@@ -22,9 +22,7 @@ public class MovieServiceImpl implements MovieService {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  @Cacheable(
-      value = "movieSearch",
-      key = "{#title, #year, #director, #starName, #page, #pageSize}")
+  @Cacheable(value = "movieSearch", key = "{#title, #year, #director, #starName, #page, #pageSize}")
   @Override
   public MoviesPageState searchMovies(
       String title, Integer year, String director, String starName, int page, int pageSize) {

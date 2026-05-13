@@ -1,6 +1,7 @@
 import { test, expect, APIRequestContext, Page } from '@playwright/test';
 
-const API_BASE = 'http://localhost:8080/api/v1';
+const API_BASE = process.env['E2E_API_BASE'] ?? 'https://localhost:8443/api/v1';
+const TEST_CUSTOMER_ID = '490003';
 
 type CartItem = { movieId: string; quantity: number };
 
@@ -16,6 +17,7 @@ async function login(page: Page): Promise<void> {
 
 async function resetCart(request: APIRequestContext): Promise<void> {
   const response = await request.delete(`${API_BASE}/cart`, {
+    params: { customerId: TEST_CUSTOMER_ID },
     failOnStatusCode: false,
   });
 
@@ -27,7 +29,7 @@ async function resetCart(request: APIRequestContext): Promise<void> {
 
 async function seedCart(request: APIRequestContext, movieId: string, quantity: number): Promise<void> {
   const response = await request.post(`${API_BASE}/cart/items`, {
-    params: { movieId, quantity: String(quantity) },
+    params: { customerId: TEST_CUSTOMER_ID, movieId, quantity: String(quantity) },
     failOnStatusCode: false,
   });
 
@@ -39,6 +41,7 @@ async function seedCart(request: APIRequestContext, movieId: string, quantity: n
 
 async function getCartItems(request: APIRequestContext): Promise<CartItem[]> {
   const response = await request.get(`${API_BASE}/cart`, {
+    params: { customerId: TEST_CUSTOMER_ID },
     failOnStatusCode: false,
   });
 
@@ -87,7 +90,7 @@ test.describe.serial('Cart', () => {
 
   const updatePromise = page.waitForResponse(
     res =>
-      res.url().includes('//localhost:8080/api/v1/cart/items') &&
+      res.url().includes('/api/v1/cart/items') &&
       res.request().method() === 'PUT'
   );
 
@@ -117,7 +120,14 @@ test.describe.serial('Cart', () => {
     await seedCart(page.request, 'tt0313792', 1);
     await openCart(page);
 
+    const clearPromise = page.waitForResponse(
+      res => res.url().includes('/api/v1/cart') && res.request().method() === 'DELETE'
+    );
+
     await page.getByTestId('btn-clear').click();
+    const clearResponse = await clearPromise;
+    expect(clearResponse.ok()).toBeTruthy();
+    await expect(page.getByText('Your cart is empty.')).toBeVisible();
 
     const items = await getCartItems(page.request);
     expect(items).toHaveLength(0);

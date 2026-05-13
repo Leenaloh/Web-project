@@ -1,9 +1,11 @@
 import { test, expect, APIRequestContext, Page } from '@playwright/test';
 
-const API_BASE = 'http://localhost:8080/api/v1';
+const API_BASE = process.env['E2E_API_BASE'] ?? 'https://localhost:8443/api/v1';
+const TEST_CUSTOMER_ID = '490003';
 
 async function resetCart(request: APIRequestContext): Promise<void> {
   const response = await request.delete(`${API_BASE}/cart`, {
+    params: { customerId: TEST_CUSTOMER_ID },
     failOnStatusCode: false
   });
   expect(response.ok()).toBeTruthy();
@@ -34,15 +36,17 @@ test.describe('Home', () => {
   });
 
   test('browse by genre opens movie list', async ({ page }) => {
-    await page.getByTestId('genre-item-0').click(); // Action
+    await page.locator('#genre').selectOption('1');
+    await page.getByTestId('btn-search').click();
 
     await expect(page).toHaveURL(/\/movie-list\?/);
-    await expect(page).toHaveURL(/genre=Action/);
+    await expect(page).toHaveURL(/genreId=1/);
     await expect(page.getByTestId('page-movie-list')).toBeVisible();
   });
 
   test('browse by title character opens movie list', async ({ page }) => {
-    await page.getByTestId('title-char-11').click(); // A
+    await page.locator('#letter').selectOption('A');
+    await page.getByTestId('btn-search').click();
 
     await expect(page).toHaveURL(/\/movie-list\?/);
     await expect(page).toHaveURL(/startsWith=A/);

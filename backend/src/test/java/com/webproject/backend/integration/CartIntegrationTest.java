@@ -162,14 +162,9 @@ class CartIntegrationTest {
   }
 
   private void resetSalesIdSequence() {
-    jdbcTemplate.queryForObject(
-        """
-        SELECT setval(
-          pg_get_serial_sequence('sales', 'id'),
-          COALESCE((SELECT MAX(id) FROM sales), 0) + 1,
-          false
-        )
-        """,
-        Long.class);
+    jdbcTemplate.execute(
+        "ALTER TABLE sales ALTER COLUMN id RESTART WITH "
+            + jdbcTemplate.queryForObject(
+                "SELECT COALESCE(MAX(id), 0) + 1 FROM sales", Long.class));
   }
 }
