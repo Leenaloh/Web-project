@@ -28,10 +28,10 @@ export class LoginComponent {
     this.authService.login({ useremail: this.email, password: this.password })
       .subscribe({
         next: (response) => {
-          if (response.status === 'SUCCESS') {
-            this.router.navigate(['/home']);
-          }
-        },
+  if (response.status === 'SUCCESS') {
+    this.router.navigate(['/home']);
+  }
+},
         error: (err: any) => {
           console.error('Login failed', err);
           if (err.status === 401) {
