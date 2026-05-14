@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './services/authGuard/auth.guard';
 import { LoginComponent } from './pages/login/login';
 import { HomeComponent } from './pages/home/home';
 import { CartComponent } from './pages/cart/cart';
@@ -13,9 +14,11 @@ export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'cart', component: CartComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'checkout/result', component: CheckoutResultComponent },
+
+  { path: 'cart', component: CartComponent, canActivate: [authGuard] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
+  { path: 'checkout/result', component: CheckoutResultComponent, canActivate: [authGuard] },
+
   { path: 'movie-list', component: MovieListComponent },
   { path: 'movie_details', component: MovieDetailsComponent },
   { path: 'star_details', component: StarDetailsComponent },
